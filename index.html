@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>JSBG Consulting</title>
+  <meta name="description" content="Data, process, and custom tool consulting. Built for your specific situation. Yours to run when the work is done.">
+  <link rel="icon" href="./favicon/favicon.ico" sizes="any">
+  <link rel="icon" href="./favicon/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./favicon/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;0,700;0,800;1,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:         oklch(98.5% 0.005 240);
+      --bg-alt:     oklch(95%   0.007 240);
+      --fg:         oklch(14%   0.020 240);
+      --fg-muted:   oklch(44%   0.013 240);
+      --border:     oklch(14%   0.020 240 / 0.09);
+      --lbl:        oklch(44%   0.013 240);
+      --blue:       oklch(52%   0.19  248);
+      --bdk:        oklch(44%   0.17  248);
+
+      --h-bg:       oklch(98.5% 0.005 240);
+      --h-icon-f:   none;
+
+      --bubble-bg:  oklch(15%   0.026 245);
+      --bubble-txt: oklch(93%   0.007 240);
+
+      --card-bg:    oklch(99.5% 0.003 240);
+      --card-shad:  0 4px 24px oklch(14% 0.020 240 / 0.10), 0 0 0 1px oklch(14% 0.020 240 / 0.08);
+
+      --pill-bg:    oklch(13%   0.028 245 / 0.92);
+      --pill-bdr:   oklch(98%   0.005 240 / 0.15);
+
+      --mq-bg:      oklch(15%   0.028 245);
+      --contact-bg: oklch(13%   0.028 245);
+      --foot-bg:    oklch(19%   0.032 245);
+
+      --w:    oklch(98% 0.005 240);
+      --w85:  oklch(98% 0.005 240 / 0.85);
+      --w65:  oklch(98% 0.005 240 / 0.65);
+      --w45:  oklch(98% 0.005 240 / 0.45);
+      --w15:  oklch(98% 0.005 240 / 0.15);
+      --w08:  oklch(98% 0.005 240 / 0.08);
+
+      --fh: 'Montserrat', system-ui, sans-serif;
+      --fb: 'Hanken Grotesk', system-ui, sans-serif;
+      --expo:  cubic-bezier(.16, 1, .3, 1);
+      --quart: cubic-bezier(.25, 1, .5, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg:        oklch(12%   0.025 245);
+      --bg-alt:    oklch(17%   0.030 245);
+      --fg:        oklch(92%   0.007 240);
+      --fg-muted:  oklch(62%   0.010 240);
+      --border:    oklch(98%   0.005 240 / 0.08);
+      --lbl:       oklch(65%   0.012 240);
+
+      --h-bg:      oklch(11%   0.022 245);
+      --h-icon-f:  brightness(0) invert(1);
+
+      --bubble-bg:  oklch(20%  0.035 245);
+      --bubble-txt: oklch(93%  0.007 240);
+
+      --card-bg:   oklch(21%   0.036 245);
+      --card-shad: 0 4px 24px oklch(3% 0.008 245 / 0.5), 0 0 0 1px oklch(98% 0.005 240 / 0.1);
+
+      --pill-bg:   oklch(21%   0.034 245 / 0.96);
+      --pill-bdr:  oklch(98%   0.005 240 / 0.22);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--fb);
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      font-optical-sizing: auto;
+      transition: background-color 280ms var(--quart), color 280ms var(--quart);
+    }
+
+    img { display: block; max-width: 100%; }
+    a   { color: inherit; text-decoration: none; }
+
+    .wrap {
+      width: 100%;
+      max-width: 1140px;
+      margin-inline: auto;
+      padding-inline: clamp(24px, 5vw, 64px);
+    }
+
+    /* ── Nav ── */
+    .nav {
+      position: fixed;
+      inset-block-start: 20px;
+      inset-inline: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: center;
+      padding-inline: 16px;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      max-width: 780px;
+      background: var(--pill-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--pill-bdr);
+      border-radius: 9999px;
+      padding: 8px 8px 8px 20px;
+      transition: background 280ms var(--quart), border-color 280ms var(--quart);
+    }
+
+    .pill-brand { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .pill-brand img { height: 22px; width: auto; filter: brightness(0) invert(1); opacity: 0.88; }
+    .pill-brand span { font-family: var(--fh); font-weight: 700; font-size: 0.875rem; color: var(--w); letter-spacing: -0.01em; }
+
+    .pill-links { display: flex; gap: 20px; flex: 1; justify-content: center; }
+    .pill-links a { font-size: 0.8125rem; font-weight: 500; color: var(--w45); transition: color 120ms; }
+    .pill-links a:hover { color: var(--w); }
+    @media (max-width: 580px) { .pill-links { display: none; } }
+
+    .pill-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    .theme-toggle {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      background: oklch(98% 0.005 240 / 0.1);
+      border: 1px solid oklch(98% 0.005 240 / 0.15);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 120ms var(--quart);
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover { background: oklch(98% 0.005 240 / 0.18); }
+    .theme-toggle svg { width: 14px; height: 14px; stroke: var(--w85); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; fill: none; display: none; }
+    html[data-theme="light"] .icon-moon { display: block; }
+    html[data-theme="dark"]  .icon-sun  { display: block; }
+
+    .pill-cta {
+      background: var(--blue); color: var(--w);
+      font-family: var(--fb); font-weight: 600; font-size: 0.8125rem;
+      padding: 9px 18px; border-radius: 9999px; border: none; cursor: pointer;
+      transition: background 120ms var(--quart); white-space: nowrap;
+    }
+    .pill-cta:hover  { background: var(--bdk); }
+    .pill-cta:active { background: var(--bdk); transform: scale(0.97); }
+    .theme-toggle:active { transform: scale(0.90); }
+
+    /* Focus-visible rings — keyboard navigation */
+    :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+    .pill-cta:focus-visible,
+    .btn:focus-visible,
+    .cal-btn:focus-visible   { outline-offset: 4px; }
+    .theme-toggle:focus-visible { outline-offset: 4px; border-radius: 50%; }
+    .b-wrap:focus-visible    { outline-offset: 6px; border-radius: 24px; }
+    .answer-close:focus-visible { outline-offset: 2px; border-radius: 50%; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      background: var(--h-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: background 280ms var(--quart);
+    }
+
+    /* Bubble layer — covers the full hero */
+    #heroBubbles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Thought-bubble: pill + dot trail ── */
+
+    /* Outer: absolute position + float animation */
+    .b-outer {
+      position: absolute;
+      pointer-events: none;
+      animation: bFloat ease-in-out infinite;
+      opacity: 0;
+      transition: opacity 450ms var(--expo);
+    }
+    .b-outer.visible { opacity: 1; }
+
+    @keyframes bFloat {
+      0%, 100% { transform: translateY(0); }
+      40%       { transform: translateY(-8px); }
+      70%       { transform: translateY(-4px); }
+    }
+
+    /* Pop animation */
+    .b-outer.popping {
+      animation: bPop 280ms cubic-bezier(.35, 0, .65, 0) forwards;
+    }
+    @keyframes bPop {
+      0%   { opacity: 1; transform: scale(1); }
+      40%  { opacity: 0.6; transform: scale(1.3); }
+      100% { opacity: 0; transform: scale(0.05); }
+    }
+
+    /* Pulse hint — runs once on the first bubble to signal interactivity */
+    @keyframes bPulse {
+      0%   { transform: scale(1); }
+      42%  { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+    @keyframes bPulseColor {
+      0%   { background-color: var(--bubble-bg); }
+      38%  { background-color: oklch(52% 0.19 248); }
+      100% { background-color: var(--bubble-bg); }
+    }
+    .b-outer.pulse-hint .b-cloud {
+      animation: bPulse 1.5s cubic-bezier(.25, 1, .5, 1) 1;
+    }
+    .b-outer.pulse-hint .b-body,
+    .b-outer.pulse-hint .b-cc,
+    .b-outer.pulse-hint .b-dot {
+      animation: bPulseColor 1.5s cubic-bezier(.25, 1, .5, 1) 1;
+    }
+
+    /* Inner wrapper: rotation + hover interaction */
+    .b-wrap {
+      pointer-events: all;
+      cursor: pointer;
+      position: relative;
+      display: inline-block;
+      transform: rotate(var(--rot, 0deg));
+      transition: transform 200ms var(--quart);
+    }
+    .b-wrap:hover { transform: rotate(var(--rot, 0deg)) scale(1.05); }
+
+    /* Cloud shape: drop-shadow wraps the whole irregular outline */
+    .b-cloud {
+      position: relative;
+      display: inline-block;
+      filter: drop-shadow(0 4px 12px oklch(14% 0.020 240 / 0.14));
+      transition: filter 200ms var(--quart);
+    }
+    .b-wrap:hover .b-cloud {
+      filter: drop-shadow(0 0 3px oklch(52% 0.19 248 / 0.85))
+              drop-shadow(0 6px 18px oklch(52% 0.19 248 / 0.28));
+    }
+    [data-theme="dark"] .b-cloud {
+      filter: drop-shadow(0 4px 14px oklch(4% 0.010 245 / 0.55));
+    }
+    [data-theme="dark"] .b-wrap:hover .b-cloud {
+      filter: drop-shadow(0 0 3px oklch(52% 0.19 248 / 0.85))
+              drop-shadow(0 6px 18px oklch(52% 0.19 248 / 0.38));
+    }
+
+    /* Cloud body — pill background ensures text is always readable;
+       pill shape is entirely inside the circles so it never shows as a rectangle */
+    .b-body {
+      background: var(--bubble-bg);
+      border-radius: 999px;
+      padding: 18px 26px;
+      max-width: 224px;
+      min-width: 130px;
+      position: relative;
+      z-index: 2;
+      transition: background 280ms var(--quart);
+    }
+
+    /* Cloud circles — 6 large overlapping circles forming the cloud silhouette */
+    .b-cc {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--bubble-bg);
+      transition: background 280ms var(--quart);
+    }
+
+    /* Tail dots — size and position set by JS based on angle toward hero center */
+    .b-dot {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--bubble-bg);
+      transition: background 280ms var(--quart);
+    }
+
+    /* Bubble text */
+    .b-text {
+      font-family: var(--fh);
+      font-style: italic;
+      font-weight: 600;
+      font-size: clamp(0.775rem, 1.05vw, 0.875rem);
+      color: var(--bubble-txt);
+      line-height: 1.4;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Color flash for replacement bubbles */
+    .b-outer.is-new .b-body,
+    .b-outer.is-new .b-cc,
+    .b-outer.is-new .b-dot {
+      animation: colorFlash 1.1s ease-out forwards;
+    }
+    @keyframes colorFlash {
+      0%, 25% { background-color: oklch(58% 0.21 32); }
+      100%    { background-color: var(--bubble-bg); }
+    }
+
+    /* ── Answer card ── */
+    .answer-card {
+      position: absolute;
+      width: clamp(220px, 19vw, 285px);
+      background: var(--card-bg);
+      box-shadow: var(--card-shad);
+      border-radius: 14px;
+      padding: 18px 18px 16px;
+      z-index: 10;
+      pointer-events: all;
+      opacity: 1;
+      transition: opacity 240ms var(--expo), background 280ms var(--quart);
+    }
+    .answer-card.entering { opacity: 0; }
+    .answer-card.closing  { opacity: 0; }
+
+    .answer-close {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--fg-muted);
+      transition: background 120ms, color 120ms, border-color 120ms;
+    }
+    .answer-close:hover { background: var(--bg-alt); color: var(--fg); border-color: var(--fg-muted); }
+    .answer-close svg { display: block; }
+
+    .answer-text {
+      font-size: 0.9375rem;
+      line-height: 1.65;
+      color: var(--fg);
+      padding-right: 16px;
+      transition: color 280ms var(--quart);
+    }
+
+    /* ── Hero center block ── */
+    .hero-center {
+      position: relative;
+      z-index: 2;
+      max-width: 560px;
+      padding: clamp(80px, 12vh, 120px) clamp(24px, 5vw, 48px);
+      pointer-events: none;
+    }
+    .hero-center .btn,
+    .hero-center a { pointer-events: auto; }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-bottom: 22px;
+    }
+    .hero-eyebrow img { height: 20px; width: auto; filter: var(--h-icon-f); opacity: 0.75; transition: filter 280ms var(--quart); }
+    .hero-eyebrow span {
+      font-family: var(--fh); font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--fg-muted); transition: color 280ms var(--quart);
+    }
+
+    .hero-h1 {
+      font-family: var(--fh); font-weight: 800;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      line-height: 1.14; letter-spacing: -0.035em;
+      color: var(--fg); margin-bottom: 22px;
+      text-wrap: balance; transition: color 280ms var(--quart);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 1.6vw, 1.125rem); line-height: 1.72;
+      color: var(--fg-muted); max-width: 52ch; margin-bottom: 36px;
+      transition: color 280ms var(--quart);
+    }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--fb); font-weight: 600; border: none; cursor: pointer;
+      border-radius: 5px; text-decoration: none;
+      transition: background 120ms var(--quart), color 120ms, border-color 120ms;
+    }
+    .btn-primary { background: var(--blue); color: var(--w); font-size: 0.9375rem; padding: 13px 26px; }
+    .btn-primary:hover { background: var(--bdk); }
+    .btn-outline {
+      background: transparent; color: var(--fg); font-size: 0.9375rem;
+      padding: 12px 22px; font-weight: 500; border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover  { border-color: var(--fg-muted); }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-outline:active  { transform: scale(0.97); }
+
+    /* ── Marquee ── */
+    .marquee-bar {
+      background: var(--mq-bg);
+      padding-block: 13px; overflow: hidden;
+      position: relative; z-index: 2;
+    }
+    .mq-track { display: flex; mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent); }
+    .mq-inner { display: inline-flex; align-items: center; animation: mq 42s linear infinite; flex-shrink: 0; white-space: nowrap; will-change: transform; }
+    .mq-item { font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--w45); padding-inline: 24px; }
+    .mq-dot  { color: var(--w15); font-size: 0.4rem; }
+    @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-33.333%); } }
+    @media (hover: hover) { .mq-track:hover .mq-inner { animation-play-state: paused; } }
+
+    /* ── Sections ── */
+    .section { padding-block: 96px; }
+    .section-label {
+      font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--lbl); margin-bottom: 20px;
+      transition: color 280ms var(--quart);
+    }
+    .section-label-lt { color: var(--w65); }
+
+    /* ── Approach ── */
+    .approach {
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      transition: background 280ms var(--quart), border-color 280ms var(--quart);
+    }
+    .approach-inner { max-width: 680px; }
+    .approach-h2 {
+      font-family: var(--fh); font-size: clamp(1.625rem, 3.2vw, 2.375rem);
+      font-weight: 700; line-height: 1.15; letter-spacing: -0.025em;
+      color: var(--fg); margin-bottom: 20px; text-wrap: balance;
+      transition: color 280ms var(--quart);
+    }
+    .approach-body p {
+      font-size: 1.0625rem; line-height: 1.78;
+      color: var(--fg-muted); max-width: 58ch; transition: color 280ms var(--quart);
+    }
+    .approach-body p + p { margin-top: 16px; }
+
+    /* ── How It Works: horizontal timeline ── */
+    .how {
+      background: var(--bg-alt); border-bottom: 1px solid var(--border);
+      transition: background 280ms var(--quart), border-color 280ms var(--quart);
+    }
+    .how-header { margin-bottom: 56px; }
+    .how-h2 {
+      font-family: var(--fh); font-size: clamp(1.5rem, 2.8vw, 2rem);
+      font-weight: 700; letter-spacing: -0.02em;
+      color: var(--fg); margin-bottom: 10px; transition: color 280ms var(--quart);
+    }
+    .how-note { font-size: 1rem; color: var(--fg-muted); transition: color 280ms var(--quart); }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: clamp(24px, 5vw, 56px);
+      position: relative;
+    }
+    .t-track {
+      position: absolute;
+      top: 18px;
+      left: 0; right: 0;
+      height: 1px;
+      background: var(--border);
+      z-index: 0;
+      transition: background 280ms var(--quart);
+    }
+    .t-step { position: relative; }
+    .t-dot {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--blue);
+      color: var(--w);
+      font-family: var(--fh); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.04em;
+      margin-bottom: 18px;
+      position: relative; z-index: 1;
+      transition: background 280ms var(--quart), color 280ms var(--quart);
+    }
+    .t-title { font-family: var(--fh); font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; color: var(--fg); margin-bottom: 10px; transition: color 280ms var(--quart); }
+    .t-body { font-size: 0.9375rem; line-height: 1.72; color: var(--fg-muted); transition: color 280ms var(--quart); }
+    @media (max-width: 640px) {
+      .timeline { grid-template-columns: 1fr; }
+      .t-step:not(:last-child)::after { display: none; }
+    }
+
+    /* ── Contact ── */
+    .contact { background: var(--contact-bg); }
+    .contact-grid { display: grid; gap: 64px; }
+    @media (min-width: 700px) {
+      .contact-grid { grid-template-columns: 1fr 1fr; gap: clamp(48px, 6vw, 96px); align-items: start; }
+    }
+    .contact-h2 { font-family: var(--fh); font-size: clamp(1.75rem, 3.5vw, 2.625rem); font-weight: 700; letter-spacing: -0.025em; line-height: 1.12; color: var(--w); margin-bottom: 16px; text-wrap: balance; }
+    .contact-sub { font-size: 1rem; line-height: 1.72; color: var(--w85); max-width: 46ch; }
+    .contact-note { font-size: 0.875rem; color: var(--w45); margin-top: 12px; }
+    .contact-actions { display: flex; flex-direction: column; gap: 4px; }
+    .cal-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--blue); color: var(--w);
+      font-family: var(--fb); font-size: 0.9375rem; font-weight: 600;
+      padding: 14px 26px; border-radius: 5px; border: none; cursor: pointer;
+      transition: background 120ms var(--quart); width: 100%; margin-bottom: 12px;
+    }
+    .cal-btn:hover { background: var(--bdk); }
+    .contact-link { display: flex; align-items: center; gap: 12px; font-size: 0.9375rem; font-weight: 500; color: var(--w65); padding: 13px 0; border-bottom: 1px solid var(--w15); transition: color 120ms; }
+    .contact-link:last-child { border-bottom: none; }
+    .contact-link:hover { color: var(--w); }
+    .contact-link svg { opacity: 0.55; flex-shrink: 0; transition: opacity 120ms; }
+    .contact-link:hover svg { opacity: 0.9; }
+
+    /* ── Footer ── */
+    .footer { background: var(--foot-bg); border-top: 1px solid var(--w08); padding-block: 28px; }
+    .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+    .footer-copy, .footer-loc { font-size: 0.8125rem; color: var(--w45); }
+
+    /* ── Reveals ── */
+    .rv { opacity: 0; transform: translateY(16px); transition: opacity 520ms var(--expo), transform 520ms var(--expo); }
+    .rv.on { opacity: 1; transform: translateY(0); }
+    .rv[data-d="1"] { transition-delay: 70ms; }
+    .rv[data-d="2"] { transition-delay: 140ms; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rv { opacity: 1; transform: none; transition: none; }
+      .mq-inner { animation-play-state: paused; }
+      .b-outer { animation: none; opacity: 1; }
+    }
+
+    /* ── Mobile adaptations (≤767px) ── */
+
+    /* Touch target fixes — global */
+    .theme-toggle { width: 44px; height: 44px; }
+    .answer-close { width: 34px; height: 34px; }
+    .btn-primary  { padding: 14px 26px; }
+    .btn-outline  { padding: 13px 22px; }
+    .contact-link { padding: 14px 8px; }
+    .cal-btn      { padding: 15px 26px; }
+
+    /* Navbar: hide "Consulting" at very narrow viewports to prevent overflow */
+    @media (max-width: 420px) {
+      .brand-suffix { display: none; }
+      .pill-cta     { padding: 8px 13px; font-size: 0.75rem; }
+    }
+
+    /* Timeline: 2-column at tablet range */
+    @media (max-width: 900px) and (min-width: 641px) {
+      .timeline { grid-template-columns: 1fr 1fr; }
+      .t-track  { display: none; }
+    }
+
+    /* Marquee: tighter on small screens */
+    @media (max-width: 600px) {
+      .mq-item { padding-inline: 14px; font-size: 0.75rem; }
+      .mq-dot  { font-size: 0.5rem; }
+    }
+
+    @media (max-width: 767px) {
+      /* Prevent horizontal overflow */
+      body { overflow-x: hidden; }
+
+      /* Hero: stack vertically, hide floating bubbles */
+      #heroBubbles { display: none; }
+      .hero {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding-top: 88px;
+        padding-bottom: 48px;
+        gap: 0;
+        min-height: 100svh;
+      }
+      .hero-center {
+        padding: 0 clamp(20px, 5vw, 36px) 32px;
+        pointer-events: auto;
+        max-width: 100%;
+      }
+      .hero-center .btn,
+      .hero-center a { pointer-events: auto; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-actions .btn { justify-content: center; }
+
+      /* Sections tighter on mobile */
+      .section { padding-block: 64px; }
+
+      /* ── Mobile Q&A carousel ── */
+      .mob-carousel {
+        display: block;
+        width: 100%;
+        padding-block: 0 48px;
+      }
+
+      .mob-track {
+        display: flex;
+        overflow-x: scroll;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        /* padding = (100% - card width) / 2 so first/last real cards center */
+        padding-inline: 11%;
+        /* top padding gives room for the close button that protrudes above the card */
+        padding-top: 20px;
+        padding-bottom: 4px;
+        gap: 14px;
+        align-items: center;
+      }
+      .mob-track::-webkit-scrollbar { display: none; }
+
+      .mob-slide {
+        flex-shrink: 0;
+        width: 85%;
+        scroll-snap-align: center;
+        scroll-snap-stop: always;
+        position: relative;
+      }
+
+      /* Card: non-active is scaled down + faded — depth illusion */
+      .mob-card {
+        background: var(--bubble-bg);
+        border-radius: 20px;
+        min-height: 216px;
+        padding: 24px 24px 30px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        transform: scale(0.80);
+        opacity: 0.32;
+        transition: transform 200ms var(--quart), opacity 200ms var(--quart),
+                    filter 200ms var(--quart);
+        filter: blur(0.6px);
+        will-change: transform, opacity;
+      }
+      .mob-slide.mob-active .mob-card {
+        transform: scale(1);
+        opacity: 1;
+        filter: blur(0);
+      }
+
+      .mob-q {
+        font-family: var(--fh);
+        font-style: italic;
+        font-weight: 600;
+        font-size: 1.0625rem;
+        line-height: 1.5;
+        color: var(--bubble-txt);
+        margin-bottom: 20px;
+      }
+
+      .mob-hint {
+        display: block;
+        font-size: 0.625rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--bubble-txt);
+        opacity: 0.38;
+      }
+
+      /* Answer overlay slides up over the question face — full card, no gap */
+      .mob-answer {
+        position: absolute;
+        inset: 0;
+        background: oklch(22% 0.034 245);
+        border-radius: 20px;
+        padding: 22px 24px 24px;
+        transform: translateY(105%);
+        transition: transform 380ms cubic-bezier(.25, 1, .5, 1);
+      }
+      .mob-card.mob-revealed .mob-answer { transform: translateY(0); }
+
+      /* Close button: a circle sitting above the card's top-right corner */
+      .mob-close-btn {
+        position: absolute;
+        top: -14px;
+        right: 14px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: var(--w);
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 4;
+        /* hidden until answer is revealed */
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.7);
+        transition: opacity 200ms, transform 200ms var(--quart);
+      }
+      /* CSS sibling selector: card.revealed + close button becomes visible */
+      .mob-card.mob-revealed ~ .mob-close-btn {
+        opacity: 1;
+        pointer-events: auto;
+        transform: scale(1);
+      }
+      .mob-card:focus-visible { outline: 2px solid var(--blue); outline-offset: -3px; border-radius: 20px; }
+
+      .mob-a {
+        font-size: 1rem;
+        line-height: 1.65;
+        color: var(--bubble-txt);
+        opacity: 0.88;
+      }
+    }
+
+    /* Hide carousel on desktop — must be min-width so mobile @media block isn't overridden */
+    @media (min-width: 768px) {
+      .mob-carousel { display: none; }
+    }
+  </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JLKFP7DEXS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JLKFP7DEXS');
+  </script>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav" aria-label="Main navigation">
+    <div class="pill">
+      <a class="pill-brand" href="#" aria-label="JSBG Consulting">
+        <img src="./assets/icon-noBG.png" alt="" width="22" height="22" aria-hidden="true">
+        <span>JSBG <span class="brand-suffix">Consulting</span></span>
+      </a>
+      <div class="pill-links">
+        <a href="#approach">Approach</a>
+        <a href="#how">How I Work</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="pill-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </button>
+        <button class="pill-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get in Touch</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="hero" aria-labelledby="hero-h1">
+    <div id="heroBubbles" aria-hidden="true"></div>
+
+    <div class="hero-center">
+      <div class="hero-eyebrow">
+        <img src="./assets/icon-noBG.png" alt="" width="20" height="20" aria-hidden="true">
+        <span>JSBG Consulting</span>
+      </div>
+      <h1 class="hero-h1" id="hero-h1">Sound familiar?<br>You're Not Alone.</h1>
+      <p class="hero-sub">Everyone has at least some of these questions going through their head. I can help you find the answers and build the custom systems your unique situation actually requires.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary"
+          data-cal-link="shaun-jsbg/discovery-meeting"
+          data-cal-config='{"layout":"month_view"}'>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          Book a Call
+        </button>
+        <a class="btn btn-outline" href="mailto:shaun@jsbg.ca">shaun@jsbg.ca</a>
+      </div>
+    </div>
+
+    <!-- Mobile Q&A carousel — populated by JS, hidden on desktop -->
+    <div class="mob-carousel" id="mobCarousel" aria-label="Common questions — swipe to browse">
+      <div class="mob-track" id="mobTrack"></div>
+    </div>
+  </section>
+
+  <!-- Marquee — edit the TOOLS array below to change items -->
+  <div class="marquee-bar" role="complementary" aria-label="Tools and technologies">
+    <div class="mq-track">
+      <div class="mq-inner" aria-hidden="true" id="mqInner"></div>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var TOOLS = [
+      "BigQuery", "Looker Studio", "Google Workspace", "Apps Script",
+      "SQL", "DOMO", "Tableau", "Python", "Microsoft Excel",
+      "VBA", "Google Forms", "Data Studio", "Microsoft Office", "SAP"
+    ];
+    var inner = document.getElementById('mqInner');
+    var html = '';
+    // 3 copies required: animation shifts by -33.333% for seamless loop
+    for (var i = 0; i < 3; i++) {
+      TOOLS.forEach(function(t) {
+        html += '<span class="mq-item">' + t + '</span><span class="mq-dot">●</span>';
+      });
+    }
+    inner.innerHTML = html;
+  })();
+  </script>
+
+  <!-- Approach -->
+  <section class="approach section" id="approach" aria-labelledby="approach-h2">
+    <div class="wrap">
+      <div class="approach-inner rv">
+        <p class="section-label">Approach</p>
+        <h2 class="approach-h2" id="approach-h2">These questions usually share a similar answer.</h2>
+        <div class="approach-body">
+          <p>Something accumulated gradually. A temporary solution that overstayed its welcome. Another small step nobody questioned. A gap between the data being tracked and the clarity you actually need. Each piece seemed manageable on its own, until it wasn't.</p>
+          <p>Every one of these issues is solvable. Most teams simply wait until the cost of the workaround becomes too much. That's when you know it's time to stop managing the problem and start building the solution.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how section" id="how" aria-labelledby="how-h2">
+    <div class="wrap">
+      <div class="how-header rv">
+        <p class="section-label">How I Work</p>
+        <h2 class="how-h2" id="how-h2">How we get there.</h2>
+        <p class="how-note">To ensure your solution is built to last, I generally follow a straightforward process designed to identify and fix the root cause of your specific challenges.</p>
+      </div>
+      <div class="timeline">
+        <div class="t-track" aria-hidden="true"></div>
+        <div class="t-step rv">
+          <div class="t-dot">01</div>
+          <h3 class="t-title">Understand the situation</h3>
+          <p class="t-body">A close look at what's actually there: your data, your processes, your team's specific needs, before any solution gets proposed. The work follows from that, not from a pre-built approach.</p>
+        </div>
+        <div class="t-step rv" data-d="1">
+          <div class="t-dot">02</div>
+          <h3 class="t-title">Build what fits</h3>
+          <p class="t-body">The solution is designed around your specific situation. Not more complex than it needs to be, and not something that requires constant technical oversight to keep running.</p>
+        </div>
+        <div class="t-step rv" data-d="2">
+          <div class="t-dot">03</div>
+          <h3 class="t-title">Hand it over</h3>
+          <p class="t-body">Documentation, training, and a system you can run in house. No requirement to have me on retainer to keep things operational. If you want help down the road, that option is there.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact section" id="contact" aria-labelledby="contact-h2">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div class="rv">
+          <p class="section-label section-label-lt">Ready to talk?</p>
+          <h2 class="contact-h2" id="contact-h2">Let's turn those questions into a plan.</h2>
+          <p class="contact-sub">If you're ready to move past the frustration, let's talk. We can walk through your specific situation to see if we're a good fit to build a solution together.</p>
+          <p class="contact-note">When you reach out, you're talking directly to the person who will do the work.</p>
+        </div>
+        <div class="contact-actions rv" data-d="1">
+          <button class="cal-btn" data-cal-link="shaun-jsbg/discovery-meeting" data-cal-config='{"layout":"month_view"}'>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Book a Call
+          </button>
+          <a class="contact-link" href="mailto:shaun@jsbg.ca">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+            shaun@jsbg.ca
+          </a>
+          <a class="contact-link" href="https://www.linkedin.com/in/-shaun-adams/" target="_blank" rel="noopener noreferrer">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-inner">
+        <span class="footer-copy">&copy; 2026 JSBG Consulting</span>
+        <span class="footer-loc">Peace River, AB</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cal.com -->
+  <script type="text/javascript">
+    (function(C,A,L){let p=function(a,ar){a.q.push(ar)};let d=C.document;C.Cal=C.Cal||function(){let cal=C.Cal,ar=arguments;if(!cal.loaded){cal.ns={};cal.q=cal.q||[];d.head.appendChild(d.createElement("script")).src=A;cal.loaded=true;}if(ar[0]===L){const api=function(){p(api,arguments)};const ns=ar[1];api.q=api.q||[];if(typeof ns==="string"){cal.ns[ns]=cal.ns[ns]||api;p(cal.ns[ns],ar);p(cal,["-",ar]);}else{p(cal,ar);p(cal,["-",ar]);}return;}p(cal,ar);};})(window,"https://app.cal.com/embed/embed.js","init");
+    Cal("init",{origin:"https://cal.com"});
+    Cal("ui",{styles:{branding:{brandColor:"#0059bb"}},hideEventTypeDetails:false,layout:"month_view"});
+  </script>
+
+  <!-- Cal.com fallback: if embed.js never drains the queue, wire the button to email -->
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        // Cal.com's embed.js drains Cal.q when it loads. A non-empty queue means it failed.
+        var calFailed = !window.Cal || (window.Cal.q && window.Cal.q.length > 0);
+        if (calFailed) {
+          var btn = document.querySelector('.cal-btn');
+          if (!btn) return;
+          btn.removeAttribute('data-cal-link');
+          btn.addEventListener('click', function() {
+            window.location.href = 'mailto:shaun@jsbg.ca?subject=Discovery+Meeting+Request';
+          });
+          btn.title = 'Booking is temporarily unavailable — clicking will open your email client.';
+        }
+      }, 7000);
+    });
+  </script>
+
+  <!-- Theme toggle -->
+  <script>
+    (function(){
+      var root = document.documentElement;
+      var btn  = document.getElementById('themeToggle');
+      var KEY  = 'jsbg-theme';
+      var saved = localStorage.getItem(KEY) || 'light';
+      root.setAttribute('data-theme', saved);
+      btn.setAttribute('aria-label', saved === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      btn.addEventListener('click', function(){
+        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem(KEY, next);
+        btn.setAttribute('aria-label', next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      });
+    })();
+  </script>
+
+  <!-- Scroll reveals -->
+  <script>
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); }
+      });
+    },{threshold:0.08});
+    document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+  </script>
+
+  <!-- Edit questions.js (one folder up) to change bubble content -->
+  <script src="./questions.js"></script>
+
+  <!-- Thought bubble system -->
+  <script>
+  (function(){
+
+    // ── Zones [top%, left%, jitMin%, jitMax%] ────────────────────────────
+    // jitMin/jitMax: random horizontal offset applied at render time.
+    // Edge zones (col left/right) jitter inward only, so they can't go off-screen.
+    // Middle zones in bands jitter both directions for variety.
+    // ADJ map below prevents adjacent column zones from being active together.
+    var ZONES = [
+      //                             jitMin  jitMax
+      // Top band — 18% keeps circles clear of the fixed navbar (~70px bottom)
+      [18,  5,   0,   0],   // 0  corner
+      [18, 29,  -6,   6],   // 1  inner
+      [18, 57,  -6,   6],   // 2  inner
+      [18, 76,  0,   0],   // 3  corner
+      // Upper-middle flanks
+      [20,  6,  0,   9],   // 4  left — jitter inward only
+      [20, 74, -9,   0],   // 5  right — jitter inward only
+      // Left column — 3 rows
+      [33,  4,  0,  10],   // 6
+      [50,  4,  0,  10],   // 7
+      [66,  4,  0,  10],   // 8
+      // Right column — 3 rows
+      [33, 75, -10,  0],   // 9
+      [50, 75, -10,  0],   // 10
+      [66, 75, -10,  0],   // 11
+      // Lower-middle flanks
+      [74,  6,  0,   9],   // 12
+      [74, 74, -9,   0],   // 13
+      // Bottom band — 4 positions
+      [80,  5,  0,   0],   // 14 corner
+      [80, 29, -6,   6],   // 15 inner
+      [80, 57, -6,   6],   // 16 inner
+      [80, 76,  0,   0],   // 17 corner
+    ];
+
+    // Adjacent zone pairs — zones too close to show simultaneously.
+    // Fully bidirectional: if A blocks B, B also blocks A.
+    // Top/bottom band zones chain (0-1-2-3, 14-15-16-17) prevent adjacent
+    // band positions from coexisting. Column zones form vertical chains.
+    var ADJ = {
+      // Top band
+      0:  [1,  4,  6],
+      1:  [0,  2],
+      2:  [1,  3,  5,  9],
+      3:  [2,  5,  9],
+      // Upper-middle flanks
+      4:  [0,  6],
+      5:  [2,  3,  9],
+      // Left column
+      6:  [0,  4,  7],
+      7:  [6,  8],
+      8:  [7,  12, 14],
+      // Right column
+      9:  [2,  3,  5,  10],
+      10: [9,  11],
+      11: [10, 13, 17],
+      // Lower-middle flanks
+      12: [8,  14],
+      13: [11, 16, 17],
+      // Bottom band
+      14: [8,  12, 15],
+      15: [14, 16],
+      16: [13, 15, 17],
+      17: [11, 13, 16],
+    };
+
+    // ── State ─────────────────────────────────────────────────────────────
+    var pool           = [];
+    var shownQs        = [];
+    var usedZones      = [];
+    var activeCard     = null;   // currently visible answer card element
+    var activeCardZone = null;   // zone index that card's bubble came from
+
+    var heroEl    = document.getElementById('hero');
+    var bubblesEl = document.getElementById('heroBubbles');
+
+    // ── Helpers ───────────────────────────────────────────────────────────
+    function shuffle(arr) {
+      var a = arr.slice(), i = a.length, j, t;
+      while (i--) { j = Math.floor(Math.random() * (i + 1)); t = a[i]; a[i] = a[j]; a[j] = t; }
+      return a;
+    }
+
+    function refillPool() {
+      var avail = Q.map(function(_,i){ return i; }).filter(function(i){ return shownQs.indexOf(i) < 0; });
+      pool = shuffle(avail.length > 0 ? avail : Q.map(function(_,i){ return i; }));
+    }
+
+    function nextQ() {
+      if (!pool.length) refillPool();
+      return pool.shift();
+    }
+
+    function getFreeZone(excludeIdx) {
+      // Build the full blocked set: used zones + their adjacents + the excluded zone
+      var blocked = {};
+      usedZones.forEach(function(zi) {
+        blocked[zi] = true;
+        if (ADJ[zi]) ADJ[zi].forEach(function(a) { blocked[a] = true; });
+      });
+      if (excludeIdx !== undefined) blocked[excludeIdx] = true;
+
+      var all  = ZONES.map(function(_,i){ return i; });
+      var free = all.filter(function(i){ return !blocked[i]; });
+      // Fallback: drop adjacency constraint if nothing is free
+      if (!free.length) free = all.filter(function(i){ return usedZones.indexOf(i) < 0 && i !== excludeIdx; });
+      if (!free.length) free = all.filter(function(i){ return i !== excludeIdx; });
+      if (!free.length) free = all;
+      return free[Math.floor(Math.random() * free.length)];
+    }
+
+    function getBubbleCount() {
+      var w = window.innerWidth;
+      if (w >= 1600) return 8;
+      if (w >= 1300) return 7;
+      if (w >= 1050) return 6;
+      if (w >= 800)  return 5;
+      if (w >= 600)  return 4;
+      return 3;
+    }
+
+    // ── Create bubble ─────────────────────────────────────────────────────
+    function createBubble(zoneIdx, qIdx, delay, isNew) {
+      shownQs.push(qIdx);
+      usedZones.push(zoneIdx);
+
+      var zone  = ZONES[zoneIdx];
+      var jTop  = (Math.random() - 0.5) * 3;
+      var jLeft = zone[2] + Math.random() * (zone[3] - zone[2]);
+      var top   = zone[0] + jTop;
+      var left  = zone[1] + jLeft;
+      var rot   = (Math.random() - 0.5) * 7;
+      var fDel  = Math.floor(Math.random() * 3000);
+      var fDur  = 5000 + Math.floor(Math.random() * 4500);
+
+      var outer = document.createElement('div');
+      outer.className = 'b-outer' + (isNew ? ' is-new' : '');
+      outer.style.top               = top  + '%';
+      outer.style.left              = left + '%';
+      outer.style.animationDelay    = fDel + 'ms';
+      outer.style.animationDuration = fDur + 'ms';
+      outer.dataset.zoneIdx = zoneIdx;
+      outer.dataset.qIdx    = qIdx;
+
+      var wrap = document.createElement('div');
+      wrap.className = 'b-wrap';
+      wrap.style.setProperty('--rot', rot + 'deg');
+      wrap.setAttribute('role', 'button');
+      wrap.setAttribute('tabindex', '0');
+      wrap.setAttribute('aria-label', Q[qIdx].q);
+
+      var cloud = document.createElement('div');
+      cloud.className = 'b-cloud';
+
+      // ── Cloud circles: randomly pick one of 3 Gemini-derived shapes ─────────
+      function cc(w, h, pos) {
+        var el = document.createElement('div');
+        el.className = 'b-cc';
+        el.style.width  = w + 'px';
+        el.style.height = h + 'px';
+        if (pos.l !== undefined) el.style.left   = pos.l + 'px';
+        if (pos.t !== undefined) el.style.top    = pos.t + 'px';
+        if (pos.r !== undefined) el.style.right  = pos.r + 'px';
+        if (pos.b !== undefined) el.style.bottom = pos.b + 'px';
+        cloud.appendChild(el);
+      }
+
+      var shape = Math.floor(Math.random() * 3);
+      if (shape === 0) {
+        // V1 — 6 circles, balanced
+        cc( 86,  86, {l:-8,  t:-8 });
+        cc(103, 103, {l:52,  t:-30});
+        cc( 82,  82, {l:120, t:-13});
+        cc( 90,  90, {r:-11, t:0  });
+        cc( 77,  77, {l:39,  b:-26});
+        cc( 95,  95, {r:34,  b:-34});
+      } else if (shape === 1) {
+        // T-3 — 6 circles, symmetrical bottom
+        cc( 80,  80, {l:-4,  t:-12});
+        cc( 92,  92, {l:52,  t:-28});
+        cc( 92,  92, {l:116, t:-20});
+        cc( 68,  68, {r:-12, t:0  });
+        cc( 76,  76, {l:44,  b:-28});
+        cc( 76,  76, {r:44,  b:-28});
+      } else {
+        // T-10 — 5 circles, heavy left mass
+        cc(121, 121, {l:9,   t:-39});
+        cc(108, 108, {l:95,  t:-30});
+        cc( 86,  86, {r:-13, t:-9 });
+        cc( 78,  78, {l:-9,  t:0  });
+        cc( 95,  95, {l:60,  b:-39});
+      }
+
+      // Universal bottom anchors — fix left/right coverage for 3-line text.
+      // For 2-line bodies these nearly overlap with the top-corner circles
+      // and barely change the shape. For 3-line bodies they close the coverage
+      // gap at the bottom-left and bottom-right edges.
+      cc(92, 92, {l:-8, b:-24});
+      cc(92, 92, {r:-8, b:-24});
+
+      var body = document.createElement('div');
+      body.className = 'b-body';
+
+      var text = document.createElement('span');
+      text.className   = 'b-text';
+      text.textContent = '”' + Q[qIdx].q + '”';
+
+      body.appendChild(text);
+      cloud.appendChild(body);
+      wrap.appendChild(cloud);
+
+      // ── Tail dots: fixed down-left direction ──────────────────────────────
+      // Anchored at bubble visual center (left:50%, top:50% of b-wrap)
+      var ux = -0.707, uy = 0.707; // unit vector: down-left
+      var tailWrap = document.createElement('div');
+      tailWrap.style.cssText = 'position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none';
+
+      [{ dist: 130, sz: 16 }, { dist: 154, sz: 10 }, { dist: 174, sz: 6 }]
+        .forEach(function(dot) {
+          var d = document.createElement('div');
+          d.className = 'b-dot';
+          d.style.width  = dot.sz + 'px';
+          d.style.height = dot.sz + 'px';
+          d.style.left   = Math.round(ux * dot.dist - dot.sz / 2) + 'px';
+          d.style.top    = Math.round(uy * dot.dist - dot.sz / 2) + 'px';
+          tailWrap.appendChild(d);
+        });
+
+      wrap.appendChild(tailWrap);
+
+      outer.appendChild(wrap);
+      bubblesEl.appendChild(outer);
+
+      // Entrance fade
+      setTimeout(function(){
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){
+            outer.classList.add('visible');
+          });
+        });
+      }, delay || 0);
+
+      if (isNew) {
+        setTimeout(function(){ outer.classList.remove('is-new'); }, 1300);
+      }
+
+      function onClick() { handleClick(outer, zoneIdx, qIdx); }
+      wrap.addEventListener('click', onClick);
+      wrap.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ') onClick();
+      });
+    }
+
+    // ── Handle click ──────────────────────────────────────────────────────
+    function handleClick(outer, zoneIdx, qIdx) {
+      var qi = shownQs.indexOf(qIdx);
+      if (qi > -1) shownQs.splice(qi, 1);
+      var zi = usedZones.indexOf(zoneIdx);
+      if (zi > -1) usedZones.splice(zi, 1);
+
+      outer.style.animation = 'bPop 280ms cubic-bezier(.35,0,.65,0) forwards';
+
+      setTimeout(function(){
+        outer.remove();
+        showAnswer(zoneIdx, parseFloat(outer.style.top), parseFloat(outer.style.left), qIdx);
+      }, 280);
+    }
+
+    // ── Answer card ───────────────────────────────────────────────────────
+    function showAnswer(fromZoneIdx, top, left, qIdx) {
+      // Dismiss any existing card and spawn a replacement bubble for its zone
+      if (activeCard) {
+        var prevCard = activeCard;
+        var prevZone = activeCardZone;
+        activeCard     = null;
+        activeCardZone = null;
+        prevCard.classList.add('closing');
+        setTimeout(function(){
+          prevCard.remove();
+          createBubble(getFreeZone(prevZone), nextQ(), 0, true);
+        }, 250);
+      }
+
+      // Track bubble click
+      if (typeof gtag === 'function') {
+        gtag('event', 'bubble_click', {
+          question_index: qIdx,
+          question_text:  Q[qIdx].q.substring(0, 100)
+        });
+      }
+
+      var card = document.createElement('div');
+      card.className = 'answer-card entering';
+      activeCard     = card;
+      activeCardZone = fromZoneIdx;
+
+      // Pixel-based positioning so card never clips the viewport edges.
+      var vw     = window.innerWidth;
+      var vh     = window.innerHeight;
+      var CARD_W = Math.min(285, Math.max(220, vw * 0.19));
+      var CARD_H = 200; // conservative estimate
+      var PAD    = 16;
+
+      var bubblePx = (left / 100) * vw;
+      var bubblePy = (top  / 100) * vh;
+
+      // Horizontal: place card to the right of bubble; flip left if near right edge
+      var cardLeft = (left > 55) ? bubblePx - CARD_W - 8 : bubblePx + 8;
+      // Vertical: place card below bubble; flip up if near bottom
+      var cardTop  = (top  > 68) ? bubblePy - CARD_H - 8 : bubblePy + 8;
+
+      // Clamp so card always stays inside viewport
+      cardLeft = Math.max(PAD, Math.min(vw - CARD_W - PAD, cardLeft));
+      cardTop  = Math.max(PAD + 72, Math.min(vh - CARD_H - PAD, cardTop));
+
+      card.style.left      = cardLeft + 'px';
+      card.style.top       = cardTop  + 'px';
+      card.style.transform = 'none';
+
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'answer-close';
+      closeBtn.setAttribute('aria-label', 'Close');
+      closeBtn.innerHTML = '<svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="7" y2="7"/><line x1="7" y1="1" x2="1" y2="7"/></svg>';
+
+      var textEl = document.createElement('p');
+      textEl.className   = 'answer-text';
+      textEl.textContent = Q[qIdx].a;
+
+      card.appendChild(closeBtn);
+      card.appendChild(textEl);
+      heroEl.appendChild(card);
+
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          card.classList.remove('entering');
+        });
+      });
+
+      closeBtn.addEventListener('click', function(){
+        card.classList.add('closing');
+        if (activeCard === card) {
+          activeCard     = null;
+          activeCardZone = null;
+        }
+        setTimeout(function(){
+          card.remove();
+          createBubble(getFreeZone(fromZoneIdx), nextQ(), 60, true);
+        }, 260);
+      });
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────
+    function init() {
+      var count = getBubbleCount();
+      pool = shuffle(Q.map(function(_,i){ return i; }));
+
+      // Pick initial zones respecting adjacency constraints
+      var allZones = shuffle(ZONES.map(function(_,i){ return i; }));
+      var picked  = [];
+      var blocked = {};
+
+      for (var i = 0; i < allZones.length && picked.length < count; i++) {
+        var zi = allZones[i];
+        if (blocked[zi]) continue;
+        picked.push(zi);
+        blocked[zi] = true;
+        if (ADJ[zi]) ADJ[zi].forEach(function(a) { blocked[a] = true; });
+      }
+
+      picked.forEach(function(zoneIdx, i){
+        createBubble(zoneIdx, nextQ(), 80 + i * 120, false);
+      });
+
+      // Pulse the first visible bubble once after 2s to signal interactivity
+      setTimeout(function() {
+        var first = document.querySelector('#heroBubbles .b-outer.visible');
+        if (!first) first = document.querySelector('#heroBubbles .b-outer');
+        if (first) {
+          first.classList.add('pulse-hint');
+          setTimeout(function() { first.classList.remove('pulse-hint'); }, 1550);
+        }
+      }, 2000);
+    }
+
+    function teardown() {
+      var hero = document.getElementById('hero');
+      hero.querySelectorAll('.b-outer').forEach(function(el){ el.remove(); });
+      if (activeCard) { activeCard.remove(); activeCard = null; }
+      activeCardZone = null;
+      usedZones = [];
+      shownQs   = [];
+      pool      = [];
+    }
+
+    var _resizeCount = getBubbleCount();
+    var _resizeTimer = null;
+    window.addEventListener('resize', function() {
+      clearTimeout(_resizeTimer);
+      _resizeTimer = setTimeout(function() {
+        var newCount = getBubbleCount();
+        if (newCount !== _resizeCount) {
+          _resizeCount = newCount;
+          teardown();
+          init();
+        }
+      }, 350);
+    });
+
+    document.addEventListener('DOMContentLoaded', init);
+  })();
+  </script>
+
+  <!-- Mobile carousel — infinite loop with 2 clones on each end -->
+  <script>
+  (function() {
+    var track = document.getElementById('mobTrack');
+    if (!track || typeof Q === 'undefined') return;
+
+    var CLONE = 2; // clones at each end to enable infinite feel
+
+    function mobShuffle(arr) {
+      var a = arr.slice(), i = a.length, j, t;
+      while (i--) { j = Math.floor(Math.random() * (i + 1)); t = a[i]; a[i] = a[j]; a[j] = t; }
+      return a;
+    }
+    var order = mobShuffle(Q.map(function(_, i) { return i; }));
+    var n = order.length;
+
+    function buildSlide(qi) {
+      var slide = document.createElement('div');
+      slide.className = 'mob-slide';
+
+      var card = document.createElement('div');
+      card.className = 'mob-card';
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', Q[qi].q);
+      card.dataset.qi = qi;
+
+      var qText = document.createElement('p');
+      qText.className = 'mob-q';
+      qText.textContent = '“' + Q[qi].q + '”';
+
+      var hint = document.createElement('span');
+      hint.className = 'mob-hint';
+      hint.textContent = 'Tap for answer';
+
+      var answer = document.createElement('div');
+      answer.className = 'mob-answer';
+
+      var aText = document.createElement('p');
+      aText.className = 'mob-a';
+      aText.textContent = Q[qi].a;
+
+      answer.appendChild(aText);
+      card.appendChild(qText);
+      card.appendChild(hint);
+      card.appendChild(answer);
+      slide.appendChild(card);
+
+      // Close button lives OUTSIDE the card so it can protrude above overflow:hidden
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'mob-close-btn';
+      closeBtn.setAttribute('aria-label', 'Close answer');
+      closeBtn.textContent = '×';
+      slide.appendChild(closeBtn);
+
+      return slide;
+    }
+
+    // Pre-clones: copies of the last CLONE real cards
+    for (var i = n - CLONE; i < n; i++) track.appendChild(buildSlide(order[i]));
+    // Real cards
+    for (var i = 0; i < n; i++)          track.appendChild(buildSlide(order[i]));
+    // Post-clones: copies of the first CLONE real cards
+    for (var i = 0; i < CLONE; i++)      track.appendChild(buildSlide(order[i]));
+
+    var slides = Array.prototype.slice.call(track.querySelectorAll('.mob-slide'));
+    var realStart = CLONE;      // DOM index of first real card
+    var activeIdx = realStart;
+
+    function setActive(idx) {
+      activeIdx = idx;
+      slides.forEach(function(s, i) { s.classList.toggle('mob-active', i === idx); });
+    }
+
+    function scrollToIdx(idx, smooth) {
+      var slide = slides[idx];
+      var target = slide.offsetLeft + slide.offsetWidth / 2 - track.clientWidth / 2;
+      if (smooth) {
+        track.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+      } else {
+        track.style.scrollBehavior = 'auto';
+        track.scrollLeft = Math.max(0, target);
+        track.offsetHeight; // force reflow
+        track.style.scrollBehavior = '';
+      }
+    }
+
+    // Land on first real card instantly
+    scrollToIdx(realStart, false);
+    setActive(realStart);
+
+    // Scroll handler: close answers, track active, loop jump
+    var scrollTimer, jumping = false;
+    track.addEventListener('scroll', function() {
+      track.querySelectorAll('.mob-card.mob-revealed').forEach(function(c) {
+        c.classList.remove('mob-revealed');
+      });
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(function() {
+        // Find nearest centered slide
+        var cx = track.scrollLeft + track.clientWidth / 2;
+        var best = activeIdx, bestDist = Infinity;
+        slides.forEach(function(s, i) {
+          var d = Math.abs(s.offsetLeft + s.offsetWidth / 2 - cx);
+          if (d < bestDist) { bestDist = d; best = i; }
+        });
+        setActive(best);
+
+        // Infinite loop: silently jump from clone to real equivalent
+        if (!jumping && (best < realStart || best >= realStart + n)) {
+          jumping = true;
+          var target = best < realStart ? best + n : best - n;
+          setActive(target);
+          scrollToIdx(target, false);
+          setTimeout(function() { jumping = false; }, 60);
+        }
+      }, 50);
+    }, { passive: true });
+
+    // Click: close-btn, navigate to faded card, or reveal answer
+    track.addEventListener('click', function(e) {
+      if (e.target.closest('.mob-close-btn')) {
+        // Close button is a sibling of .mob-card inside .mob-slide
+        var slide = e.target.closest('.mob-slide');
+        if (slide) slide.querySelector('.mob-card').classList.remove('mob-revealed');
+        return;
+      }
+      var card = e.target.closest('.mob-card');
+      if (!card) return;
+      var slide = card.parentElement;
+
+      // Tap on faded card → navigate to it
+      if (!slide.classList.contains('mob-active')) {
+        var idx = slides.indexOf(slide);
+        if (idx >= 0) scrollToIdx(idx, true);
+        return;
+      }
+
+      // Tap on active card → reveal/hide answer
+      card.classList.toggle('mob-revealed');
+      if (card.classList.contains('mob-revealed')) {
+        var qi = parseInt(card.dataset.qi, 10);
+        if (typeof gtag === 'function') {
+          gtag('event', 'bubble_click', { question_index: qi, question_text: Q[qi].q.substring(0, 100) });
+        }
+      }
+    });
+
+    track.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        var card = e.target.closest('.mob-card');
+        if (card) { e.preventDefault(); card.click(); }
+      }
+    });
+  })();
+  </script>
+
+</body>
+</html>
+

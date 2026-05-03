@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apologies – Game Rules</title>
+  <meta name="description" content="Apologies board game rules." />
+  <style>
+    /* ===== Mobile-first rules page =====
+       - Single column on mobile, TOC becomes sticky sidebar on desktop
+       - Big tap targets, readable line lengths, consistent section layout
+       - Image placeholders (swap with real <img> tags when ready)
+    */
+
+    :root {
+      --bg: #0b0d12;
+      --panel: #0f1420;
+      --surface: #121a2a;
+      --surface-2: #0f1625;
+      --text: #eaf0ff;
+      --muted: #aab6cf;
+      --border: #23324b;
+      --accent: #7bd0ff;
+      --accent-2: #7bffaf;
+      --warn: #ffd27b;
+      --radius: 16px;
+      --shadow: 0 10px 34px rgba(0,0,0,.35);
+      --maxw: 980px;
+
+      --h1: clamp(20px, 4.6vw, 28px);
+      --h2: clamp(18px, 4.1vw, 26px);
+      --h3: clamp(16px, 3.5vw, 20px);
+      --body: 16px;
+      --lh: 1.65;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg:#f6f7fb;
+        --panel:#ffffff;
+        --surface:#ffffff;
+        --surface-2:#fbfcff;
+        --text:#0b1220;
+        --muted:#4b5a73;
+        --border:#e5e7eb;
+        --accent:#0284c7;
+        --accent-2:#059669;
+        --shadow: 0 10px 34px rgba(15, 23, 42, .10);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font: var(--body)/var(--lh) system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial; }
+
+    a { color: var(--accent); }
+
+    .wrap { width:min(var(--maxw), 92vw); margin:0 auto; }
+
+    /* ===== Header ===== */
+    header.site {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: color-mix(in oklab, var(--panel) 86%, transparent);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .bar {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 12px 0;
+    }
+
+    .title {
+      display:flex;
+      align-items:baseline;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .title h1 {
+      margin:0;
+      font-size: var(--h1);
+      letter-spacing: .2px;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    .badge {
+      display:inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #06101a;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      flex: 0 0 auto;
+    }
+
+    .header-actions {
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      text-decoration:none;
+      font-weight: 700;
+      font-size: 14px;
+      cursor:pointer;
+      min-height: 40px; /* tap friendly */
+    }
+
+    .btn:hover { background: color-mix(in oklab, var(--surface-2) 70%, var(--accent) 8%); }
+
+    /* ===== Layout ===== */
+    .layout {
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      padding: 14px 0 22px;
+    }
+
+    @media (min-width: 940px) {
+      .layout {
+        grid-template-columns: 260px 1fr;
+        align-items:start;
+      }
+    }
+
+    /* ===== Cards ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    /* ===== TOC ===== */
+    nav.toc .card { padding: 10px; }
+    nav.toc .card { position: static; }
+
+    @media (min-width: 940px) {
+      nav.toc .card {
+        position: sticky;
+        top: 76px;
+      }
+    }
+
+    .toc h2 {
+      margin: 8px 10px 6px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--muted);
+    }
+
+    .toc a {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      color: var(--text);
+      text-decoration:none;
+      font-weight: 650;
+      font-size: 15px;
+      min-height: 44px; /* tap */
+    }
+
+    .toc a:hover { background: color-mix(in oklab, var(--surface) 85%, var(--accent) 10%); }
+    .toc .hint { color: var(--muted); font-weight: 600; font-size: 12px; }
+
+    /* ===== Article ===== */
+    article.rules { padding: clamp(14px, 2.6vw, 26px); }
+
+    section { scroll-margin-top: 90px; }
+
+    .section-title {
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .section-title h2 { margin:0; font-size: var(--h2); }
+
+    h3 { font-size: var(--h3); margin: 16px 0 8px; }
+    p { margin: 8px 0; }
+
+    .muted { color: var(--muted); }
+
+    .divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+    /* ===== Callouts ===== */
+    .callout {
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      background: color-mix(in oklab, var(--surface) 86%, var(--accent) 10%);
+      border-radius: 14px;
+      padding: 12px;
+      margin: 12px 0;
+    }
+
+    .callout strong { color: color-mix(in oklab, var(--text) 90%, var(--accent) 10%); }
+
+    .callout.warn {
+      border-left-color: var(--warn);
+      background: color-mix(in oklab, var(--surface) 86%, var(--warn) 10%);
+    }
+
+    /* ===== Lists ===== */
+    ul, ol { padding-left: 18px; margin: 8px 0; }
+    li { margin: 8px 0; }
+
+    /* Rules list as numbered chips */
+    .rules-list { list-style:none; padding:0; margin: 10px 0 0; }
+    .rules-list li {
+      display:flex;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: color-mix(in oklab, var(--surface) 92%, var(--accent) 6%);
+    }
+
+    .num {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 900;
+      font-size: 13px;
+      color: #06101a;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+
+    /* ===== Specials grid ===== */
+    .specials {
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 720px) {
+      .specials { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 1040px) {
+      .specials { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .spec {
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      background: color-mix(in oklab, var(--surface) 94%, white 2%);
+    }
+
+    .spec h4 { margin: 0 0 6px; font-size: 16px; }
+
+    .pill {
+      display:inline-block;
+      font-size: 12px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    /* ===== Figures / image placeholders ===== */
+    figure {
+      margin: 12px 0;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: color-mix(in oklab, var(--surface) 92%, white 1%);
+    }
+
+    .placeholder {
+      width:100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: repeating-linear-gradient(45deg,
+        color-mix(in oklab, var(--surface) 88%, black 8%),
+        color-mix(in oklab, var(--surface) 88%, black 8%) 10px,
+        color-mix(in oklab, var(--surface) 96%, black 10%) 10px,
+        color-mix(in oklab, var(--surface) 96%, black 10%) 20px
+      );
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    figcaption { margin-top: 8px; font-size: 13px; color: var(--muted); }
+
+    /* ===== Footer ===== */
+    footer {
+      padding: 26px 0 40px;
+      color: var(--muted);
+      text-align:center;
+    }
+
+    /* ===== Print tweaks (nice bonus) ===== */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  /* --- Page setup --- */
+  @page { margin: 0.5in; } /* adjust: 0.4in if you want tighter */
+  html, body {
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 10.5pt !important; /* smaller */
+    line-height: 1.25 !important; /* tighter */
+  }
+
+  /* --- Hide non-essential UI --- */
+  header, nav, .toc, .header-actions, .btn, .pill, .badge, footer {
+    display: none !important;
+  }
+
+  /* --- Remove “card” styling / shadows / padding --- */
+  .wrap, main, section, article, .card, .panel {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* --- Hide images entirely --- */
+  img, figure, picture, video, .placeholder {
+    display: none !important;
+  }
+
+  /* --- Headings compact --- */
+  h1 { font-size: 16pt !important; margin: 0 0 6pt !important; }
+  h2 { font-size: 12pt !important; margin: 10pt 0 4pt !important; }
+  h3 { font-size: 11pt !important; margin: 8pt 0 3pt !important; }
+  p  { margin: 0 0 6pt !important; }
+
+  /* --- Lists compact --- */
+  ul, ol { margin: 0 0 6pt 14pt !important; padding: 0 !important; }
+  li { margin: 0 0 2pt !important; }
+
+  /* --- Avoid awkward breaks --- */
+  h2, h3 { break-after: avoid; page-break-after: avoid; }
+  li, p { break-inside: avoid; page-break-inside: avoid; }
+
+  /* --- Links: print clean --- */
+  a, a:visited { color: #111 !important; text-decoration: none !important; }
+
+
+  /* Prevent headings splitting across columns */
+  article.rules h2, article.rules h3 { column-span: all; }
+
+  /* If two columns is too aggressive, just comment out the block above. */
+}
+
+
+  .rotate-ccw { transform: rotate(-90deg); transform-origin: center; }
+/* Tap-to-zoom images */
+img.zoomable { cursor: zoom-in; }
+
+/* Fullscreen overlay */
+.zoom-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.82);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 9999;
+}
+.zoom-overlay[aria-hidden="false"] { display: flex; }
+
+.zoom-sheet {
+  width: min(1100px, 96vw);
+  max-height: 92vh;
+  background: color-mix(in oklab, var(--panel) 90%, black 10%);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.zoom-topbar {
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.zoom-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zoom-actions { display:flex; gap: 8px; }
+
+.zoom-actions button {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 800;
+  cursor: pointer;
+  min-height: 40px;
+}
+
+.zoom-actions button:hover {
+  background: color-mix(in oklab, var(--surface-2) 70%, var(--accent) 10%);
+}
+
+.zoom-body {
+  max-height: calc(92vh - 58px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(0,0,0,.12);
+}
+
+.zoom-body img {
+  display:block;
+  max-width: none; /* allow natural large size */
+  width: 100%;
+  height: auto;
+}
+
+.zoom-body .inner {
+  padding: 10px;
+}
+
+.zoom-hint {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 0 12px 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+</style>
+</head>
+<body>
+  <header class="site">
+    <div class="wrap bar">
+      <div class="title">
+        <h1>Apologies Game Rules</h1>
+        <span class="badge">Quick Ref</span>
+      </div>
+      <div class="header-actions">
+        <a class="btn" href="#overview" aria-label="Jump to overview">Top</a>
+        <a class="btn" href="#" onclick="window.print(); return false;">Print</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="layout">
+      <!-- TOC -->
+      <nav class="toc" aria-label="Table of contents">
+        <div class="card">
+          <h2>Contents</h2>
+          <a href="#overview">Overview <span class="hint">what you’re doing</span></a>
+          <a href="#setup">Setup <span class="hint">teams & pegs</span></a>
+          <a href="#gameplay">Gameplay <span class="hint">round flow</span></a>
+          <a href="#rules">Rules <span class="hint">priority list</span></a>
+          <a href="#special-cards">Special Cards <span class="hint">quick abilities</span></a>
+          <a href="#variants">Variants <span class="hint">2 / 3 / 6 players</span></a>
+          <a href="#suggestions">Suggestions <span class="hint">feedback</span></a>
+          <a href="#buyme">Buy Me! <span class="hint">board options</span></a>
+          <a href="#changelog">Change Log <span class="hint">versions</span></a>
+        </div>
+      </nav>
+
+      <!-- Article -->
+      <article class="rules card">
+        <section id="overview">
+          <div class="section-title">
+            <h2>Overview</h2>
+          </div>
+          <p class="muted">Apologies is best played with <strong>4 players</strong> and these rules are written with teams in mind. There are variants below for 2 or 3 players, but if you don’t like how it plays with fewer people, change it. <strong>House rules exist for a reason.</strong></p>
+
+          <p>You play cards to move your pegs in various ways with the goal of getting <strong>all yours</strong> and <strong>your teammate’s</strong> pegs into the finishing spaces.</p>
+
+          <div class="callout">
+            <strong>Goal:</strong> Finish all your pegs, then help finish your teammate’s. When both teammates’ pegs are all finished, you win.
+          </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="setup">
+          <div class="section-title">
+            <h2>Setup</h2>
+          </div>
+          <ul>
+            <li>Split into <strong>two teams</strong>. Teammates sit <strong>opposite</strong> each other around the board.</li>
+            <li>Each player places their pegs in their <strong>starting section</strong> on the board.</li>
+            <li>Choose the starting dealer based on whoever has the <strong>worst breath</strong> (or whatever you feel like /shrug).</li>
+          </ul>
+
+          <figure>
+            <img class="zoomable" data-zoom-title="Full board setup" src="FullBoardSetup.jpg" alt="Full board setup showing all players and start areas" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);" />
+            <figcaption>Full board setup — shows teams, player areas, and the general layout.</figcaption>
+          </figure>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="gameplay">
+          <div class="section-title">
+            <h2>Gameplay</h2>
+          </div>
+
+          <h3>Deal (3 hands per dealer)</h3>
+          <p>Each round begins with the deal. The dealer chooses whether the current hand will be <strong>4</strong> or <strong>5</strong> cards and must deal <strong>two 4‑card hands</strong> and <strong>one 5‑card hand</strong> over three rounds.</p>
+
+          <h3>Card exchange (teammates)</h3>
+          <p>After dealing, teammates exchange <strong>one card face down</strong>.</p>
+
+          <h3>Turn order</h3>
+          <p>The player to the dealer’s left begins. Play proceeds <strong>clockwise</strong>; on your turn, play <strong>exactly one card</strong> if possible.</p>
+
+          <h3>Face value vs special ability</h3>
+          <p>Cards may be played for face value or their special ability. You are <strong>never required</strong> to use the special ability.</p>
+
+          <h3>No legal play</h3>
+          <p>If you have no legal play, discard your hand <strong>face up</strong>. When discarding a full hand, you may move <strong>one peg forward one space</strong>.</p>
+
+          <h3>Next hand / next dealer</h3>
+          <p>When all cards are played or discarded, the next dealer collects them. After three hands, the next dealer shuffles and becomes the dealer.</p>
+
+          <h3>Finished players</h3>
+          <p>When a player finishes all their pegs, they discard remaining cards and play their teammate’s pegs in future rounds.</p>
+
+          <div class="callout warn">
+            <strong>Quick reminder:</strong> You play one card per turn (if you can). If you can’t, discard your whole hand.
+          </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="rules">
+          <div class="section-title">
+            <h2>Rules (Priority Order)</h2>
+          </div>
+          <p class="muted">Rules should be prioritized in sequence. If there is a conflict, follow the higher‑order rule first—or make house rules. It’s just a game.</p>
+
+          <ol class="rules-list">
+            <li><span class="num">1</span><div>Once in your finish, your piece <strong>cannot leave</strong>.</div></li>
+            <li><span class="num">2</span><div>You cannot <strong>pass</strong> pieces in your finish.</div></li>
+            <li><span class="num">3</span><div>If you can play, you <strong>must</strong> (even if you don’t want to).</div></li>
+            <li><span class="num">4</span><div>Simply passing players does nothing unless it is done with a <strong>King</strong>.</div></li>
+            <li><span class="num">5</span><div>If you can’t play you must discard your hand; face up and fanned out so all players can see which cards are no longer available.</div></li>
+            <li><span class="num">6</span><div>If you discard a full hand then you can move <strong>1 piece</strong> forward <strong>1 place</strong> (Start 4 → Start 3, for example).</div></li>
+            <li><span class="num">7</span><div>Once you have all of your pieces in your finish then you discard what’s left of your hand.</div></li>
+            <li><span class="num">8</span><div>If you land on another piece that piece is sent <strong>home</strong>.</div></li>
+            <li><span class="num">9</span><div>You cannot land on your <strong>own</strong> piece. If your only play lands on your own piece, you’re unable to play and must discard your hand.</div></li>
+            <li><span class="num">10</span><div>You can land on your teammate’s pieces. If you do, they are sent back to their start.</div></li>
+            <li><span class="num">11</span><div>When a piece is sent back to start it goes to the <strong>furthest available</strong> starting point (if Start 3 is available it goes there and not to Start 1).</div></li>
+            <li><span class="num">12</span><div>Once your pieces are all in your finish spaces you start playing the same pieces as your teammate.</div></li>
+            <li><span class="num">13</span><div>If both yours and your teammate’s pieces are all in their respective finish spaces then you’ve won the game.</div></li>
+          </ol>
+
+          <figure>
+            <img class="zoomable" data-zoom-title="Numbered start row" src="PlayerOneStarted.jpg" alt="Close-up of a start row with numbered positions and a peg" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);" />
+            <figcaption>Numbered start row example for the “discard → move 1 space” rule.</figcaption>
+          </figure>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="special-cards">
+          <div class="section-title">
+            <h2>Special Cards</h2>
+          </div>
+          <p class="muted">All cards can be played as face value instead of their special abilities below (Ace = 1, Jack = 11, King = 13). The symbols on the board are reminders so you don’t need to ask during the game and give away your hand.</p>
+
+          <figure>
+            <div style="overflow:auto;">
+              <img class="zoomable" data-zoom-title="Board symbols legend" src="BoardSymbols.jpg" alt="Board symbols legend showing special card reminders" loading="lazy" class="rotate-ccw" style="max-width:100%;height:auto;border-radius:12px;border:1px solid var(--border);" />
+            </div>
+            <figcaption>Board symbol reminders for special cards.</figcaption>
+          </figure>
+
+          <div class="specials">
+            <div class="spec">
+              <h4>Ace or King <span class="pill">Leave Start</span></h4>
+              <p>Ace or King can get you out of your start.</p>
+              <p class="muted">Works from any location in the start row (Start 3 → 0, for example).</p>
+            </div>
+            <div class="spec">
+              <h4>4 <span class="pill">Backward</span></h4>
+              <p>4 can go backwards. It’s the <strong>only</strong> way to move backwards.</p>
+            </div>
+            <div class="spec">
+              <h4>7 <span class="pill">Split Move</span></h4>
+              <p>Split your movement across as many of your pieces as you want (move one 2 spaces and another 5). You must still move a total of <strong>7</strong> spaces.</p>
+            </div>
+            <div class="spec">
+              <h4>Jack <span class="pill">Swap</span></h4>
+              <p>Jack can swap your piece with any other player piece.</p>
+            </div>
+            <div class="spec">
+              <h4>King <span class="pill">Pass & Send Home</span></h4>
+              <p>King can also send any opposing player back to their start if you pass them with it.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="variants">
+          <div class="section-title">
+            <h2>Variants</h2>
+          </div>
+
+          <h3>2 Players</h3>
+          <ul>
+            <li>Remove one board.</li>
+            <li>Deal becomes <strong>two hands of 7</strong> and <strong>two hands of 6</strong>.</li>
+          </ul>
+
+          <h3>3 Players</h3>
+          <ul>
+            <li>Ignore one section of play. You can use player 4’s pegs to mark the area off.</li>
+            <li>Place a peg on the <strong>12</strong> at the start of the board and <strong>11</strong> at the midway point.</li>
+            <li>No more teams: <strong>1v1v1</strong>.</li>
+            <li>Deal becomes <strong>two hands of 6</strong> and <strong>one hand of 5</strong>, with <strong>one card leftover</strong> at the end.</li>
+          </ul>
+
+          <figure>
+            <img class="zoomable" data-zoom-title="3-player variant layout" src="3PlayerVariant.jpg" alt="3-player variant layout showing blocked section and markers" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);" />
+            <figcaption>3-player layout — blocked section marked and peg placement at 12 and 11.</figcaption>
+          </figure>
+
+          <h3>6 Players</h3>
+          <ul>
+            <li>If you have a second game, place it in the middle. Movement gets a bit weird:</li>
+            <li>The midpoint <strong>11</strong> on the middle board goes to the <strong>12</strong> on the next board.</li>
+            <li>The <strong>11</strong> on the end board goes to the <strong>12</strong> at the midpoint of the middle board.</li>
+            <li>Do <strong>3 teams of 2</strong>.</li>
+            <li>Use <strong>2 decks</strong>. Deal <strong>two hands of 6</strong> and <strong>one hand of 5</strong> with <strong>two cards leftover</strong> at the end.</li>
+            <li>It actually works okay once everyone understands the odd movement around the middle.</li>
+          </ul>
+
+          <figure>
+            <img class="zoomable" data-zoom-title="6-player variant layout" src="6PlayerVariant.jpg" alt="6-player variant layout with arrows showing movement between boards" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);" />
+            <figcaption>6-player layout — arrows show how movement transitions between boards.</figcaption>
+          </figure>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="suggestions" class="no-print">
+          <div class="section-title">
+            <h2>Suggestions</h2>
+          </div>
+          <p>Any suggestions or problems: email <a href="mailto:printing@jsbg.ca?subject=Apologies%20Suggestions">printing@jsbg.ca</a> and I’ll get back to you.</p>
+          <div class="callout">
+            <strong>Tip:</strong> If you’re emailing about a rule, include a photo of the board state. It makes fixes way faster.
+          </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="shoutouts">
+          <div class="section-title">
+            <h2>Shoutouts</h2>
+          </div>
+          <p class="muted">Special thanks to Taylor for introducing me to the original game (Dashka), Rylie for the new name to go with the revised rules and Jonothan for the wood/resin board with what turned out to be a great layout.</p>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="buyme" class="no-print">
+          <div class="buyme-title">
+            <h2>Buy a Copy!</h2>
+          </div>
+          <p>If you're interested in purchasing another or your own copy of the game check out the <a href="https://jsbg.ca/ApologiesGame/boards">Boards Page</a> to see the existing boards or aim to make one of your very own!</p>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="changelog" class="no-print">
+          <div class="section-title">
+            <h2>Change Log</h2>
+          </div>
+          <ul>
+            <li><strong>V1.1</strong> - Updated email addresses and added link to boards page.</li>
+            <li><strong>V1</strong> – Finalized rules and variants.</li>
+          </ul>
+        </section>
+      </article>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <small>© JSBG • Apologies rules • Built mobile‑first</small>
+    </div>
+  </footer>
+
+  <!-- Tap-to-zoom overlay (single, reused for all images) -->
+  <div class="zoom-overlay" id="zoomOverlay" aria-hidden="true" role="dialog" aria-label="Image viewer">
+    <div class="zoom-sheet" role="document">
+      <div class="zoom-topbar">
+        <div class="zoom-title" id="zoomTitle">Image</div>
+        <div class="zoom-actions">
+          <button type="button" id="zoomCloseBtn" aria-label="Close">Close</button>
+        </div>
+      </div>
+      <div class="zoom-body" id="zoomBody">
+        <div class="inner">
+          <img id="zoomImg" alt="" />
+        </div>
+        <div class="zoom-hint">Tip: pinch to zoom on mobile. Drag/scroll to pan.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Smooth scroll for TOC anchors (nice on mobile)
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const href = a.getAttribute('href');
+        const el = document.querySelector(href);
+        if (el) {
+          e.preventDefault();
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Tap-to-zoom for images
+    const overlay = document.getElementById('zoomOverlay');
+    const zoomImg = document.getElementById('zoomImg');
+    const zoomTitle = document.getElementById('zoomTitle');
+    const closeBtn = document.getElementById('zoomCloseBtn');
+
+    function openZoom(imgEl) {
+      const src = imgEl.getAttribute('src');
+      const alt = imgEl.getAttribute('alt') || '';
+      const title = imgEl.getAttribute('data-zoom-title') || alt || 'Image';
+
+      zoomImg.src = src;
+      zoomImg.alt = alt;
+      zoomTitle.textContent = title;
+
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function closeZoom() {
+      overlay.setAttribute('aria-hidden', 'true');
+      zoomImg.src = '';
+      document.body.style.overflow = '';
+    }
+
+    // Open on tap/click
+    document.querySelectorAll('img.zoomable').forEach(img => {
+      img.addEventListener('click', () => openZoom(img));
+      img.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openZoom(img);
+        }
+      });
+      // Make keyboard-focusable (nice bonus)
+      img.setAttribute('tabindex', '0');
+      img.setAttribute('role', 'button');
+      img.setAttribute('aria-label', (img.getAttribute('alt') || 'Zoom image'));
+    });
+
+    // Close interactions
+    closeBtn.addEventListener('click', closeZoom);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeZoom();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (overlay.getAttribute('aria-hidden') === 'false' && e.key === 'Escape') closeZoom();
+    });
+
+  </script>
+</body>
+</html>

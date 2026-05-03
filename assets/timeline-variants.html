@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Timeline Variants — JSBG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      background: oklch(96% 0.006 240);
+      color: oklch(14% 0.020 240);
+      padding: 48px 32px 80px;
+    }
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: oklch(44% 0.013 240);
+      margin-bottom: 56px;
+    }
+    .variant {
+      background: oklch(98.5% 0.005 240);
+      border-radius: 12px;
+      padding: 40px 48px 48px;
+      margin-bottom: 32px;
+      max-width: 860px;
+    }
+    .variant-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: oklch(52% 0.19 248);
+      margin-bottom: 28px;
+    }
+    .how-h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .how-note {
+      font-size: 1rem;
+      color: oklch(44% 0.013 240);
+      margin-bottom: 40px;
+    }
+
+    /* Shared step text */
+    .t-num  { display: block; font-family: 'Montserrat', sans-serif; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em; color: oklch(52% 0.19 248); margin-bottom: 8px; }
+    .t-title { font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 10px; }
+    .t-body  { font-size: 0.9375rem; line-height: 1.72; color: oklch(44% 0.013 240); }
+
+    /* ─────────────────────────────────────────────
+       A: Numeral anchor — no dot, number IS the node
+    ───────────────────────────────────────────── */
+    .tA { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; position: relative; }
+    .tA-step { position: relative; padding-top: 0; }
+    .tA-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: oklch(52% 0.19 248);
+      color: oklch(98% 0.005 240);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 2;
+    }
+    .tA-track {
+      position: absolute;
+      top: 18px; left: 0; right: 0;
+      height: 1px;
+      background: oklch(14% 0.020 240 / 0.09);
+      z-index: 0;
+    }
+    .tA-step .t-num { display: none; } /* number replaced by circle */
+
+    /* ─────────────────────────────────────────────
+       B: Ghost ring — large faint ring, small filled center
+    ───────────────────────────────────────────── */
+    .tB { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; position: relative; }
+    .tB-step { position: relative; }
+    .tB-dot-wrap { margin-bottom: 18px; display: flex; align-items: center; }
+    .tB-dot {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 1px solid oklch(52% 0.19 248 / 0.3);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 2;
+      flex-shrink: 0;
+    }
+    .tB-dot::after {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: oklch(52% 0.19 248);
+    }
+    .tB-track {
+      position: absolute;
+      top: 11px; left: 0; right: 0;
+      height: 1px;
+      background: oklch(14% 0.020 240 / 0.09);
+      z-index: 0;
+    }
+
+    /* ─────────────────────────────────────────────
+       C: Step bar — thick progress-bar segments, no dot
+    ───────────────────────────────────────────── */
+    .tC { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; }
+    .tC-step { position: relative; }
+    .tC-bar {
+      height: 3px;
+      background: oklch(52% 0.19 248);
+      border-radius: 2px;
+      margin-bottom: 22px;
+      width: calc(100% + 40px);
+    }
+    .tC-step:last-child .tC-bar { width: 100%; }
+
+    /* ─────────────────────────────────────────────
+       D: Diamond node
+    ───────────────────────────────────────────── */
+    .tD { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; position: relative; }
+    .tD-step { position: relative; }
+    .tD-diamond {
+      width: 14px; height: 14px;
+      border: 2px solid oklch(52% 0.19 248);
+      background: oklch(98.5% 0.005 240);
+      transform: rotate(45deg);
+      margin-bottom: 22px;
+      margin-top: 3px;
+      position: relative; z-index: 2;
+    }
+    .tD-track {
+      position: absolute;
+      top: 10px; left: 0; right: 0;
+      height: 1px;
+      background: oklch(14% 0.020 240 / 0.09);
+      z-index: 0;
+    }
+
+    /* ─────────────────────────────────────────────
+       E: Filled square — solid blue square node, clean line
+    ───────────────────────────────────────────── */
+    .tE { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; position: relative; }
+    .tE-step { position: relative; }
+    .tE-sq {
+      width: 10px; height: 10px;
+      background: oklch(52% 0.19 248);
+      border-radius: 2px;
+      margin-bottom: 20px;
+      margin-top: 3px;
+      position: relative; z-index: 2;
+    }
+    .tE-track {
+      position: absolute;
+      top: 8px; left: 0; right: 0;
+      height: 1px;
+      background: oklch(14% 0.020 240 / 0.09);
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Timeline Dot Variants</h1>
+
+<!-- ── A: Filled numeral circle ── -->
+<div class="variant">
+  <p class="variant-label">A — Filled numeral circle</p>
+  <h2 class="how-h2">Same process, every time.</h2>
+  <p class="how-note">Every engagement follows the same structure regardless of the problem type.</p>
+  <div class="tA">
+    <div class="tA-track"></div>
+
+    <div class="tA-step">
+      <div class="tA-num">01</div>
+      <h3 class="t-title">Understand the situation</h3>
+      <p class="t-body">A close look at what's actually there: your data, your processes, your team's specific needs, before any solution gets proposed.</p>
+    </div>
+    <div class="tA-step">
+      <div class="tA-num">02</div>
+      <h3 class="t-title">Build what fits</h3>
+      <p class="t-body">The solution is designed around your specific situation. Not more complex than it needs to be, and not something that requires a specialist to keep running.</p>
+    </div>
+    <div class="tA-step">
+      <div class="tA-num">03</div>
+      <h3 class="t-title">Hand it over</h3>
+      <p class="t-body">Full documentation, training, and a system you can run independently. No ongoing fees or required involvement.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── B: Ghost ring + filled center ── -->
+<div class="variant">
+  <p class="variant-label">B — Ghost ring with filled center</p>
+  <h2 class="how-h2">Same process, every time.</h2>
+  <p class="how-note">Every engagement follows the same structure regardless of the problem type.</p>
+  <div class="tB">
+    <div class="tB-track"></div>
+
+    <div class="tB-step">
+      <div class="tB-dot-wrap"><div class="tB-dot"></div></div>
+      <span class="t-num">01</span>
+      <h3 class="t-title">Understand the situation</h3>
+      <p class="t-body">A close look at what's actually there: your data, your processes, your team's specific needs, before any solution gets proposed.</p>
+    </div>
+    <div class="tB-step">
+      <div class="tB-dot-wrap"><div class="tB-dot"></div></div>
+      <span class="t-num">02</span>
+      <h3 class="t-title">Build what fits</h3>
+      <p class="t-body">The solution is designed around your specific situation. Not more complex than it needs to be, and not something that requires a specialist to keep running.</p>
+    </div>
+    <div class="tB-step">
+      <div class="tB-dot-wrap"><div class="tB-dot"></div></div>
+      <span class="t-num">03</span>
+      <h3 class="t-title">Hand it over</h3>
+      <p class="t-body">Full documentation, training, and a system you can run independently. No ongoing fees or required involvement.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── C: Continuous bar ── -->
+<div class="variant">
+  <p class="variant-label">C — Continuous bar (no dot)</p>
+  <h2 class="how-h2">Same process, every time.</h2>
+  <p class="how-note">Every engagement follows the same structure regardless of the problem type.</p>
+  <div class="tC">
+    <div class="tC-step">
+      <div class="tC-bar"></div>
+      <span class="t-num">01</span>
+      <h3 class="t-title">Understand the situation</h3>
+      <p class="t-body">A close look at what's actually there: your data, your processes, your team's specific needs, before any solution gets proposed.</p>
+    </div>
+    <div class="tC-step">
+      <div class="tC-bar"></div>
+      <span class="t-num">02</span>
+      <h3 class="t-title">Build what fits</h3>
+      <p class="t-body">The solution is designed around your specific situation. Not more complex than it needs to be, and not something that requires a specialist to keep running.</p>
+    </div>
+    <div class="tC-step">
+      <div class="tC-bar"></div>
+      <span class="t-num">03</span>
+      <h3 class="t-title">Hand it over</h3>
+      <p class="t-body">Full documentation, training, and a system you can run independently. No ongoing fees or required involvement.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── D: Diamond node ── -->
+<div class="variant">
+  <p class="variant-label">D — Diamond node</p>
+  <h2 class="how-h2">Same process, every time.</h2>
+  <p class="how-note">Every engagement follows the same structure regardless of the problem type.</p>
+  <div class="tD">
+    <div class="tD-track"></div>
+
+    <div class="tD-step">
+      <div class="tD-diamond"></div>
+      <span class="t-num">01</span>
+      <h3 class="t-title">Understand the situation</h3>
+      <p class="t-body">A close look at what's actually there: your data, your processes, your team's specific needs, before any solution gets proposed.</p>
+    </div>
+    <div class="tD-step">
+      <div class="tD-diamond"></div>
+      <span class="t-num">02</span>
+      <h3 class="t-title">Build what fits</h3>
+      <p class="t-body">The solution is designed around your specific situation. Not more complex than it needs to be, and not something that requires a specialist to keep running.</p>
+    </div>
+    <div class="tD-step">
+      <div class="tD-diamond"></div>
+      <span class="t-num">03</span>
+      <h3 class="t-title">Hand it over</h3>
+      <p class="t-body">Full documentation, training, and a system you can run independently. No ongoing fees or required involvement.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── E: Solid square ── -->
+<div class="variant">
+  <p class="variant-label">E — Solid square node</p>
+  <h2 class="how-h2">Same process, every time.</h2>
+  <p class="how-note">Every engagement follows the same structure regardless of the problem type.</p>
+  <div class="tE">
+    <div class="tE-track"></div>
+
+    <div class="tE-step">
+      <div class="tE-sq"></div>
+      <span class="t-num">01</span>
+      <h3 class="t-title">Understand the situation</h3>
+      <p class="t-body">A close look at what's actually there: your data, your processes, your team's specific needs, before any solution gets proposed.</p>
+    </div>
+    <div class="tE-step">
+      <div class="tE-sq"></div>
+      <span class="t-num">02</span>
+      <h3 class="t-title">Build what fits</h3>
+      <p class="t-body">The solution is designed around your specific situation. Not more complex than it needs to be, and not something that requires a specialist to keep running.</p>
+    </div>
+    <div class="tE-step">
+      <div class="tE-sq"></div>
+      <span class="t-num">03</span>
+      <h3 class="t-title">Hand it over</h3>
+      <p class="t-body">Full documentation, training, and a system you can run independently. No ongoing fees or required involvement.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
