@@ -142,22 +142,22 @@
   <div id="content">Loading rules...</div>
 
   <script>
-    fetch('index.html')
-      .then(response => response.text())
+    fetch('/printing/products/apologies-game/rules/index.html')
+      .then(response => {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.text();
+      })
       .then(html => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
         const article = doc.querySelector('article.rules');
-        
-        // Remove images and figures explicitly
+        if (!article) throw new Error('Rules article not found in fetched page');
         article.querySelectorAll('figure, img').forEach(el => el.remove());
-        // Remove .no-print elements
         article.querySelectorAll('.no-print').forEach(el => el.remove());
-        
         document.getElementById('content').innerHTML = article.innerHTML;
       })
       .catch(err => {
-        document.getElementById('content').innerHTML = '<p>Error loading rules. Please check your connection.</p>';
+        document.getElementById('content').innerHTML = '<p>Error loading rules: ' + err.message + '</p>';
       });
   </script>
 </body>
