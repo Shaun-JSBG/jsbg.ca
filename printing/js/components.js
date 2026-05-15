@@ -11,19 +11,19 @@
 
   define('jsbg-header', function (el) {
     var p = window.location.pathname;
-    var shopActive = p === '/products.html' || p.startsWith('/products/');
-    var customActive = p === '/custom.html';
-    var faqActive = p === '/faq.html';
+    var shopActive = p === '/printing/products.html' || p.startsWith('/printing/products/');
+    var customActive = p === '/printing/custom.html';
+    var faqActive = p === '/printing/faq.html';
     el.innerHTML = `
       <header class="site-header">
-        <a href="/" class="brand">
-          <img src="/images/site/icon-noBG.png" alt="JSBG Bulb Logo" class="header-icon" />
+        <a href="/printing/" class="brand">
+          <img src="/printing/images/site/icon-noBG.png" alt="JSBG Bulb Logo" class="header-icon" />
           JSBG Printing
         </a>
         <nav class="nav-links">
-          <a href="/products.html"${shopActive ? ' class="nav-active"' : ''}>Shop Collection</a>
-          <a href="/custom.html"${customActive ? ' class="nav-active"' : ''}>Custom Prints</a>
-          <a href="/faq.html"${faqActive ? ' class="nav-active"' : ''}>FAQ</a>
+          <a href="/printing/products.html"${shopActive ? ' class="nav-active"' : ''}>Shop Collection</a>
+          <a href="/printing/custom.html"${customActive ? ' class="nav-active"' : ''}>Custom Prints</a>
+          <a href="/printing/faq.html"${faqActive ? ' class="nav-active"' : ''}>FAQ</a>
           <a href="mailto:printing@jsbg.ca">Contact</a>
         </nav>
       </header>`;
