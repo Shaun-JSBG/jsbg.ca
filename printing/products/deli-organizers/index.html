@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deli Container Organizers | JSBG 3D Printing</title>
+  <meta name="description" content="3D printed deli container organizers — tabletop and wall-mounted variants with multiple color options." />
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <style>
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+
+    .page-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 3rem 0 1rem;
+      color: var(--on-surface);
+      text-shadow: 2px 2px 0px var(--true-black);
+    }
+
+    .intro-text {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gallery-layout {
+      display: grid;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (min-width: 920px) {
+      .gallery-layout { grid-template-columns: 1.2fr 1fr; align-items: start; }
+    }
+
+    .stage {
+      padding: 1rem;
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      background-color: var(--surface);
+      box-shadow: var(--hard-shadow);
+    }
+
+    .stage-media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--rounded-sm);
+      border: var(--border-bold);
+      background-color: var(--secondary-container);
+      overflow: hidden;
+    }
+
+    .stage-media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: zoom-in;
+    }
+
+    .thumbs-group {
+      padding: 1.5rem;
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      background-color: var(--secondary-container);
+      box-shadow: var(--hard-shadow);
+    }
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 10px;
+      list-style: none;
+      margin-top: 1rem;
+    }
+
+    .thumb {
+      border: var(--border-bold);
+      border-radius: var(--rounded-sm);
+      overflow: hidden;
+      background: var(--surface);
+      transition: transform 0.2s;
+    }
+
+    .thumb:hover { transform: translate(-2px, -2px); }
+
+    .thumb button {
+      width: 100%;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      display: block;
+    }
+
+    .thumb img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb[aria-current="true"] {
+      outline: 4px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .info-section {
+      background-color: var(--surface);
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      box-shadow: var(--hard-shadow);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-section h2, .info-section h3 {
+      font-weight: 800;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .info-section ul { margin-left: 1.5rem; margin-bottom: 1.5rem; font-weight: 500; }
+    .info-section li { margin-bottom: 0.5rem; }
+
+    .price-callout {
+      background-color: var(--primary);
+      color: var(--on-primary);
+      padding: 1.5rem;
+      border-radius: var(--rounded-md);
+      border: var(--border-bold);
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: var(--hard-shadow-sm);
+    }
+
+    .warn-callout {
+      background-color: var(--secondary-container);
+      color: var(--on-surface);
+      padding: 1.5rem;
+      border-radius: var(--rounded-md);
+      border: var(--border-bold);
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    .variant-grid { display: grid; gap: 1.5rem; margin-bottom: 2rem; }
+    @media (min-width: 640px) { .variant-grid { grid-template-columns: 1fr 1fr; } }
+
+    .variant-card { border: var(--border-bold); border-radius: var(--rounded-md); box-shadow: var(--hard-shadow-sm); overflow: hidden; }
+    .variant-card-header { padding: 0.75rem 1.25rem; font-family: var(--font-display); font-weight: 800; font-size: 1rem; text-transform: uppercase; border-bottom: var(--border-bold); }
+    .variant-card-body { padding: 1.25rem; font-weight: 600; font-size: 0.95rem; }
+
+    .price-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .price-table th, .price-table td { border: var(--border-bold); padding: 0.65rem 1rem; text-align: center; font-weight: 700; }
+    .price-table th { background-color: var(--tertiary-container); font-family: var(--font-label); text-transform: uppercase; font-size: 0.85rem; }
+    .price-table tr:nth-child(even) td { background-color: var(--surface-container); }
+
+  </style>
+  <script src="js/components.js"></script>
+</head>
+<body>
+
+  <jsbg-banner></jsbg-banner>
+
+  <jsbg-header></jsbg-header>
+
+  <main>
+    <div class="wrap">
+      <p class="breadcrumb"><a href="products.html">Shop Collection</a> / Deli Container Organizers</p>
+      <h1 class="page-title">Deli Container Organizers</h1>
+      <p class="intro-text">Keep your deli containers in order — two variants to fit your space, with vibrant color options to match your style.</p>
+
+      <div class="hero-actions" style="margin-bottom: 3rem;">
+        <a href="mailto:printing@jsbg.ca?subject=Deli%20Container%20Organizer%20Order&body=Variant%3A%20%5BTabletop%20%2F%20Wall%20Mounted%5D%0AQuantity%3A%20%0AColor%20preference%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" class="btn btn-primary">Email to Order</a>
+        <a href="products.html" class="btn btn-secondary">Back to Collection</a>
+      </div>
+
+      <div class="gallery-layout">
+        <div class="stage">
+          <div class="stage-media">
+            <img id="stageImg" tabindex="0" role="button"
+              src="images/deli-organizers/Hoders_With_Containers.jpg"
+              alt="Organizers loaded with deli containers" loading="lazy" />
+          </div>
+          <p id="stageCaption" style="font-weight: 900; margin-top: 1rem; font-size: 1.25rem;">With Containers — Tap to zoom.</p>
+          <p id="stageDesc" style="font-weight: 600;">The organizers loaded up with deli containers.</p>
+        </div>
+
+        <div class="thumbs-group">
+          <h2 style="font-weight: 800; font-family: var(--font-display); text-transform: uppercase; border-bottom: var(--border-bold); padding-bottom: 0.5rem;">Photos</h2>
+          <p style="font-size: 0.9rem; font-weight: 700; margin-top: 0.5rem;">Tap a thumbnail to update the main image</p>
+          <ul class="thumbs" id="thumbs">
+            <li class="thumb" aria-current="true"
+              data-src="images/deli-organizers/Hoders_With_Containers.jpg"
+              data-title="With Containers"
+              data-alt="Organizers loaded with deli containers"
+              data-desc="The organizers loaded up with deli containers.">
+              <button type="button" aria-label="Show with containers photo">
+                <img src="images/deli-organizers/Hoders_With_Containers.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/deli-organizers/Empty_Organizers.jpg"
+              data-title="Empty Organizers"
+              data-alt="Empty organizers on their own"
+              data-desc="The organizers on their own, showing the structure.">
+              <button type="button" aria-label="Show empty organizers photo">
+                <img src="images/deli-organizers/Empty_Organizers.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/deli-organizers/Filled_in_Cupboard.jpg"
+              data-title="In the Cupboard"
+              data-alt="Organizers installed and filled in a cupboard"
+              data-desc="Installed in a cupboard — showing how they look in a real space.">
+              <button type="button" aria-label="Show in-cupboard photo">
+                <img src="images/deli-organizers/Filled_in_Cupboard.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/deli-organizers/Dimensions.png"
+              data-title="Container Dimensions"
+              data-alt="Dimensions reference for compatible deli containers"
+              data-desc="Container size reference — shows the deli container dimensions this organizer is designed to fit.">
+              <button type="button" aria-label="Show dimensions reference">
+                <img src="images/deli-organizers/Dimensions.png" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/deli-organizers/Wall_Loaded.jpg"
+              data-title="Wall Mounted — loaded"
+              data-alt="Wall-mounted organizer loaded with deli containers"
+              data-desc="The wall-mounted variant loaded up with containers — showing how it looks installed on a wall.">
+              <button type="button" aria-label="Show wall mounted loaded photo">
+                <img src="images/deli-organizers/Wall_Loaded.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/deli-organizers/Wall_Empty.jpg"
+              data-title="Wall Mounted — empty"
+              data-alt="Empty wall-mounted organizer on a wall"
+              data-desc="The wall-mounted variant empty, showing how it sits on the wall.">
+              <button type="button" aria-label="Show wall mounted empty photo">
+                <img src="images/deli-organizers/Wall_Empty.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/deli-organizers/Connector.jpg"
+              data-title="Connector Detail"
+              data-alt="Close-up of the organizer connector"
+              data-desc="A closer look at how the organizer connects and locks together.">
+              <button type="button" aria-label="Show connector detail photo">
+                <img src="images/deli-organizers/Connector.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>About This Product</h2>
+        <ul>
+          <li>Designed to fit the standard round deli containers commonly available on Amazon — see the dimensions reference in the gallery above for container compatibility.</li>
+          <li>Keeps your containers sorted and upright instead of rattling around in a drawer or toppling out of a cupboard.</li>
+          <li>Available in tabletop and wall-mounted variants — works on a counter, pantry shelf, or mounted to the wall to save space.</li>
+          <li>The wall mounted variant will have limitations on how many containers it can hold. I tested one with 15 of the large containers and it held just fine for a week but ymmv.</li>
+          <li>Quantity discounts available — the more you order, the better the per-unit price.</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <h2>Available Variants</h2>
+        <div class="variant-grid">
+          <div class="variant-card">
+            <div class="variant-card-header" style="background-color: var(--tertiary-container);">Tabletop</div>
+            <div class="variant-card-body">Sits flat on a counter or shelf. Great for pantry or cupboard organization.</div>
+          </div>
+          <div class="variant-card">
+            <div class="variant-card-header" style="background-color: var(--primary-container);">Wall Mounted</div>
+            <div class="variant-card-body">Mounts to the wall to free up counter space. 3M mounting strips included.</div>
+          </div>
+        </div>
+        <p style="font-weight: 600;">Both variants are the same price. Let me know which you'd like when ordering.</p>
+      </div>
+
+      <div class="info-section">
+        <h2>Pricing</h2>
+        <div class="price-callout">Quantity discounts available!</div>
+        <table class="price-table">
+          <thead>
+            <tr><th>Quantity</th><th>Price</th><th>Per Unit</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>$20</td><td>$20.00</td></tr>
+            <tr><td>2</td><td>$36</td><td>$18.00</td></tr>
+            <tr><td>3</td><td>$45</td><td>$15.00</td></tr>
+            <tr><td>4</td><td>$50</td><td>$12.50</td></tr>
+          </tbody>
+        </table>
+        <p style="font-weight: 700; font-size: 1.25rem; text-align: center; margin-top: 2rem;">
+          To order, email <a href="mailto:printing@jsbg.ca?subject=Deli%20Container%20Organizer%20Order&body=Variant%3A%20%5BTabletop%20%2F%20Wall%20Mounted%5D%0AQuantity%3A%20%0AColor%20preference%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 3px;">printing@jsbg.ca</a>.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2>Color Options</h2>
+        <ul>
+          <li>Multiple color options available — ask and I'll let you know what's in stock.</li>
+          <li>Specify your preferred color(s) when ordering.</li>
+        </ul>
+        <div class="warn-callout"><strong>Need more than 4?</strong> Reach out and I'll work something out for larger quantities.</div>
+      </div>
+
+      <jsbg-quality-notice></jsbg-quality-notice>
+    </div>
+  </main>
+
+  <jsbg-footer></jsbg-footer>
+
+  <script src="js/zoom.js"></script>
+  <script>
+    const stageImg = document.getElementById('stageImg');
+    const stageCaption = document.getElementById('stageCaption');
+    const stageDesc = document.getElementById('stageDesc');
+    const thumbs = Array.from(document.querySelectorAll('.thumb'));
+    const thumbData = thumbs.map(t => ({ src: t.dataset.src, alt: t.dataset.alt || '', title: t.dataset.title || 'Photo', desc: t.dataset.desc || '' }));
+    let currentStageIndex = 0;
+
+    thumbs.forEach((t, i) => {
+      t.querySelector('button').addEventListener('click', () => {
+        currentStageIndex = i;
+        const d = thumbData[i];
+        stageImg.src = d.src; stageImg.alt = d.alt;
+        stageCaption.textContent = d.title + ' — Tap to zoom.';
+        stageDesc.innerHTML = d.desc;
+        thumbs.forEach((th, j) => th.setAttribute('aria-current', j === i ? 'true' : 'false'));
+      });
+    });
+
+    const openZoom = initZoom(thumbData);
+
+    stageImg.addEventListener('click', () => openZoom(currentStageIndex));
+    stageImg.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openZoom(currentStageIndex); } });
+  </script>
+</body>
+</html>

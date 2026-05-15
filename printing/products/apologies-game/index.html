@@ -1,0 +1,370 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apologies Game | JSBG 3D Printing</title>
+  <meta name="description" content="Apologies travel cribbage boards — styles, photos, pricing, and ordering." />
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <style>
+    /* ===== Gallery & Specific Component Styles ===== */
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 5%;
+    }
+    
+    .page-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 3rem 0 1rem;
+      color: var(--on-surface);
+      text-shadow: 2px 2px 0px var(--true-black);
+    }
+    
+    .intro-text {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gallery-layout {
+      display: grid;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (min-width: 920px) {
+      .gallery-layout {
+        grid-template-columns: 1.2fr 1fr;
+        align-items: start;
+      }
+    }
+
+    .stage {
+      padding: 1rem;
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      background-color: var(--surface);
+      box-shadow: var(--hard-shadow);
+    }
+
+    .stage-media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--rounded-sm);
+      border: var(--border-bold);
+      background-color: var(--tertiary-container);
+      overflow: hidden;
+    }
+
+    .stage-media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background-color: var(--surface);
+    }
+
+    .thumbs-group {
+      padding: 1.5rem;
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      background-color: var(--secondary-container);
+      box-shadow: var(--hard-shadow);
+    }
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      gap: 10px;
+      list-style: none;
+      margin-top: 1rem;
+    }
+
+    .thumb {
+      border: var(--border-bold);
+      border-radius: var(--rounded-sm);
+      overflow: hidden;
+      background: var(--surface);
+      transition: transform 0.2s;
+    }
+
+    .thumb:hover {
+      transform: translate(-2px, -2px);
+    }
+
+    .thumb button {
+      width: 100%;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      display: block;
+    }
+
+    .thumb img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb[aria-current="true"] {
+      outline: 4px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .info-section {
+      background-color: var(--surface);
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      box-shadow: var(--hard-shadow);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-section h2, .info-section h3 {
+      font-weight: 800;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .info-section ul {
+      margin-left: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+    
+    .info-section li {
+      margin-bottom: 0.5rem;
+    }
+
+    .price-callout {
+      background-color: var(--primary);
+      color: var(--on-primary);
+      padding: 1.5rem;
+      border-radius: var(--rounded-md);
+      border: var(--border-bold);
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: var(--hard-shadow-sm);
+    }
+    
+    .warn-callout {
+      background-color: var(--secondary-container);
+      color: var(--on-surface);
+      padding: 1.5rem;
+      border-radius: var(--rounded-md);
+      border: var(--border-bold);
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    /* Tap-to-zoom */
+    img.zoomable { cursor: zoom-in; }
+
+  </style>
+  <script src="js/components.js"></script>
+</head>
+<body>
+
+  <jsbg-banner></jsbg-banner>
+  <jsbg-header></jsbg-header>
+
+  <main>
+    <div class="wrap">
+      <p class="breadcrumb"><a href="products.html">Shop Collection</a> / The Apologies Game</p>
+      <h1 class="page-title">Apologies</h1>
+      <p class="intro-text">When Sorry Isn't Enough</p>
+      
+      <div class="hero-actions" style="margin-bottom: 3rem;">
+        <a href="products/apologies-game/rules/index.html" class="btn btn-secondary">View Game Rules</a>
+        <a href="mailto:printing@jsbg.ca?subject=Apologies%20Board%20Order&body=Style%20%2F%20color%20preference%3A%20%0AQuantity%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" class="btn btn-primary">Email to Order</a>
+        <a href="products.html" class="btn btn-secondary">Back to Collection</a>
+      </div>
+
+      <div class="gallery-layout">
+        <!-- Main Image Stage -->
+        <div class="stage">
+          <div class="stage-media">
+            <img id="stageImg" class="zoomable" data-zoom-title="All board options" src="images/apologies-game/AllBoards.jpg" alt="All board options shown together" loading="lazy" />
+          </div>
+          <p id="stageCaption" style="font-weight: 900; margin-top: 1rem; font-size: 1.25rem;">All board options — Tap to zoom.</p>
+          <p id="stageDesc" style="font-weight: 600;">A quick look at the different styles available.</p>
+        </div>
+
+        <!-- Thumbnails -->
+        <div class="thumbs-group">
+          <h2 style="font-weight: 800; font-family: var(--font-display); text-transform: uppercase; border-bottom: var(--border-bold); padding-bottom: 0.5rem;">Photos</h2>
+          <p style="font-size: 0.9rem; font-weight: 700; margin-top: 0.5rem;">Tap thumbnail to update main image</p>
+          
+          <ul class="thumbs" id="thumbs">
+            <!-- All boards -->
+            <li class="thumb" aria-current="true" data-src="images/apologies-game/AllBoards.jpg" data-title="All board options" data-alt="All board options shown together" data-desc="A quick look at the different styles available.">
+              <button type="button" aria-label="Show All Boards photo"><img src="images/apologies-game/AllBoards.jpg" alt="" loading="lazy" /></button>
+            </li>
+            
+            <!-- Classic -->
+            <li class="thumb" data-src="images/apologies-game/Classic_FullBoard.jpg" data-title="Classic – full board" data-alt="Classic board shown fully assembled" data-desc="Designed with the OG Sorry! board in mind for the color choices.">
+              <button type="button" aria-label="Show Classic full board"><img src="images/apologies-game/Classic_FullBoard.jpg" alt="" loading="lazy" /></button>
+            </li>
+            <li class="thumb" data-src="images/apologies-game/Classic_AngleView1.jpg" data-title="Classic – angle view" data-alt="Classic board angled view" data-desc="Designed with the OG Sorry! board in mind for the color choices.">
+              <button type="button" aria-label="Show Classic angle view"><img src="images/apologies-game/Classic_AngleView1.jpg" alt="" loading="lazy" /></button>
+            </li>
+
+            <!-- Christmas -->
+            <li class="thumb" data-src="images/apologies-game/Christmas_FullBoard.jpg" data-title="Christmas – full board" data-alt="Christmas themed board shown fully" data-desc="A Christmas inspired board with marble snow, brown pathing, and gold/silver.">
+              <button type="button" aria-label="Show Christmas full board"><img src="images/apologies-game/Christmas_FullBoard.jpg" alt="" loading="lazy" /></button>
+            </li>
+            <li class="thumb" data-src="images/apologies-game/Christmas_AngleView1.jpg" data-title="Christmas – angle view" data-alt="Christmas themed board angled view" data-desc="A Christmas inspired board with marble snow, brown pathing, and gold/silver.">
+              <button type="button" aria-label="Show Christmas angle view"><img src="images/apologies-game/Christmas_AngleView1.jpg" alt="" loading="lazy" /></button>
+            </li>
+            <li class="thumb" data-src="images/apologies-game/Christmas_Back.jpg" data-title="Christmas – back" data-alt="Back side of Christmas themed board" data-desc="A Christmas inspired board with marble snow, brown pathing, and gold/silver.">
+              <button type="button" aria-label="Show Christmas back"><img src="images/apologies-game/Christmas_Back.jpg" alt="" loading="lazy" /></button>
+            </li>
+
+            <!-- ColorBlind -->
+            <li class="thumb" data-src="images/apologies-game/CB_FullBoard.jpg" data-title="ColorBlind – full board" data-alt="Board shown fully assembled" data-desc="Designed with colorblindness taken into account using the Coblis simulator.">
+              <button type="button" aria-label="Show CB full board"><img src="images/apologies-game/CB_FullBoard.jpg" alt="" loading="lazy" /></button>
+            </li>
+            <li class="thumb" data-src="images/apologies-game/CB_AngleView1.jpg" data-title="ColorBlind – angle view" data-alt="Board angled view" data-desc="Designed with colorblindness taken into account using the Coblis simulator.">
+              <button type="button" aria-label="Show CB angle view"><img src="images/apologies-game/CB_AngleView1.jpg" alt="" loading="lazy" /></button>
+            </li>
+            <li class="thumb" data-src="images/apologies-game/CB_Back.jpg" data-title="ColorBlind – back" data-alt="Back side of board showing Apologies text" data-desc="Designed with colorblindness taken into account using the Coblis simulator.">
+              <button type="button" aria-label="Show CB back"><img src="images/apologies-game/CB_Back.jpg" alt="" loading="lazy" /></button>
+            </li>
+
+            <!-- Galaxy -->
+            <li class="thumb" data-src="images/apologies-game/Galaxy_FullBoard.jpg" data-title="Galaxy – full board" data-alt="Galaxy themed board shown fully" data-desc="Cool premium filament with a galaxy theme.">
+              <button type="button" aria-label="Show Galaxy full board"><img src="images/apologies-game/Galaxy_FullBoard.jpg" alt="" loading="lazy" /></button>
+            </li>
+            <li class="thumb" data-src="images/apologies-game/Galaxy_AngleView1.jpg" data-title="Galaxy – angle view" data-alt="Galaxy themed board angled view" data-desc="Cool premium filament with a galaxy theme.">
+              <button type="button" aria-label="Show Galaxy angle view"><img src="images/apologies-game/Galaxy_AngleView1.jpg" alt="" loading="lazy" /></button>
+            </li>
+            <li class="thumb" data-src="images/apologies-game/Galaxy_Back.jpg" data-title="Galaxy – back" data-alt="Back side of galaxy themed board" data-desc="Cool premium filament with a galaxy theme.">
+              <button type="button" aria-label="Show Galaxy back"><img src="images/apologies-game/Galaxy_Back.jpg" alt="" loading="lazy" /></button>
+            </li>
+
+            <!-- Neon -->
+            <li class="thumb" data-src="images/apologies-game/Neon_FullBoard.jpg" data-title="Neon – full board" data-alt="Neon board shown fully" data-desc="Glows in black light! Made with fluorescent filament.">
+              <button type="button" aria-label="Show Neon full board"><img src="images/apologies-game/Neon_FullBoard.jpg" alt="" loading="lazy" /></button>
+            </li>
+            <li class="thumb" data-src="images/apologies-game/Neon_AngleView1.jpg" data-title="Neon – angle view" data-alt="Neon board angled view" data-desc="Glows in black light! Made with fluorescent filament.">
+              <button type="button" aria-label="Show Neon angle view"><img src="images/apologies-game/Neon_AngleView1.jpg" alt="" loading="lazy" /></button>
+            </li>
+
+            <!-- Pastel -->
+            <li class="thumb" data-src="images/apologies-game/Pastel_FullBoard_Clipped.jpg" data-title="Pastel – full board" data-alt="Pastel board shown fully" data-desc="Very nice pastel themed board.">
+              <button type="button" aria-label="Show Pastel full board"><img src="images/apologies-game/Pastel_FullBoard_Clipped.jpg" alt="" loading="lazy" /></button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Information Section -->
+      <div class="info-section">
+        <h2>About This Product</h2>
+        <p style="font-weight: 500; line-height: 1.7; margin-bottom: 1.25rem;">Apologies is a card-and-peg board game for 4 players — built around teams of two, but tactical enough to keep everyone on their toes. You and your teammate work together to move all your pegs, and then all of theirs, into the finish spaces before the other team does.</p>
+        <p style="font-weight: 500; line-height: 1.7; margin-bottom: 1.25rem;">Each round, hands of cards are dealt and teammates secretly exchange one card before play begins. On your turn you must play a card if you legally can — most cards simply move you forward by their face value. A handful carry special abilities you can choose to use instead: a 4 can move you backwards, a 7 lets you split movement across multiple pegs, a Jack swaps your peg with anyone else's on the board, a King can pass opponents and send them home. The strategy often comes down to whether using the special ability helps or hurts — and sometimes when the face value isn't a legal move, you're forced into the ability whether you want it or not.</p>
+        <p style="font-weight: 500; line-height: 1.7; margin-bottom: 1.5rem;">The catch: you have to play if you can. If your teammate is 5 spaces ahead and a 5 is your only legal move, you're sending them back to start. Friendly fire isn't a choice — it's just part of the game.</p>
+        <ul>
+          <li>Suitable for players 8 and up — more relaxed with younger players, much more intense when everyone's thinking strategically.</li>
+          <li>Variants available for 2, 3, and 6 players, plus a Battle Royale mode where every player is on their own.</li>
+          <li>Travel-sized with a built-in storage compartment on the underside, so pegs and cards stay together between games.</li>
+          <li>No paper rulebook — two QR codes printed directly on the board link to the <a href="products/apologies-game/rules/" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 2px;">rules page</a>.</li>
+          <li>Available in several color themes, with fully custom color options on request.</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <h2>Price & Ordering</h2>
+        
+        <div class="price-callout">
+          $60 per game (includes board, pegs, and cards).
+        </div>
+        
+        <p style="font-weight: 700; font-size: 1.25rem; text-align: center; margin-bottom: 2rem;">
+          To order, email <a href="mailto:printing@jsbg.ca?subject=Apologies%20Board%20Order&body=Style%20%2F%20color%20preference%3A%20%0AQuantity%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 3px;">printing@jsbg.ca</a>.
+        </p>
+
+        <div class="warn-callout">
+          <strong>Customization:</strong> custom board decorations and color choices are possible, but the price may increase. Reach out and I'll work out the details. Maximum <strong>4 colors per side</strong>.
+        </div>
+
+        <h3>What you get</h3>
+        <ul>
+          <li>Travel-sized game with built-in storage.</li>
+          <li>6 pegs for each player (extra 2 of each in case they get lost).</li>
+          <li>Standard deck of cards.</li>
+          <li>There are no physical game rules included. There are 2 QR codes on the boards that you can scan that will take you to the <a href="products/apologies-game/rules/index.html">rules page</a>.</li>
+        </ul>
+
+        <h3 style="margin-top: 2rem;">Factory Seconds</h3>
+        <ul>
+          <li>I have "factory second" boards that I'm unwilling to sell as pristine. They still function fine but with slight imperfections. If you're interested, they're $20 a set to recoup some material costs. They may or may not match.</li>
+        </ul>
+      </div>
+      <jsbg-quality-notice></jsbg-quality-notice>
+    </div>
+  </main>
+
+  <jsbg-footer></jsbg-footer>
+
+  <!-- Tap-to-zoom overlay -->
+  <script src="js/zoom.js"></script>
+  <script>
+    const stageImg = document.getElementById('stageImg');
+    const stageCaption = document.getElementById('stageCaption');
+    const stageDesc = document.getElementById('stageDesc');
+    const thumbs = Array.from(document.querySelectorAll('.thumb'));
+
+    // Build navigable image list from thumb data
+    const thumbData = thumbs.map(t => ({
+      src: t.getAttribute('data-src'),
+      alt: t.getAttribute('data-alt') || '',
+      title: t.getAttribute('data-title') || 'Photo',
+      desc: t.getAttribute('data-desc') || ''
+    }));
+
+    let currentStageIndex = 0;
+
+    // Thumbnail click: update stage
+    thumbs.forEach((t, i) => {
+      t.querySelector('button').addEventListener('click', () => {
+        currentStageIndex = i;
+        const d = thumbData[i];
+        stageImg.src = d.src;
+        stageImg.alt = d.alt;
+        stageCaption.textContent = d.title + ' — Tap to zoom.';
+        stageDesc.innerHTML = d.desc;
+        thumbs.forEach((th, j) => th.setAttribute('aria-current', j === i ? 'true' : 'false'));
+      });
+    });
+
+    stageImg.setAttribute('tabindex', '0');
+    stageImg.setAttribute('role', 'button');
+
+    const openZoom = initZoom(thumbData);
+
+    stageImg.addEventListener('click', () => openZoom(currentStageIndex));
+    stageImg.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openZoom(currentStageIndex); }
+    });
+  </script>
+</body>
+</html>

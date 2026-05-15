@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookmarks | JSBG 3D Printing</title>
+  <meta name="description" content="3D printed bookmarks in multiple styles — $5 each. Browse designs and pick your favourite." />
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <style>
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+
+    .page-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 3rem 0 1rem;
+      color: var(--on-surface);
+      text-shadow: 2px 2px 0px var(--true-black);
+    }
+
+    .intro-text {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gallery-layout { display: grid; gap: 2rem; margin-bottom: 4rem; }
+    @media (min-width: 920px) { .gallery-layout { grid-template-columns: 1.2fr 1fr; align-items: start; } }
+
+    .stage { padding: 1rem; border: var(--border-bold); border-radius: var(--rounded-md); background-color: var(--surface); box-shadow: var(--hard-shadow); }
+    .stage-media { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: var(--rounded-sm); border: var(--border-bold); background-color: var(--quaternary); overflow: hidden; }
+    .stage-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background-color: var(--surface); cursor: zoom-in; }
+
+    .thumbs-group { padding: 1.5rem; border: var(--border-bold); border-radius: var(--rounded-md); background-color: var(--secondary-container); box-shadow: var(--hard-shadow); }
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 12px;
+      list-style: none;
+      margin-top: 1rem;
+    }
+
+    .thumb { border: var(--border-bold); border-radius: var(--rounded-sm); overflow: hidden; background: var(--surface); transition: transform 0.2s; }
+    .thumb:hover { transform: translate(-2px, -2px); }
+    .thumb button { width: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; display: block; }
+    .thumb img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .thumb-label { display: block; text-align: center; font-family: var(--font-label); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; padding: 0.3rem 0.25rem 0.4rem; border-top: 2px solid var(--true-black); background: var(--surface); }
+    .thumb[aria-current="true"] { outline: 4px solid var(--primary); outline-offset: 2px; }
+
+    .info-section { background-color: var(--surface); border: var(--border-bold); border-radius: var(--rounded-md); box-shadow: var(--hard-shadow); padding: 2rem; margin-bottom: 2rem; }
+    .info-section h2, .info-section h3 { font-weight: 800; font-family: var(--font-display); text-transform: uppercase; margin-bottom: 1rem; }
+    .info-section ul { margin-left: 1.5rem; margin-bottom: 1.5rem; font-weight: 500; }
+    .info-section li { margin-bottom: 0.5rem; }
+
+    .price-callout { background-color: var(--primary); color: var(--on-primary); padding: 1.5rem; border-radius: var(--rounded-md); border: var(--border-bold); font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 2rem; box-shadow: var(--hard-shadow-sm); }
+
+    .leftover-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .leftover-item {
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: var(--hard-shadow-sm);
+    }
+
+    .leftover-img-wrap {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: #111;
+      border-bottom: var(--border-bold);
+    }
+
+    .leftover-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      cursor: zoom-in;
+    }
+
+    .leftover-label {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 0.6rem 0.75rem 0.2rem;
+      text-transform: uppercase;
+    }
+
+  </style>
+  <script src="js/components.js"></script>
+</head>
+<body>
+
+  <jsbg-banner></jsbg-banner>
+
+  <jsbg-header></jsbg-header>
+
+  <main>
+    <div class="wrap">
+      <p class="breadcrumb"><a href="products.html">Shop Collection</a> / Bookmarks</p>
+      <h1 class="page-title">Bookmarks</h1>
+      <p class="intro-text">Practical and vibrant. Browse the styles below, pick the one that speaks to you, and order at a price that won't break the bank.</p>
+
+      <div class="hero-actions" style="margin-bottom: 3rem;">
+        <a href="mailto:printing@jsbg.ca?subject=Bookmark%20Order&body=Style%20I%20want%3A%20%0AQuantity%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" class="btn btn-primary">Email to Order</a>
+        <a href="products.html" class="btn btn-secondary">Back to Collection</a>
+      </div>
+
+      <div class="gallery-layout">
+        <div class="stage">
+          <div class="stage-media">
+            <img id="stageImg" tabindex="0" role="button"
+              src="images/bookmarks/Spiderman.jpg"
+              alt="Spider-Man style bookmark" loading="lazy" />
+          </div>
+          <p id="stageCaption" style="font-weight: 900; margin-top: 1rem; font-size: 1.25rem;">Spider-Man — Tap to zoom.</p>
+          <p id="stageDesc" style="font-weight: 600;">Spider-Man style bookmark.</p>
+        </div>
+
+        <div class="thumbs-group">
+          <h2 style="font-weight: 800; font-family: var(--font-display); text-transform: uppercase; border-bottom: var(--border-bold); padding-bottom: 0.5rem;">Available Styles</h2>
+          <p style="font-size: 0.9rem; font-weight: 700; margin-top: 0.5rem;">All styles are the same price — tap to preview</p>
+          <ul class="thumbs" id="thumbs">
+            <li class="thumb" aria-current="true"
+              data-src="images/bookmarks/Spiderman.jpg"
+              data-title="Spider-Man"
+              data-alt="Spider-Man style bookmark"
+              data-desc="Spider-Man style bookmark.">
+              <button type="button" aria-label="Show Spider-Man style">
+                <img src="images/bookmarks/Spiderman.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Spider-Man</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/bookmarks/Venom.jpg"
+              data-title="Venom"
+              data-alt="Venom style bookmark"
+              data-desc="Venom style bookmark.">
+              <button type="button" aria-label="Show Venom style">
+                <img src="images/bookmarks/Venom.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Venom</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/bookmarks/Bookmark_Depth.jpg"
+              data-title="Depth & Texture"
+              data-alt="Two bookmarks side by side showing the raised 3D texture"
+              data-desc="A closer look at the raised texture detail — the designs have real depth to them, not just a flat print.">
+              <button type="button" aria-label="Show depth and texture detail">
+                <img src="images/bookmarks/Bookmark_Depth.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Detail</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>About This Product</h2>
+        <ul>
+          <li>Slim 3D printed bookmarks with raised, sculpted designs — not flat prints, the detail has real depth and texture to it.</li>
+          <li>Lightweight and thin enough to sit flush in any book without sticking out awkwardly.</li>
+          <li>Multiple styles available, with new designs added occasionally.</li>
+          <li>A solid gift option — cheap enough to grab a few different styles at once.</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <h2>Price & Ordering</h2>
+        <div class="price-callout">$5 each</div>
+        <ul>
+          <li>All styles are the same price.</li>
+          <li>Browse the available designs above and mention the style name when ordering.</li>
+          <li>Great for gifts — order multiples and mix styles.</li>
+        </ul>
+        <p style="font-weight: 700; font-size: 1.25rem; text-align: center; margin-top: 1rem;">
+          To order, email <a href="mailto:printing@jsbg.ca?subject=Bookmark%20Order&body=Style%20I%20want%3A%20%0AQuantity%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 3px;">printing@jsbg.ca</a>.
+        </p>
+      </div>
+      <!-- Leftover Stock -->
+      <div class="info-section" style="border-top: 6px solid var(--primary);">
+        <h2>Leftover Stock</h2>
+        <p style="font-weight: 600; margin-bottom: 1.5rem;">These are one-time items from a previous print run — I won't be making more of them. Once they're gone, they're gone. Same price as the regular styles.</p>
+
+        <div class="leftover-grid">
+          <div class="leftover-item">
+            <div class="leftover-img-wrap">
+              <img src="images/bookmarks/temp_K-Pop_Demon_Hunters.jpg" alt="K-Pop Demon Hunters bookmarks — three bookmark designs" loading="lazy" />
+            </div>
+            <div class="leftover-label">K-Pop Demon Hunters</div>
+          </div>
+        </div>
+
+        <p style="font-weight: 700; font-size: 1.1rem; text-align: center; margin-top: 1.5rem;">
+          Interested? Email <a href="mailto:printing@jsbg.ca?subject=Leftover%20Bookmark%20Inquiry&body=Item%20I%27m%20interested%20in%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 3px;">printing@jsbg.ca</a> to claim one.
+        </p>
+      </div>
+
+      <jsbg-quality-notice></jsbg-quality-notice>
+    </div>
+  </main>
+
+  <jsbg-footer></jsbg-footer>
+
+  <script src="js/zoom.js"></script>
+  <script>
+    const stageImg = document.getElementById('stageImg');
+    const stageCaption = document.getElementById('stageCaption');
+    const stageDesc = document.getElementById('stageDesc');
+    const thumbs = Array.from(document.querySelectorAll('.thumb'));
+    const thumbData = thumbs.map(t => ({ src: t.dataset.src, alt: t.dataset.alt || '', title: t.dataset.title || 'Photo', desc: t.dataset.desc || '' }));
+    let currentStageIndex = 0;
+
+    thumbs.forEach((t, i) => {
+      t.querySelector('button').addEventListener('click', () => {
+        currentStageIndex = i;
+        const d = thumbData[i];
+        stageImg.src = d.src; stageImg.alt = d.alt;
+        stageCaption.textContent = d.title + ' — Tap to zoom.';
+        stageDesc.innerHTML = d.desc;
+        thumbs.forEach((th, j) => th.setAttribute('aria-current', j === i ? 'true' : 'false'));
+      });
+    });
+
+    const openZoom = initZoom(thumbData);
+
+    // Leftover stock images use openZoomImage (no prev/next navigation)
+    document.querySelectorAll('.leftover-img-wrap img').forEach(img => {
+      img.addEventListener('click', () => {
+        const title = img.closest('.leftover-item').querySelector('.leftover-label').textContent;
+        openZoomImage(img.src, img.alt, title);
+      });
+    });
+
+    stageImg.addEventListener('click', () => openZoom(currentStageIndex));
+    stageImg.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openZoom(currentStageIndex); } });
+  </script>
+</body>
+</html>

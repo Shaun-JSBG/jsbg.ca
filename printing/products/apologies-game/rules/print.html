@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apologies Game Rules (Printable)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
+    
+    body {
+      font-family: 'Times New Roman', serif;
+      color: #000;
+      background: #fff;
+      line-height: 1.4;
+      margin: 0 auto;
+      max-width: 800px;
+      padding: 2rem;
+    }
+
+    h1, h2, h3 {
+      font-family: Arial, sans-serif;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      border-bottom: 2px solid #000;
+      padding-bottom: 0.25rem;
+      margin-top: 1.5rem;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      margin-top: 1.5rem;
+      page-break-after: avoid;
+    }
+
+    p, li {
+      margin-bottom: 0.5rem;
+      page-break-inside: avoid;
+    }
+
+    ul, ol {
+      margin-left: 1.5rem;
+    }
+
+    .callout {
+      border: 1px solid #000;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-style: italic;
+      page-break-inside: avoid;
+    }
+
+    .divider {
+      height: 1px;
+      background: #ccc;
+      margin: 1.5rem 0;
+    }
+
+    .specials {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .spec {
+      border: 1px dashed #000;
+      padding: 1rem;
+      page-break-inside: avoid;
+    }
+
+    .spec h4 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .pill {
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+
+    figure, img {
+      display: none !important; /* Hide images for B&W printing */
+    }
+
+    figcaption {
+      display: none !important;
+    }
+
+    .rules-list {
+      list-style-type: decimal;
+      padding-left: 2rem;
+    }
+
+    .rules-list li {
+      margin-bottom: 0.75rem;
+    }
+    
+    .rules-list .num {
+      display: none;
+    }
+    
+    @page {
+      margin: 0.75in;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        max-width: 100%;
+      }
+      .print-button {
+        display: none;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+
+    .print-button {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      cursor: pointer;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <button class="print-button" onclick="window.print()">🖨️ Click Here to Print This Page</button>
+  <h1 style="text-align: center; margin-bottom: 2rem;">Apologies Game Rules</h1>
+  <div id="content">Loading rules...</div>
+
+  <script>
+    fetch('index.html')
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const article = doc.querySelector('article.rules');
+        
+        // Remove images and figures explicitly
+        article.querySelectorAll('figure, img').forEach(el => el.remove());
+        // Remove .no-print elements
+        article.querySelectorAll('.no-print').forEach(el => el.remove());
+        
+        document.getElementById('content').innerHTML = article.innerHTML;
+      })
+      .catch(err => {
+        document.getElementById('content').innerHTML = '<p>Error loading rules. Please check your connection.</p>';
+      });
+  </script>
+</body>
+</html>

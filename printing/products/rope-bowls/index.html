@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faux Rope Bowls | JSBG 3D Printing</title>
+  <meta name="description" content="3D printed faux rope bowls — a vibrant catchall for keys, coins, and everyday essentials. $25 each, choose up to two colors." />
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <style>
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+
+    .page-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 3rem 0 1rem;
+      color: var(--on-surface);
+      text-shadow: 2px 2px 0px var(--true-black);
+    }
+
+    .intro-text {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gallery-layout { display: grid; gap: 2rem; margin-bottom: 4rem; }
+    @media (min-width: 920px) { .gallery-layout { grid-template-columns: 1.2fr 1fr; align-items: start; } }
+
+    .stage { padding: 1rem; border: var(--border-bold); border-radius: var(--rounded-md); background-color: var(--surface); box-shadow: var(--hard-shadow); }
+    .stage-media { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: var(--rounded-sm); border: var(--border-bold); background-color: var(--secondary-container); overflow: hidden; }
+    .stage-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+
+    .thumbs-group { padding: 1.5rem; border: var(--border-bold); border-radius: var(--rounded-md); background-color: var(--secondary-container); box-shadow: var(--hard-shadow); }
+    .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; list-style: none; margin-top: 1rem; }
+    .thumb { border: var(--border-bold); border-radius: var(--rounded-sm); overflow: hidden; background: var(--surface); transition: transform 0.2s; }
+    .thumb:hover { transform: translate(-2px, -2px); }
+    .thumb button { width: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; display: block; }
+    .thumb img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .thumb[aria-current="true"] { outline: 4px solid var(--primary); outline-offset: 2px; }
+
+    .info-section { background-color: var(--surface); border: var(--border-bold); border-radius: var(--rounded-md); box-shadow: var(--hard-shadow); padding: 2rem; margin-bottom: 2rem; }
+    .info-section h2, .info-section h3 { font-weight: 800; font-family: var(--font-display); text-transform: uppercase; margin-bottom: 1rem; }
+    .info-section ul { margin-left: 1.5rem; margin-bottom: 1.5rem; font-weight: 500; }
+    .info-section li { margin-bottom: 0.5rem; }
+
+    .price-callout { background-color: var(--primary); color: var(--on-primary); padding: 1.5rem; border-radius: var(--rounded-md); border: var(--border-bold); font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 2rem; box-shadow: var(--hard-shadow-sm); }
+    .warn-callout { background-color: var(--secondary-container); color: var(--on-surface); padding: 1.5rem; border-radius: var(--rounded-md); border: var(--border-bold); font-weight: 600; margin-bottom: 2rem; }
+
+  </style>
+  <script src="js/components.js"></script>
+</head>
+<body>
+
+  <jsbg-banner></jsbg-banner>
+
+  <jsbg-header></jsbg-header>
+
+  <main>
+    <div class="wrap">
+      <p class="breadcrumb"><a href="products.html">Shop Collection</a> / Faux Rope Bowls</p>
+      <h1 class="page-title">Faux Rope Bowls</h1>
+      <p class="intro-text">A satisfying catchall for the stuff that accumulates on your counter — keys, coins, odds and ends. Printed in a coiled rope texture with your choice of up to two colors.</p>
+
+      <div class="hero-actions" style="margin-bottom: 3rem;">
+        <a href="mailto:printing@jsbg.ca?subject=Faux%20Rope%20Bowl%20Order&body=Color%201%3A%20%0AColor%202%20%28optional%29%3A%20%0AQuantity%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" class="btn btn-primary">Email to Order</a>
+        <a href="products.html" class="btn btn-secondary">Back to Collection</a>
+      </div>
+
+      <div class="gallery-layout">
+        <div class="stage">
+          <div class="stage-media">
+            <img id="stageImg" tabindex="0" role="button"
+              src="images/rope-bowls/5_Variations.jpg"
+              alt="Five color variations of the rope bowl side by side" loading="lazy" />
+          </div>
+          <p id="stageCaption" style="font-weight: 900; margin-top: 1rem; font-size: 1.25rem;">All Variations — Tap to zoom.</p>
+          <p id="stageDesc" style="font-weight: 600;">Five color variations showing the range of options available.</p>
+        </div>
+
+        <div class="thumbs-group">
+          <h2 style="font-weight: 800; font-family: var(--font-display); text-transform: uppercase; border-bottom: var(--border-bold); padding-bottom: 0.5rem;">Photos</h2>
+          <p style="font-size: 0.9rem; font-weight: 700; margin-top: 0.5rem;">Tap a thumbnail to update the main image</p>
+          <ul class="thumbs" id="thumbs">
+            <li class="thumb" aria-current="true"
+              data-src="images/rope-bowls/5_Variations.jpg"
+              data-title="All Variations"
+              data-alt="Five color variations side by side"
+              data-desc="Five color variations showing the range of options available.">
+              <button type="button" aria-label="Show all variations photo">
+                <img src="images/rope-bowls/5_Variations.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/rope-bowls/5_Variations_Stacked.jpg"
+              data-title="Stacked"
+              data-alt="Bowls stacked together"
+              data-desc="Stacked to show how they nest when not in use.">
+              <button type="button" aria-label="Show stacked photo">
+                <img src="images/rope-bowls/5_Variations_Stacked.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/rope-bowls/BlueCoins_RedKeys.jpg"
+              data-title="In Use"
+              data-alt="Blue bowl with coins and red bowl with keys"
+              data-desc="A blue bowl with coins and a red bowl with keys — a classic use case.">
+              <button type="button" aria-label="Show in-use photo">
+                <img src="images/rope-bowls/BlueCoins_RedKeys.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/rope-bowls/Bowls_Dimensions.png"
+              data-title="Dimensions"
+              data-alt="Bowl dimensions reference"
+              data-desc="Size reference for the bowl — helpful for gauging how it'll fit your space.">
+              <button type="button" aria-label="Show dimensions photo">
+                <img src="images/rope-bowls/Bowls_Dimensions.png" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/rope-bowls/Purple_Bedside.jpg"
+              data-title="Bedside"
+              data-alt="Purple bowl on a bedside table"
+              data-desc="A purple bowl on a bedside table — perfect for jewelry, a phone, or whatever you empty your pockets of at night.">
+              <button type="button" aria-label="Show bedside photo">
+                <img src="images/rope-bowls/Purple_Bedside.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>About This Product</h2>
+        <ul>
+          <li>Printed to look like a woven rope bowl — the coiled texture gives it a handcrafted feel without any actual rope involved.</li>
+          <li>Great as an entryway key dish, desk organizer, or a gift.</li>
+          <li>Solid and functional — not just decorative.</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <h2>Price & Ordering</h2>
+        <div class="price-callout">$25 each</div>
+        <h3>Customization</h3>
+        <ul>
+          <li>Choose up to <strong>two colors</strong> for your bowl.</li>
+          <li>Let me know your color preferences when you order and I'll confirm what's available.</li>
+        </ul>
+        <p style="font-weight: 700; font-size: 1.25rem; text-align: center; margin-top: 1rem;">
+          To order, email <a href="mailto:printing@jsbg.ca?subject=Faux%20Rope%20Bowl%20Order&body=Color%201%3A%20%0AColor%202%20%28optional%29%3A%20%0AQuantity%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 3px;">printing@jsbg.ca</a>.
+        </p>
+      </div>
+
+      <jsbg-quality-notice></jsbg-quality-notice>
+    </div>
+  </main>
+
+  <jsbg-footer></jsbg-footer>
+
+  <script src="js/zoom.js"></script>
+  <script>
+    const stageImg = document.getElementById('stageImg');
+    const stageCaption = document.getElementById('stageCaption');
+    const stageDesc = document.getElementById('stageDesc');
+    const thumbs = Array.from(document.querySelectorAll('.thumb'));
+    const thumbData = thumbs.map(t => ({ src: t.dataset.src, alt: t.dataset.alt || '', title: t.dataset.title || 'Photo', desc: t.dataset.desc || '' }));
+    let currentStageIndex = 0;
+
+    thumbs.forEach((t, i) => {
+      t.querySelector('button').addEventListener('click', () => {
+        currentStageIndex = i;
+        const d = thumbData[i];
+        stageImg.src = d.src; stageImg.alt = d.alt;
+        stageCaption.textContent = d.title + ' — Tap to zoom.';
+        stageDesc.innerHTML = d.desc;
+        thumbs.forEach((th, j) => th.setAttribute('aria-current', j === i ? 'true' : 'false'));
+      });
+    });
+
+    const openZoom = initZoom(thumbData);
+
+    stageImg.addEventListener('click', () => openZoom(currentStageIndex));
+    stageImg.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openZoom(currentStageIndex); } });
+  </script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apologies Game Rules | JSBG 3D Printing</title>
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <style>
+    /* Preserve some layout specific rules for the TOC and cards */
+    .layout {
+      display: grid;
+      gap: 2rem;
+      padding: 2rem 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    @media (min-width: 940px) {
+      .layout {
+        grid-template-columns: 280px 1fr;
+        align-items: start;
+      }
+    }
+    .toc { position: sticky; top: 2rem; }
+    @media (max-width: 939px) { .toc { position: static; } }
+    .toc h2 { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; margin-bottom: 1rem; }
+    .toc a:not(.btn) { display: block; font-weight: 700; text-decoration: none; padding: 0.5rem 0; color: var(--on-surface); border-bottom: 3px solid transparent; transition: all 0.2s; }
+    .toc a:not(.btn):hover { color: var(--primary); border-color: var(--primary); transform: translateX(5px); }
+    .toc .hint { font-size: 0.8rem; font-weight: 500; color: var(--on-surface-variant); display: block; }
+    
+    .rules-content { background: var(--surface); padding: 2rem; border: var(--border-bold); border-radius: var(--rounded-md); box-shadow: var(--hard-shadow); }
+    .section-title h2 { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 2.5rem; margin-top: 3rem; margin-bottom: 1.5rem; border-bottom: var(--border-bold); padding-bottom: 0.5rem; color: var(--tertiary); text-shadow: 2px 2px 0px var(--true-black); -webkit-text-stroke: 1px var(--true-black); }
+    h3 { font-family: var(--font-display); font-size: 1.75rem; font-weight: 800; margin-top: 2rem; margin-bottom: 1rem; text-transform: uppercase; }
+    p, li { font-weight: 500; font-size: 1.1rem; margin-bottom: 1rem; }
+    .callout { background: var(--secondary-container); border: var(--border-bold); padding: 1rem; font-weight: 700; margin: 1.5rem 0; color: var(--on-surface); }
+    .callout.warn { background: var(--primary-container); color: var(--on-surface); }
+    .divider { height: 3px; background: var(--true-black); margin: 3rem 0; }
+    
+    .rules-list { list-style: none; padding: 0; }
+    .rules-list li { display: flex; gap: 1rem; background: var(--tertiary-container); border: var(--border-bold); padding: 1rem; margin-bottom: 1rem; border-radius: var(--rounded-sm); align-items: center; box-shadow: var(--hard-shadow-sm); color: var(--on-surface); }
+    .num { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; background: var(--surface); border: var(--border-bold); padding: 0.5rem 1rem; border-radius: 50%; height: max-content; color: var(--on-surface); }
+    
+    .specials { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .spec { border: var(--border-bold); padding: 1.5rem; background: var(--surface); border-radius: var(--rounded-sm); }
+    .spec h4 { font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; margin-bottom: 0.5rem; text-transform: uppercase; }
+    .pill { display: inline-block; background: var(--primary); color: var(--on-primary); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 700; border: var(--border-bold); }
+    
+    figure { border: var(--border-bold); padding: 1rem; background: var(--surface); box-shadow: var(--hard-shadow); border-radius: var(--rounded-md); margin: 2rem 0; }
+    figcaption { font-weight: 700; text-align: center; margin-top: 1rem; }
+    img.zoomable { border: var(--border-bold); border-radius: var(--rounded-sm); cursor: zoom-in; }
+    
+    @media print { .no-print, header, .toc, .banner, .site-footer { display: none !important; } .rules-content { box-shadow: none; border: none; } }
+
+  </style>
+  <script src="js/components.js"></script>
+</head>
+
+<body>
+  
+  <jsbg-banner></jsbg-banner>
+  <jsbg-header></jsbg-header>
+
+
+  <main class="wrap">
+    <div class="layout">
+      <!-- TOC -->
+      <nav class="toc" aria-label="Table of contents">
+        <div class="rules-content"><h2>Contents</h2>
+          <a href="#overview">Overview <span class="hint">what you’re doing</span></a>
+          <a href="#setup">Setup <span class="hint">teams & pegs</span></a>
+          <a href="#gameplay">Gameplay <span class="hint">round flow</span></a>
+          <a href="#rules">Rules <span class="hint">priority list</span></a>
+          <a href="#special-cards">Special Cards <span class="hint">quick abilities</span></a>
+          <a href="#variants">Variants <span class="hint">2 / 3 / 6 players</span></a>
+          <a href="#suggestions">Suggestions <span class="hint">feedback</span></a>
+          <a href="#buyme">Buy Me! <span class="hint">board options</span></a>
+          <a href="#changelog">Change Log <span class="hint">versions</span></a>
+          <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="products/apologies-game/rules/print.html" class="print-link btn btn-primary" style="width: 100%;">🖨️ Print Rules</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Article -->
+      <article class="rules rules-content">
+        <section id="overview">
+          <div class="section-title">
+            <h2>Overview</h2>
+          </div>
+          <p class="muted">Apologies is best played with <strong>4 players</strong> and these rules are written with teams in mind. There are variants below for 2 or 3 players, but if you don’t like how it plays with fewer people, change it. <strong>House rules exist for a reason.</strong></p>
+
+          <p>You play cards to move your pegs in various ways with the goal of getting <strong>all yours</strong> and <strong>your teammate’s</strong> pegs into the finishing spaces.</p>
+
+          <div class="callout">
+            <strong>Goal:</strong> Finish all your pegs, then help finish your teammate’s. When both teammates’ pegs are all finished, you win.
+          </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="setup">
+          <div class="section-title">
+            <h2>Setup</h2>
+          </div>
+          <ul>
+            <li>Split into <strong>two teams</strong>. Teammates sit <strong>opposite</strong> each other around the board.</li>
+            <li>Each player places their pegs in their <strong>starting section</strong> on the board.</li>
+            <li>Choose the starting dealer based on whoever has the <strong>worst breath</strong> (or whatever you feel like /shrug).</li>
+          </ul>
+
+          <figure>
+            <img class="zoomable" data-zoom-title="Full board setup" src="products/apologies-game/rules/FullBoardSetup.jpg" alt="Full board setup showing all players and start areas" loading="lazy" style="width:100%;height:auto;border-radius:12px;border: var(--border-bold);" />
+            <figcaption>Full board setup — shows teams, player areas, and the general layout.</figcaption>
+          </figure>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="gameplay">
+          <div class="section-title">
+            <h2>Gameplay</h2>
+          </div>
+
+          <h3>Deal (3 hands per dealer)</h3>
+          <p>Each round begins with the deal. The dealer chooses whether the current hand will be <strong>4</strong> or <strong>5</strong> cards and must deal <strong>two 4‑card hands</strong> and <strong>one 5‑card hand</strong> over three rounds.</p>
+
+          <h3>Card exchange (teammates)</h3>
+          <p>After dealing, teammates exchange <strong>one card face down</strong>.</p>
+
+          <h3>Turn order</h3>
+          <p>The player to the dealer’s left begins. Play proceeds <strong>clockwise</strong>; on your turn, play <strong>exactly one card</strong> if possible.</p>
+
+          <h3>Face value vs special ability</h3>
+          <p>Cards may be played for face value or their special ability. You are <strong>never required</strong> to use the special ability.</p>
+
+          <h3>No legal play</h3>
+          <p>If you have no legal play, discard your hand <strong>face up</strong>. When discarding a full hand, you may move <strong>one peg forward one space</strong>.</p>
+
+          <h3>Next hand / next dealer</h3>
+          <p>When all cards are played or discarded, the next dealer collects them. After three hands, the next dealer shuffles and becomes the dealer.</p>
+
+          <h3>Finished players</h3>
+          <p>When a player finishes all their pegs, they discard remaining cards and play their teammate’s pegs in future rounds.</p>
+
+          <div class="callout warn">
+            <strong>Quick reminder:</strong> You play one card per turn (if you can). If you can’t, discard your whole hand.
+          </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="rules">
+          <div class="section-title">
+            <h2>Rules (Priority Order)</h2>
+          </div>
+          <p class="muted">Rules should be prioritized in sequence. If there is a conflict, follow the higher‑order rule first—or make house rules. It’s just a game.</p>
+
+          <ol class="rules-list">
+            <li><span class="num">1</span><div>Once in your finish, your piece <strong>cannot leave</strong>.</div></li>
+            <li><span class="num">2</span><div>You cannot <strong>pass</strong> pieces in your finish.</div></li>
+            <li><span class="num">3</span><div>If you can play, you <strong>must</strong> (even if you don’t want to).</div></li>
+            <li><span class="num">4</span><div>Simply passing players does nothing unless it is done with a <strong>King</strong>.</div></li>
+            <li><span class="num">5</span><div>If you can’t play you must discard your hand; face up and fanned out so all players can see which cards are no longer available.</div></li>
+            <li><span class="num">6</span><div>If you discard a full hand then you can move <strong>1 piece</strong> forward <strong>1 place</strong> (Start 4 → Start 3, for example).</div></li>
+            <li><span class="num">7</span><div>Once you have all of your pieces in your finish then you discard what’s left of your hand.</div></li>
+            <li><span class="num">8</span><div>If you land on another piece that piece is sent <strong>home</strong>.</div></li>
+            <li><span class="num">9</span><div>You cannot land on your <strong>own</strong> piece. If your only play lands on your own piece, you’re unable to play and must discard your hand.</div></li>
+            <li><span class="num">10</span><div>You can land on your teammate’s pieces. If you do, they are sent back to their start.</div></li>
+            <li><span class="num">11</span><div>When a piece is sent back to start it goes to the <strong>furthest available</strong> starting point (if Start 3 is available it goes there and not to Start 1).</div></li>
+            <li><span class="num">12</span><div>Once your pieces are all in your finish spaces you start playing the same pieces as your teammate.</div></li>
+            <li><span class="num">13</span><div>If both yours and your teammate’s pieces are all in their respective finish spaces then you’ve won the game.</div></li>
+          </ol>
+
+          <figure>
+            <img class="zoomable" data-zoom-title="Numbered start row" src="products/apologies-game/rules/PlayerOneStarted.jpg" alt="Close-up of a start row with numbered positions and a peg" loading="lazy" style="width:100%;height:auto;border-radius:12px;border: var(--border-bold);" />
+            <figcaption>Numbered start row example for the “discard → move 1 space” rule.</figcaption>
+          </figure>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="special-cards">
+          <div class="section-title">
+            <h2>Special Cards</h2>
+          </div>
+          <p class="muted">All cards can be played as face value instead of their special abilities below (Ace = 1, Jack = 11, King = 13). The symbols on the board are reminders so you don’t need to ask during the game and give away your hand.</p>
+
+          <figure>
+            <div style="overflow:auto;">
+              <img class="zoomable" data-zoom-title="Board symbols legend" src="products/apologies-game/rules/BoardSymbols.jpg" alt="Board symbols legend showing special card reminders" loading="lazy" class="rotate-ccw" style="max-width:100%;height:auto;border-radius:12px;border: var(--border-bold);" />
+            </div>
+            <figcaption>Board symbol reminders for special cards.</figcaption>
+          </figure>
+
+          <div class="specials">
+            <div class="spec">
+              <h4>Ace or King <span class="pill">Leave Start</span></h4>
+              <p>Ace or King can get you out of your start.</p>
+              <p class="muted">Works from any location in the start row (Start 3 → 0, for example).</p>
+            </div>
+            <div class="spec">
+              <h4>4 <span class="pill">Backward</span></h4>
+              <p>4 can go backwards. It’s the <strong>only</strong> way to move backwards.</p>
+            </div>
+            <div class="spec">
+              <h4>7 <span class="pill">Split Move</span></h4>
+              <p>Split your movement across as many of your pieces as you want (move one 2 spaces and another 5). You must still move a total of <strong>7</strong> spaces.</p>
+            </div>
+            <div class="spec">
+              <h4>Jack <span class="pill">Swap</span></h4>
+              <p>Jack can swap your piece with any other player piece.</p>
+            </div>
+            <div class="spec">
+              <h4>King <span class="pill">Pass & Send Home</span></h4>
+              <p>King can also send any opposing player back to their start if you pass them with it.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="variants">
+          <div class="section-title">
+            <h2>Variants</h2>
+          </div>
+
+          <h3>2 Players</h3>
+          <ul>
+            <li>Remove one board.</li>
+            <li>Deal becomes <strong>two hands of 7</strong> and <strong>two hands of 6</strong>.</li>
+          </ul>
+
+          <h3>3 Players</h3>
+          <ul>
+            <li>Ignore one section of play. You can use player 4’s pegs to mark the area off.</li>
+            <li>Place a peg on the <strong>12</strong> at the start of the board and <strong>11</strong> at the midway point.</li>
+            <li>No more teams: <strong>1v1v1</strong>.</li>
+            <li>Deal becomes <strong>two hands of 6</strong> and <strong>one hand of 5</strong>, with <strong>one card leftover</strong> at the end.</li>
+          </ul>
+
+          <figure>
+            <img class="zoomable" data-zoom-title="3-player variant layout" src="products/apologies-game/rules/3PlayerVariant.jpg" alt="3-player variant layout showing blocked section and markers" loading="lazy" style="width:100%;height:auto;border-radius:12px;border: var(--border-bold);" />
+            <figcaption>3-player layout — blocked section marked and peg placement at 12 and 11.</figcaption>
+          </figure>
+
+          <h3>6 Players</h3>
+          <ul>
+            <li>If you have a second game, place it in the middle. Movement gets a bit weird:</li>
+            <li>The midpoint <strong>11</strong> on the middle board goes to the <strong>12</strong> on the next board.</li>
+            <li>The <strong>11</strong> on the end board goes to the <strong>12</strong> at the midpoint of the middle board.</li>
+            <li>Do <strong>3 teams of 2</strong>.</li>
+            <li>Use <strong>2 decks</strong>. Deal <strong>two hands of 6</strong> and <strong>one hand of 5</strong> with <strong>two cards leftover</strong> at the end.</li>
+            <li>It actually works okay once everyone understands the odd movement around the middle.</li>
+          </ul>
+
+          <figure>
+            <img class="zoomable" data-zoom-title="6-player variant layout" src="products/apologies-game/rules/6PlayerVariant.jpg" alt="6-player variant layout with arrows showing movement between boards" loading="lazy" style="width:100%;height:auto;border-radius:12px;border: var(--border-bold);" />
+            <figcaption>6-player layout — arrows show how movement transitions between boards.</figcaption>
+          </figure>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="suggestions" class="no-print">
+          <div class="section-title">
+            <h2>Suggestions</h2>
+          </div>
+          <p>Any suggestions or problems: email <a href="mailto:printing@jsbg.ca?subject=Apologies%20Suggestions">printing@jsbg.ca</a> and I’ll get back to you.</p>
+          <div class="callout">
+            <strong>Tip:</strong> If you’re emailing about a rule, include a photo of the board state. It makes fixes way faster.
+          </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="shoutouts">
+          <div class="section-title">
+            <h2>Shoutouts</h2>
+          </div>
+          <p class="muted">Special thanks to Taylor for introducing me to the original game (Dashka), Rylie for the new name to go with the revised rules and Jonothan for the wood/resin board with what turned out to be a great layout.</p>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="buyme" class="no-print">
+          <div class="section-title">
+            <h2>Buy a Copy!</h2>
+          </div>
+          <p>If you're interested in purchasing another or your own copy of the game, check out the <a href="products/apologies-game/">Apologies Game page</a> to see the available boards and order details.</p>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="changelog" class="no-print">
+          <div class="section-title">
+            <h2>Change Log</h2>
+          </div>
+          <ul>
+            <li><strong>V1.1</strong> - Updated email addresses and added link to boards page.</li>
+            <li><strong>V1</strong> – Finalized rules and variants.</li>
+          </ul>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <jsbg-footer></jsbg-footer>
+
+  <script src="js/zoom.js"></script>
+  <script>
+    // Smooth scroll for TOC anchors
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const el = document.querySelector(a.getAttribute('href'));
+        if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
+    });
+
+    // Tap-to-zoom for diagram images
+    document.querySelectorAll('img.zoomable').forEach(img => {
+      img.setAttribute('tabindex', '0');
+      img.setAttribute('role', 'button');
+      img.setAttribute('aria-label', img.getAttribute('alt') || 'Zoom image');
+      const zoom = () => openZoomImage(img.src, img.alt, img.dataset.zoomTitle || img.alt || 'Image');
+      img.addEventListener('click', zoom);
+      img.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zoom(); } });
+    });
+  </script>
+</body>
+</html>

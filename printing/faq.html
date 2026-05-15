@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ | JSBG 3D Printing</title>
+  <meta name="description" content="Frequently asked questions about ordering, shipping, materials, turnaround times, and more from JSBG 3D Printing." />
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <style>
+    .page-header {
+      background-color: var(--secondary-container);
+      border-bottom: var(--border-bold);
+      padding: 4rem 5%;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      font-size: clamp(3rem, 8vw, 5rem);
+      text-transform: uppercase;
+      color: var(--surface);
+      text-shadow: 4px 4px 0px var(--true-black);
+      -webkit-text-stroke: 1px var(--true-black);
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-header p {
+      font-size: 1.25rem;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    .faq-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 5%;
+    }
+
+    .faq-section { margin-bottom: 3.5rem; }
+
+    .faq-section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: var(--border-bold);
+    }
+
+    /* Shipping callout boxes */
+    .shipping-box {
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      box-shadow: var(--hard-shadow);
+      padding: 1.5rem 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .shipping-box h3 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+
+    .shipping-box p { line-height: 1.7; margin-bottom: 0.5rem; }
+    .shipping-box p:last-child { margin-bottom: 0; }
+
+    /* FAQ accordion */
+    details.faq-item {
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      background: var(--surface);
+      box-shadow: var(--hard-shadow-sm);
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: box-shadow 0.1s ease-out, transform 0.1s ease-out;
+    }
+
+    details.faq-item[open] {
+      box-shadow: var(--hard-shadow);
+      transform: translate(-2px, -2px);
+    }
+
+    details.faq-item > summary {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      user-select: none;
+    }
+
+    details.faq-item > summary::-webkit-details-marker { display: none; }
+
+    details.faq-item > summary::after {
+      content: '+';
+      font-size: 1.5rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      line-height: 1;
+      color: var(--primary);
+    }
+
+    details.faq-item[open] > summary::after { content: '−'; }
+
+    details.faq-item > summary:hover { background: var(--surface-container-low); }
+
+    .faq-answer {
+      padding: 1.25rem 1.5rem 1.5rem;
+      font-weight: 500;
+      line-height: 1.7;
+      border-top: var(--border-bold);
+      background: var(--surface-container-low);
+    }
+
+    .faq-answer p { margin-bottom: 0.75rem; }
+    .faq-answer p:last-child { margin-bottom: 0; }
+  </style>
+  <script src="js/components.js"></script>
+</head>
+<body>
+
+  <jsbg-banner></jsbg-banner>
+  <jsbg-header></jsbg-header>
+
+  <main>
+    <div class="page-header">
+      <div class="flower-pattern"></div>
+      <h1>FAQ</h1>
+      <p>Everything you need to know before ordering.</p>
+    </div>
+
+    <div class="faq-wrap">
+
+      <!-- How to Order -->
+      <section class="faq-section">
+        <h2 class="faq-section-title">How to Order</h2>
+        <jsbg-how-to-order></jsbg-how-to-order>
+      </section>
+
+      <!-- Shipping -->
+      <section class="faq-section">
+        <h2 class="faq-section-title">Shipping</h2>
+        <div class="shipping-box" style="background: var(--tertiary-container);">
+          <p>Yes, I can ship anywhere. Shipping is through Canada Post — it's the only option available in Peace River. You pay the actual shipping cost, and I'll confirm the exact price with you before anything goes out.</p>
+          <p style="margin-top: 0.5rem;"><strong>Within Canada:</strong> most items run around $20 to ship.</p>
+        </div>
+        <div class="shipping-box" style="background: var(--surface-container-low);">
+          <h3>Bookmarks</h3>
+          <p>Bookmarks may be small enough to ship in a standard envelope, which would bring the cost down significantly compared to a parcel. I haven't shipped any yet, so I don't have a firm number — once I do, I'll update this page.</p>
+        </div>
+      </section>
+
+      <!-- Common Questions -->
+      <section class="faq-section">
+        <h2 class="faq-section-title">More Questions</h2>
+
+        <details class="faq-item">
+          <summary>How long does an order take?</summary>
+          <div class="faq-answer">
+            <p>It depends on what you ordered. If it's something I already have in stock, it can ship within a day or two. Standard items with no or minor customizations (adding a name or custom QR code) are typically ready in 3–5 business days. Fully custom work — where I'm designing something from scratch — can take a lot more.</p>
+            <p>I'll give you an estimated turnaround when I confirm your order.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What payment methods do you accept?</summary>
+          <div class="faq-answer">
+            <p>E-transfer is preferred. If we're meeting in person, cash works too. That's it for now — this is a hobby project, not a full-scale retail operation.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What colors and materials are available?</summary>
+          <div class="faq-answer">
+            <p>I have a large selection of colors available. Most of my filament is <a href="https://ca.store.bambulab.com/collections/bambu-lab-3d-printer-filament?skr=yes&By+Material=PLA" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 2px;" target="_blank" rel="noopener">Bambu PLA</a> — plant-based and biodegradable. That said, "biodegradable" doesn't mean it's going to fall apart on you — PLA requires specific conditions to break down and takes a very long time to do so. Your prints will hold up fine for years of normal use. I can and do print with other brands as well so feel free to look around if you're looking for something very specific.</p>
+            <p>For utility prints that need to be more durable, I can use other materials. Pricing on those varies widely. If you have a specific filament in mind that I don't currently stock, let me know. If it's something I'd use again anyway, I'll likely just order it without charging you much extra. If it's a niche filament I'd only be buying for your job, you may need to cover the cost of the roll.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Can I send you a file to print?</summary>
+          <div class="faq-answer">
+            <p>Absolutely! If it's your own design or something you have a license for, no problem. If it's someone else's design and you just need a single one-off print, I'll do it — but I'll add a dollar or two to the cost and pass that along to the original creator. Mass production of someone else's work without a license is a no.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Can you design something from scratch?</summary>
+          <div class="faq-answer">
+            <p>Yes. Just know that design time factors into the price, and depending on the complexity it can add up. Simple stuff is usually no big deal. Anything more involved takes longer, which means higher cost.</p>
+            <p>I'll work out a quote with you upfront before starting so there are no surprises.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Are your prints food safe?</summary>
+          <div class="faq-answer">
+            <p>No — not straight out of the printer. The layer lines that build up during printing are nearly impossible to fully clean, and bacteria can hide in the gaps. There are dishwasher safe filaments but they're more expensive and color selection is limited.</p>
+            <p>If you need food-safe output, coating the print with a food-safe resin or sealant after the fact will get you there — but that would be on you to do after receiving it.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Are the prints waterproof or dishwasher safe?</summary>
+          <div class="faq-answer">
+            <p>Not dishwasher safe — the heat will warp or melt PLA. Some filaments handle heat better, but I don't stock a lot of those types so color choices are limited and they're typically more expensive.</p>
+            <p>As for watertight: prints can hold water, but there's sometimes small gaps between layers that water can seep through. For anything that truly needs to be watertight (like a vase), you might need to apply a sealant coat after printing. I can take steps to minimize the risk, but it's not guaranteed.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What's the maximum print size?</summary>
+          <div class="faq-answer">
+            <p>I print on a Bambu P1S, which has a build volume of 256 × 256 × 256 mm (about 10" × 10" × 10"). If your project fits within those dimensions, I can print it.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Do you do bulk or quantity orders?</summary>
+          <div class="faq-answer">
+            <p>Yes, and for some items the per-unit cost can come down with larger quantities. Items like bookmarks fit several on a single print plate, so bulk is efficient. Others, like rulers, only fit one per plate — so bulk savings there are more limited.</p>
+            <p>Reach out and we'll figure out what makes sense for your order.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What if something arrives damaged or wrong?</summary>
+          <div class="faq-answer">
+            <p>We'll sort it out case by case. If it's genuinely broken — like damage from shipping — I'll refund you. If it's a minor cosmetic issue or slight imperfection, I'll discount or partially refund. I'm not going to ask you to ship anything back; that's wasteful. Just reach out and we'll work it out.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Can I see the product before I pay?</summary>
+          <div class="faq-answer">
+            <p>For local pickup, yes — as long as the item isn't personalized specifically for you (e.g. with your name on it). Custom items require payment upfront since I can't resell them if you change your mind.</p>
+            <p>For shipping orders, I'm happy to send photos before anything goes out. Just expect a short delay while I wait for your OK.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Do you take rush orders?</summary>
+          <div class="faq-answer">
+            <p>Yes. I've only got the one printer, but if you need something quickly and I can fit it in, I'll bump it to the front of the queue.</p>
+          </div>
+        </details>
+
+      </section>
+
+    </div>
+  </main>
+
+  <jsbg-footer></jsbg-footer>
+
+</body>
+</html>

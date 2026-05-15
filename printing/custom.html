@@ -1,0 +1,458 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Prints | JSBG 3D Printing</title>
+  <meta name="description" content="Custom 3D printing requests, repairs, and ideas by JSBG. See examples of past work and reach out with your idea." />
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Polaroid gallery ── */
+    .polaroid-section {
+      padding: 1rem 24px 4rem;
+      background: var(--surface);
+      overflow: visible;
+    }
+
+    .polaroid-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 2.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 3rem;
+      overflow: visible;
+    }
+
+    .polaroid {
+      background: #fff;
+      border: var(--border-bold);
+      padding: 10px 10px 46px;
+      box-shadow: var(--hard-shadow);
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+      margin: -14px;
+      border-radius: 2px;
+      user-select: none;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease-out;
+    }
+
+    .polaroid:nth-child(5n+1) { transform: rotate(-3.5deg); }
+    .polaroid:nth-child(5n+2) { transform: rotate(2.5deg); }
+    .polaroid:nth-child(5n+3) { transform: rotate(-1deg); }
+    .polaroid:nth-child(5n+4) { transform: rotate(4deg); }
+    .polaroid:nth-child(5n+5) { transform: rotate(-2.5deg); }
+
+    .polaroid:hover,
+    .polaroid:focus-visible {
+      transform: rotate(0deg) translate(-3px, -5px) scale(1.07) !important;
+      box-shadow: var(--hard-shadow-hover);
+      z-index: 20;
+      outline: none;
+    }
+
+    .polaroid img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      border: 1px solid #ddd;
+    }
+
+    .polaroid-label {
+      display: block;
+      text-align: center;
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #444;
+      padding: 8px 6px 0;
+      line-height: 1.2;
+    }
+
+    /* Mobile */
+    @media (max-width: 640px) {
+      .polaroid-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.75rem;
+        padding: 1.5rem 0.5rem 2.5rem;
+      }
+      .polaroid { margin: 0; }
+      .polaroid:nth-child(5n+1) { transform: rotate(-1.5deg); }
+      .polaroid:nth-child(5n+2) { transform: rotate(1.5deg); }
+      .polaroid:nth-child(5n+3) { transform: rotate(-1deg); }
+      .polaroid:nth-child(5n+4) { transform: rotate(2deg); }
+      .polaroid:nth-child(5n+5) { transform: rotate(-0.5deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .polaroid, .polaroid:hover, .polaroid:focus-visible {
+        transform: none !important;
+        transition: box-shadow 0.15s;
+      }
+    }
+
+    /* ── "Any of these" note ── */
+    .custom-note {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 4rem;
+      padding: 0 24px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--on-surface-variant);
+    }
+
+    /* ── Modal ── */
+    .custom-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .custom-modal[aria-hidden="false"] { display: flex; }
+
+    .custom-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+    }
+
+    .custom-modal-card {
+      position: relative;
+      background: var(--surface);
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      box-shadow: var(--hard-shadow);
+      width: min(580px, 96vw);
+      max-height: 90vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .custom-modal-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: var(--primary);
+      color: var(--on-primary);
+      border: var(--border-bold);
+      border-radius: var(--rounded-full);
+      width: 40px;
+      height: 40px;
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--hard-shadow-sm);
+      z-index: 2;
+      transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+    }
+
+    .custom-modal-close:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--hard-shadow);
+      background: var(--secondary-container);
+      color: var(--on-surface);
+    }
+
+    .custom-modal-img-wrap {
+      border-bottom: var(--border-bold);
+      background: var(--surface-container);
+      flex-shrink: 0;
+    }
+
+    #modal-main-img {
+      width: 100%;
+      max-height: 55vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .modal-ba-controls {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      justify-content: center;
+      border-top: 2px solid var(--true-black);
+      background: var(--surface-container-low);
+    }
+
+    .modal-ba-btn {
+      font-family: var(--font-label);
+      font-weight: 800;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      padding: 0.4rem 1.5rem;
+      border: var(--border-bold);
+      border-radius: var(--rounded-full);
+      background: var(--surface);
+      color: var(--on-surface);
+      cursor: pointer;
+      box-shadow: var(--hard-shadow-sm);
+      transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+    }
+
+    .modal-ba-btn:hover { transform: translate(-2px, -2px); box-shadow: var(--hard-shadow); }
+    .modal-ba-btn.active { background: var(--primary); color: var(--on-primary); }
+
+    .custom-modal-body {
+      padding: 1.5rem 2rem 2rem;
+    }
+
+    .custom-modal-body h3 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .custom-modal-body p {
+      font-weight: 500;
+      line-height: 1.75;
+      color: var(--on-surface-variant);
+    }
+
+    .modal-cta {
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 2px solid var(--surface-container);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .modal-cta a {
+      color: var(--primary);
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  </style>
+  <script src="js/components.js"></script>
+</head>
+<body>
+
+  <jsbg-banner></jsbg-banner>
+  <jsbg-header></jsbg-header>
+
+  <main>
+    <section class="hero hero-secondary" style="min-height: 40vh;">
+      <div class="flower-pattern"></div>
+      <div class="hero-content">
+        <h1>Got a<br>Weird Idea?</h1>
+        <p>Custom CAD & 3D Printing</p>
+        <div style="margin-top: 16px;">
+          <a href="mailto:printing@jsbg.ca?subject=Custom%203D%20Print%20Request&body=What%20do%20you%20need%3A%20%0ADimensions%20or%20fit%20requirements%20%28if%20known%29%3A%20%0AMaterial%20preference%20%28if%20any%29%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" class="btn btn-secondary">Email Your Idea</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="featured" style="padding-bottom: 0;">
+      <div style="text-align: center; margin-bottom: 1.5rem; position: relative; z-index: 10;">
+        <h2 class="section-title">Past Work</h2>
+        <p style="font-size: 20px; font-weight: 700; color: var(--on-surface-variant); max-width: 800px; margin: 0 auto;">
+          A mix of repairs, replacements, and things that just didn't exist yet. Tap any photo for the full story.
+        </p>
+      </div>
+    </section>
+
+    <!-- Polaroid Gallery -->
+    <section class="polaroid-section">
+      <div class="polaroid-grid">
+
+        <div class="polaroid"
+          tabindex="0" role="button"
+          aria-label="Lawn Ornament Spikes — tap for details"
+          data-title="Lawn Ornament Spikes"
+          data-desc="A customer came to me to replace their broken spikes from their Costco Halloween Lawn decorations. I designed these replacements and printed them in PETG filament which is stronger than my usual PLA. Coincidentally we found a half dozen broken spikes of our own this spring so I'll have to do another run of these..."
+          data-images='["/images/custom-examples/Lawn_Ornament_Spike.jpg"]'
+          data-alts='["3D printed replacement lawn ornament spikes"]'>
+          <img src="images/custom-examples/Lawn_Ornament_Spike.jpg" alt="" loading="lazy">
+          <span class="polaroid-label">Lawn Ornament Spikes</span>
+        </div>
+
+        <div class="polaroid"
+          tabindex="0" role="button"
+          aria-label="Light Switch Plate — tap for details"
+          data-title="Light Switch Plate"
+          data-desc="This light switch was installed too close to an adjacent wall for a standard plate to sit flush. A custom-shaped plate was designed to fit the exact gap. One-off geometry fixes like this aren't always cost-effective — but when there's genuinely no other option, this is exactly what custom printing is for. This had to be printed in a fire retardant UL rated material so it isn't a fire hazard as most 3d printed materials would be in this application."
+          data-images='["/images/custom-examples/Lightswitch_Plate.jpg"]'
+          data-alts='["Custom 3D printed light switch plate bridging a wall gap"]'>
+          <img src="images/custom-examples/Lightswitch_Plate.jpg" alt="" loading="lazy">
+          <span class="polaroid-label">Light Switch Plate</span>
+        </div>
+
+        <div class="polaroid"
+          tabindex="0" role="button"
+          aria-label="Strike Plate — tap for details"
+          data-title="Strike Plate"
+          data-desc="A custom door strike plate. We had this double wide slot in the door frame and for the longest time it was just exposed wood. I modeled up this custom strike plate just for it. Actually did some colorful standard plates for around the house too!"
+          data-images='["/images/custom-examples/Strike_Plate.jpg"]'
+          data-alts='["Custom 3D printed door strike plate"]'>
+          <img src="images/custom-examples/Strike_Plate.jpg" alt="" loading="lazy">
+          <span class="polaroid-label">Strike Plate</span>
+        </div>
+
+        <div class="polaroid"
+          tabindex="0" role="button"
+          aria-label="Griddle Mount — tap for details"
+          data-title="Griddle Mount"
+          data-desc="We needed a place to mount our griddle and the side of the cabinet seemed like the perfect spot. I designed these holders to keep it in place and printed them in some Black Carbon Fiber PLA giving it a very nice look."
+          data-images='["/images/custom-examples/Griddle_Mount.jpg"]'
+          data-alts='["Custom 3D printed griddle mount"]'>
+          <img src="images/custom-examples/Griddle_Mount.jpg" alt="" loading="lazy">
+          <span class="polaroid-label">Griddle Mount</span>
+        </div>
+
+        <div class="polaroid"
+          tabindex="0" role="button"
+          aria-label="Under-Cab Cutting Board Mounts — tap for details"
+          data-title="Under-Cab Cutting Board Mounts"
+          data-desc="We needed a better, easily accessable, place to keep our cutting boards. Under the cabinet was the ideal solution for us. We've got these metal rails under our cabinets so we needed very specific spacing for the holders so I designed these and printed them in Red Carbon Fiber PLA."
+          data-images='["/images/custom-examples/Under_Cabinet_Cutting_Board_Holders.jpg"]'
+          data-alts='["Under-cabinet cutting board holders mounted below a kitchen cabinet"]'>
+          <img src="images/custom-examples/Under_Cabinet_Cutting_Board_Holders.jpg" alt="" loading="lazy">
+          <span class="polaroid-label">Under-Cab Cutting Board Mounts</span>
+        </div>
+
+        <div class="polaroid"
+          tabindex="0" role="button"
+          aria-label="Shelf Alignment — tap for details"
+          data-title="Shelf Alignment"
+          data-desc="We built a custom pantry but the shelves were slightly misaligned. I did a quick design and next thing you know, the shelves are perfectly level and flush. Plus, I think they look much better than just the sharp edges of the shelves meeting."
+          data-images='["/images/custom-examples/Shelf_Alignment_Before.jpg", "/images/custom-examples/Shelf_Alignment_After.jpg"]'
+          data-alts='["Shelf alignment — before, showing the misalignment", "Shelf alignment — after, showing the corrected result"]'>
+          <img src="images/custom-examples/Shelf_Alignment_After.jpg" alt="" loading="lazy">
+          <span class="polaroid-label">Shelf Alignment</span>
+        </div>
+
+        <div class="polaroid"
+          tabindex="0" role="button"
+          aria-label="CR Box Shroud — tap for details"
+          data-title="Corsi-Rosenthal Box Shroud"
+          data-desc="I love my CR box during wildfire season but it's got three big problems: replacing filters require that you rebuild the entire thing, it's ugly and it's loud. Well two out of three ain't bad right? This shroud design allows me to replace filters without disassembling the whole thing, and it looks way better without the tape all over it. It doesn't do much for the noise but hey, you win some, you lose some. This was printed in cheap prototype PLA. I might eventually redo it in something nicer but it is a lot of filament."
+          data-images='["/images/custom-examples/CR_Box_Before.jpg"]'
+          data-alts='["Corsi-Rosenthal air filter box before the shroud is applied"]'>
+          <img src="images/custom-examples/CR_Box_Before.jpg" alt="" loading="lazy">
+          <span class="polaroid-label">CR Box Shroud</span>
+        </div>
+
+      </div>
+    </section>
+
+    <p class="custom-note">
+      See something you'd want for yourself? Any of these can be printed for you — just <a href="mailto:printing@jsbg.ca?subject=Custom%20Print%20Inquiry" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 2px;">reach out for a price</a>.
+    </p>
+
+    <div style="text-align: center; padding: 0 24px 80px;">
+      <h3 style="font-size: clamp(2rem, 5vw, 2.75rem); font-family: var(--font-display); color: var(--primary); margin-bottom: 24px; text-transform: uppercase;">Have a Custom Request?</h3>
+      <a href="mailto:printing@jsbg.ca?subject=Custom%203D%20Print%20Request&body=What%20do%20you%20need%3A%20%0ADimensions%20or%20fit%20requirements%20%28if%20known%29%3A%20%0AMaterial%20preference%20%28if%20any%29%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" class="btn" style="background-color: var(--primary); color: var(--on-primary);">Email printing@jsbg.ca</a>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div id="custom-modal" class="custom-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title">
+    <div class="custom-modal-backdrop"></div>
+    <div class="custom-modal-card">
+      <button class="custom-modal-close" id="modal-close" aria-label="Close">×</button>
+      <div class="custom-modal-img-wrap">
+        <img id="modal-main-img" src="" alt="">
+        <div id="modal-ba-controls" class="modal-ba-controls" hidden>
+          <button class="modal-ba-btn" id="btn-before">Before</button>
+          <button class="modal-ba-btn active" id="btn-after">After</button>
+        </div>
+      </div>
+      <div class="custom-modal-body">
+        <h3 id="modal-title"></h3>
+        <p id="modal-desc"></p>
+        <p class="modal-cta">Want this for yourself? <a href="mailto:printing@jsbg.ca?subject=Custom%20Print%20Inquiry">Email printing@jsbg.ca</a> for a quote.</p>
+      </div>
+    </div>
+  </div>
+
+  <jsbg-footer></jsbg-footer>
+
+  <script>
+    (function () {
+      var modal = document.getElementById('custom-modal');
+      var modalImg = document.getElementById('modal-main-img');
+      var modalTitle = document.getElementById('modal-title');
+      var modalDesc = document.getElementById('modal-desc');
+      var modalBAControls = document.getElementById('modal-ba-controls');
+      var modalClose = document.getElementById('modal-close');
+      var backdrop = modal.querySelector('.custom-modal-backdrop');
+      var btnBefore = document.getElementById('btn-before');
+      var btnAfter = document.getElementById('btn-after');
+
+      var imgs = [], alts = [];
+
+      function open(el) {
+        imgs = JSON.parse(el.dataset.images || '[]');
+        alts = JSON.parse(el.dataset.alts || '[]');
+        modalTitle.textContent = el.dataset.title || '';
+        modalDesc.textContent = el.dataset.desc || '';
+
+        var isBA = imgs.length > 1;
+        modalBAControls.hidden = !isBA;
+
+        if (isBA) {
+          showImg(imgs.length - 1); // default to "after"
+          btnAfter.classList.add('active');
+          btnBefore.classList.remove('active');
+        } else {
+          showImg(0);
+        }
+
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        modalClose.focus();
+      }
+
+      function close() {
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      function showImg(idx) {
+        modalImg.src = imgs[idx] || '';
+        modalImg.alt = alts[idx] || '';
+      }
+
+      document.querySelectorAll('.polaroid').forEach(function (p) {
+        p.addEventListener('click', function () { open(p); });
+        p.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(p); }
+        });
+      });
+
+      modalClose.addEventListener('click', close);
+      backdrop.addEventListener('click', close);
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+
+      btnBefore.addEventListener('click', function () {
+        showImg(0);
+        btnBefore.classList.add('active');
+        btnAfter.classList.remove('active');
+      });
+
+      btnAfter.addEventListener('click', function () {
+        showImg(imgs.length - 1);
+        btnAfter.classList.add('active');
+        btnBefore.classList.remove('active');
+      });
+    })();
+  </script>
+
+</body>
+</html>

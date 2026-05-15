@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toothbrush & Toothpaste Holder | JSBG 3D Printing</title>
+  <meta name="description" content="Modular 3D printed bathroom organizers — toothbrushes, electric brushes, toothpaste, chargers, and more. Contact for pricing." />
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <style>
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+
+    .page-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 3rem 0 1rem;
+      color: var(--on-surface);
+      text-shadow: 2px 2px 0px var(--true-black);
+    }
+
+    .intro-text {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gallery-layout { display: grid; gap: 2rem; margin-bottom: 4rem; }
+    @media (min-width: 920px) { .gallery-layout { grid-template-columns: 1.2fr 1fr; align-items: start; } }
+
+    .stage { padding: 1rem; border: var(--border-bold); border-radius: var(--rounded-md); background-color: var(--surface); box-shadow: var(--hard-shadow); }
+    .stage-media { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: var(--rounded-sm); border: var(--border-bold); background-color: var(--tertiary-container); overflow: hidden; }
+    .stage-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+
+    .thumbs-group { padding: 1.5rem; border: var(--border-bold); border-radius: var(--rounded-md); background-color: var(--secondary-container); box-shadow: var(--hard-shadow); }
+    .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; list-style: none; margin-top: 1rem; }
+    .thumb { border: var(--border-bold); border-radius: var(--rounded-sm); overflow: hidden; background: var(--surface); transition: transform 0.2s; }
+    .thumb:hover { transform: translate(-2px, -2px); }
+    .thumb button { width: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; display: block; }
+    .thumb img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .thumb[aria-current="true"] { outline: 4px solid var(--primary); outline-offset: 2px; }
+
+    .info-section { background-color: var(--surface); border: var(--border-bold); border-radius: var(--rounded-md); box-shadow: var(--hard-shadow); padding: 2rem; margin-bottom: 2rem; }
+    .info-section h2, .info-section h3 { font-weight: 800; font-family: var(--font-display); text-transform: uppercase; margin-bottom: 1rem; }
+    .info-section ul { margin-left: 1.5rem; margin-bottom: 1.5rem; font-weight: 500; }
+    .info-section li { margin-bottom: 0.5rem; }
+
+    .price-callout { background-color: var(--tertiary-container); color: var(--on-surface); padding: 1.5rem; border-radius: var(--rounded-md); border: var(--border-bold); font-size: 1.25rem; font-weight: 800; text-align: center; margin-bottom: 2rem; box-shadow: var(--hard-shadow-sm); }
+    .warn-callout { background-color: var(--secondary-container); color: var(--on-surface); padding: 1.5rem; border-radius: var(--rounded-md); border: var(--border-bold); font-weight: 600; margin-bottom: 2rem; }
+
+    .modules-grid { display: grid; gap: 1rem; margin-bottom: 1.5rem; }
+    @media (min-width: 640px) { .modules-grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 900px) { .modules-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .module-chip { border: var(--border-bold); border-radius: var(--rounded-md); padding: 1rem; background: var(--surface); box-shadow: var(--hard-shadow-sm); text-align: center; transition: transform 0.15s ease-out, box-shadow 0.15s ease-out; }
+    .module-chip:hover { transform: translate(-2px, -2px); box-shadow: var(--hard-shadow); }
+    .module-chip-icon { font-size: 1.75rem; display: block; margin-bottom: 0.5rem; }
+    .module-chip-label { font-family: var(--font-label); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
+
+  </style>
+  <script src="js/components.js"></script>
+</head>
+<body>
+
+  <jsbg-banner></jsbg-banner>
+
+  <jsbg-header></jsbg-header>
+
+  <main>
+    <div class="wrap">
+      <p class="breadcrumb"><a href="products.html">Shop Collection</a> / Toothbrush & Toothpaste Holder</p>
+      <h1 class="page-title">Toothbrush & Toothpaste Holder</h1>
+      <p class="intro-text">A modular bathroom organizer you actually configure for your setup — mix and match modules for your specific brushes, toothpaste, and chargers.</p>
+
+      <div class="hero-actions" style="margin-bottom: 3rem;">
+        <a href="mailto:printing@jsbg.ca?subject=Toothbrush%20Holder%20Inquiry&body=Modules%20needed%3A%0AStandard%20toothbrush%20x__%0AElectric%20toothbrush%20x__%0AToothpaste%20holder%20x__%0ACharger%20holder%20x__%0A%0AMounting%3A%20%5BCountertop%20%2F%20Wall-mounted%20%2F%20Over-cabinet%5D%0AColor%20preference%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" class="btn btn-primary">Contact for Pricing</a>
+        <a href="products.html" class="btn btn-secondary">Back to Collection</a>
+      </div>
+
+      <div class="gallery-layout">
+        <div class="stage">
+          <div class="stage-media">
+            <img id="stageImg" tabindex="0" role="button"
+              src="images/toothbrush-holder/Loaded1.jpg"
+              alt="Toothbrush holder fully loaded with brushes, toothpaste, and accessories" loading="lazy" />
+          </div>
+          <p id="stageCaption" style="font-weight: 900; margin-top: 1rem; font-size: 1.25rem;">Loaded Up — Tap to zoom.</p>
+          <p id="stageDesc" style="font-weight: 600;">All modules filled — toothbrushes, toothpaste, and accessories.</p>
+        </div>
+
+        <div class="thumbs-group">
+          <h2 style="font-weight: 800; font-family: var(--font-display); text-transform: uppercase; border-bottom: var(--border-bold); padding-bottom: 0.5rem;">Photos</h2>
+          <p style="font-size: 0.9rem; font-weight: 700; margin-top: 0.5rem;">Tap a thumbnail to update the main image</p>
+          <ul class="thumbs" id="thumbs">
+            <li class="thumb" aria-current="true"
+              data-src="images/toothbrush-holder/Loaded1.jpg"
+              data-title="Loaded Up"
+              data-alt="Holder fully loaded with toothbrushes, toothpaste, and accessories"
+              data-desc="All modules filled — toothbrushes, toothpaste, and accessories.">
+              <button type="button" aria-label="Show loaded photo">
+                <img src="images/toothbrush-holder/Loaded1.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/toothbrush-holder/Empty1.jpg"
+              data-title="Empty View"
+              data-alt="Empty toothbrush holder modules"
+              data-desc="The empty module set, showing the structure and available slots.">
+              <button type="button" aria-label="Show empty view photo">
+                <img src="images/toothbrush-holder/Empty1.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/toothbrush-holder/In_Use.jpg"
+              data-title="In Use"
+              data-alt="Toothbrush holder in use in a bathroom"
+              data-desc="The holder in use — showing how it looks in a real bathroom setting.">
+              <button type="button" aria-label="Show in-use photo">
+                <img src="images/toothbrush-holder/In_Use.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>About This Product</h2>
+        <ul>
+          <li>A modular bathroom organizer that you configure specifically for your setup — no unused slots, no guessing.</li>
+          <li>Mix and match modules for standard toothbrushes, electric brushes, toothpaste tubes, and charger cables.</li>
+          <li>Mounting can be done via screws or medium 3M velcro strips (not included). The modules just slide onto the mounting plate and can be reorganized as desired.</li>
+          <li>This is a newer addition and I haven't worked out pricing quite yet. Reach out if you're interested and I'll put together a quote based on your configuration.</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <h2>Pricing</h2>
+        <div class="price-callout">Pricing depends on your configuration — reach out and I'll put together a quote.</div>
+        <p style="font-weight: 600;">The cost varies based on how many modules you need. Email me with what you're looking for and I'll work out the details with you.</p>
+        <p style="font-weight: 700; font-size: 1.25rem; text-align: center; margin-top: 1.5rem;">
+          Email <a href="mailto:printing@jsbg.ca?subject=Toothbrush%20Holder%20Inquiry&body=Modules%20needed%3A%0AStandard%20toothbrush%20x__%0AElectric%20toothbrush%20x__%0AToothpaste%20holder%20x__%0ACharger%20holder%20x__%0A%0AMounting%3A%20%5BCountertop%20%2F%20Wall-mounted%20%2F%20Over-cabinet%5D%0AColor%20preference%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 3px;">printing@jsbg.ca</a> to get started.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2>Available Modules</h2>
+        <p style="font-weight: 600; margin-bottom: 1.5rem;">Mix and match the modules you need. Describe your bathroom setup and I'll help you figure out the right combination.</p>
+        <div class="modules-grid">
+          <div class="module-chip" style="border-top: 4px solid var(--primary);">
+            <span class="module-chip-icon">🪥</span>
+            <span class="module-chip-label">Standard Toothbrush</span>
+          </div>
+          <div class="module-chip" style="border-top: 4px solid var(--tertiary-container);">
+            <span class="module-chip-icon">⚡</span>
+            <span class="module-chip-label">Electric Toothbrush</span>
+          </div>
+          <div class="module-chip" style="border-top: 4px solid var(--secondary-container);">
+            <span class="module-chip-icon">🧴</span>
+            <span class="module-chip-label">Toothpaste Holder</span>
+          </div>
+          <div class="module-chip" style="border-top: 4px solid var(--quaternary);">
+            <span class="module-chip-icon">🔌</span>
+            <span class="module-chip-label">Charger Holder</span>
+          </div>
+        </div>
+        <div class="warn-callout">
+          <strong>More module types are possible.</strong> If you have something specific — a water flosser, razor holder, or extra-large paste tube — just ask and I'll see what I can do.
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Customization Options</h2>
+        <ul>
+          <li><strong>Colors:</strong> choose your preferred colors and I'll confirm what's in stock.</li>
+          <li><strong>Module count:</strong> order exactly as many of each type as you need.</li>
+        </ul>
+      </div>
+
+      <jsbg-quality-notice></jsbg-quality-notice>
+    </div>
+  </main>
+
+  <jsbg-footer></jsbg-footer>
+
+  <script src="js/zoom.js"></script>
+  <script>
+    const stageImg = document.getElementById('stageImg');
+    const stageCaption = document.getElementById('stageCaption');
+    const stageDesc = document.getElementById('stageDesc');
+    const thumbs = Array.from(document.querySelectorAll('.thumb'));
+    const thumbData = thumbs.map(t => ({ src: t.dataset.src, alt: t.dataset.alt || '', title: t.dataset.title || 'Photo', desc: t.dataset.desc || '' }));
+    let currentStageIndex = 0;
+
+    thumbs.forEach((t, i) => {
+      t.querySelector('button').addEventListener('click', () => {
+        currentStageIndex = i;
+        const d = thumbData[i];
+        stageImg.src = d.src; stageImg.alt = d.alt;
+        stageCaption.textContent = d.title + ' — Tap to zoom.';
+        stageDesc.innerHTML = d.desc;
+        thumbs.forEach((th, j) => th.setAttribute('aria-current', j === i ? 'true' : 'false'));
+      });
+    });
+
+    const openZoom = initZoom(thumbData);
+
+    stageImg.addEventListener('click', () => openZoom(currentStageIndex));
+    stageImg.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openZoom(currentStageIndex); } });
+  </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products | JSBG 3D Printing</title>
+  <meta name="description" content="Shop the collection of JSBG 3D printed products." />
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <script src="js/components.js"></script>
+</head>
+<body>
+
+  <jsbg-banner></jsbg-banner>
+  <jsbg-header></jsbg-header>
+
+  <main>
+    <section class="hero hero-tertiary" style="min-height: 40vh;">
+      <div class="flower-pattern"></div>
+      <div class="hero-content">
+        <h1>Shop the<br>Collection</h1>
+        <p>Practical 3D printed items, made to be used. Browse the catalog and find something that fits.</p>
+      </div>
+    </section>
+
+    <section class="featured">
+      <div style="text-align: center; margin-bottom: 48px; position: relative; z-index: 10;">
+        <span class="badge" style="background-color: var(--primary-container); color: var(--on-primary-container);">The Collection</span>
+        <br>
+        <h2 class="section-title">Shop Products</h2>
+        <p style="font-size: 20px; font-weight: 700; color: var(--on-surface-variant); max-width: 600px; margin: 0 auto;">Something catch your eye? Email <a href="mailto:printing@jsbg.ca" style="color: var(--primary);">printing@jsbg.ca</a> to order.</p>
+      </div>
+      
+      <div class="filter-chips" role="group" aria-label="Filter products">
+        <button class="filter-chip active" data-filter="all" aria-pressed="true">All</button>
+        <button class="filter-chip" data-filter="under30" aria-pressed="false">Under $30</button>
+        <button class="filter-chip" data-filter="custom" aria-pressed="false">Custom</button>
+      </div>
+
+      <div class="grid" style="position: relative; z-index: 10;">
+        <!-- Apologies Game -->
+        <article class="card" data-price="high" data-custom="true">
+          <div class="card-img" style="padding: 0;">
+            <img src="images/apologies-game/CB_AngleView1.jpg" alt="Apologies Game board at an angle showing pegs and cards" style="width: 100%; height: 100%; object-fit: cover; object-position: center 40%;">
+          </div>
+          <div class="card-content">
+            <h3>Apologies Game</h3>
+            <span class="price-badge">$60 each</span>
+            <p>Travel friendly 3D printed board game. Based on an old classic.</p>
+            <a href="products/apologies-game/" class="btn btn-primary" style="align-self: flex-start; width: 100%;">View Details</a>
+          </div>
+        </article>
+
+        <!-- Deli Container Organizers -->
+        <article class="card" data-price="low">
+          <div class="card-img" style="padding: 0;">
+            <img src="images/deli-organizers/Empty_Organizers.jpg" alt="Deli container organizers on a table" style="width: 100%; height: 100%; object-fit: cover; object-position: center 30%;">
+          </div>
+          <div class="card-content">
+            <h3>Deli Container Organizers</h3>
+            <span class="price-badge">from $20</span>
+            <p>Tabletop or wall-mounted — keep your deli containers sorted in style. Multiple color options and quantity discounts.</p>
+            <a href="products/deli-organizers/" class="btn btn-primary" style="align-self: flex-start; width: 100%;">View Details</a>
+          </div>
+        </article>
+
+        <!-- Earring / Pin Holder -->
+        <article class="card" data-price="low" data-custom="true">
+          <div class="card-img" style="padding: 0;">
+            <img src="images/earring-holder/Star.jpg" alt="Star style earring and pin holder" style="width: 100%; height: 100%; object-fit: cover; object-position: left center;">
+          </div>
+          <div class="card-content">
+            <h3>Earring & Pin Holder</h3>
+            <span class="price-badge">$20 each</span>
+            <p>Multiple styles to choose from, each with a custom message in the centre. Custom shapes and colors available on request.</p>
+            <a href="products/earring-holder/" class="btn btn-primary" style="align-self: flex-start; width: 100%;">View Details</a>
+          </div>
+        </article>
+
+        <!-- Faux Rope Bowls -->
+        <article class="card" data-price="low">
+          <div class="card-img" style="padding: 0;">
+            <img src="images/rope-bowls/5_Variations.jpg" alt="Five color variations of the rope bowl" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div class="card-content">
+            <h3>Faux Rope Bowls</h3>
+            <span class="price-badge">$25 each</span>
+            <p>A vibrant catchall for keys and everyday essentials. Printed in a coiled rope texture with your choice of up to two colors.</p>
+            <a href="products/rope-bowls/" class="btn btn-primary" style="align-self: flex-start; width: 100%;">View Details</a>
+          </div>
+        </article>
+
+        <!-- Bookmarks -->
+        <article class="card" data-price="low">
+          <div class="card-img" style="padding: 0;">
+            <img src="images/bookmarks/Bookmark_Depth.jpg" alt="3D printed bookmarks showing raised texture detail" style="width: 100%; height: 100%; object-fit: contain; background-color: #111;">
+          </div>
+          <div class="card-content">
+            <h3>Bookmarks</h3>
+            <span class="price-badge">$5 each</span>
+            <p>Fun and functional. Browse the available styles and pick your favourite. More styles may be added in the future.</p>
+            <a href="products/bookmarks/" class="btn btn-primary" style="align-self: flex-start; width: 100%;">View Details</a>
+          </div>
+        </article>
+
+        <!-- Rulers -->
+        <article class="card" data-price="low" data-custom="true">
+          <div class="card-img" style="padding: 0;">
+            <img src="images/rulers/Dragons.jpg" alt="Dragons style 3D printed ruler" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div class="card-content">
+            <h3>Rulers</h3>
+            <span class="price-badge">from $15</span>
+            <p>Pick from existing styles or go fully custom with your own design, colors, and name. Great back to school gift for your favourite kiddo!</p>
+            <a href="products/rulers/" class="btn btn-primary" style="align-self: flex-start; width: 100%;">View Details</a>
+          </div>
+        </article>
+
+        <!-- QR Code WiFi Stand -->
+        <article class="card" data-price="low" data-custom="true">
+          <div class="card-img" style="padding: 0;">
+            <img src="images/wifi-stand/Stand1_1.jpg" alt="QR code WiFi stand on a surface" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div class="card-content">
+            <h3>QR Code WiFi Stand</h3>
+            <span class="price-badge">$20 each</span>
+            <p>Let guests scan to connect — no more reading out a 20-character password. Tabletop or wall-mounted and you can choose your own colors!.</p>
+            <a href="products/wifi-stand/" class="btn btn-primary" style="align-self: flex-start; width: 100%;">View Details</a>
+          </div>
+        </article>
+
+        <!-- Toothbrush & Toothpaste Holder -->
+        <article class="card" data-custom="true">
+          <div class="card-img" style="padding: 0;">
+            <img src="images/toothbrush-holder/Loaded1.jpg" alt="Toothbrush and toothpaste holder fully loaded" style="width: 100%; height: 100%; object-fit: cover; object-position: center bottom;">
+          </div>
+          <div class="card-content">
+            <h3>Toothbrush & Toothpaste Holder</h3>
+            <span class="price-badge">Quote on request</span>
+            <p>Modular bathroom organizer — mix and match slots for standard brushes, electric brushes, toothpaste, chargers, and more.</p>
+            <a href="products/toothbrush-holder/" class="btn btn-primary" style="align-self: flex-start; width: 100%;">View Details</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <jsbg-footer></jsbg-footer>
+
+  <script>
+    (function () {
+      var chips = document.querySelectorAll('.filter-chip');
+      var cards = Array.from(document.querySelectorAll('.grid article.card'));
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          chips.forEach(function (c) { c.classList.remove('active'); c.setAttribute('aria-pressed', 'false'); });
+          chip.classList.add('active');
+          chip.setAttribute('aria-pressed', 'true');
+          var f = chip.dataset.filter;
+          cards.forEach(function (card) {
+            if (f === 'all') card.hidden = false;
+            else if (f === 'under30') card.hidden = card.dataset.price !== 'low';
+            else card.hidden = card.dataset.custom !== 'true';
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

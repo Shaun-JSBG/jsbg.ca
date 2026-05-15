@@ -1,0 +1,437 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Code WiFi Stand | JSBG 3D Printing</title>
+  <meta name="description" content="3D printed QR code WiFi stands — tabletop or wall-mounted, custom colors, $20 each. Send your SSID and I'll handle the rest." />
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <style>
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 5%;
+    }
+
+    .page-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 3rem 0 1rem;
+      color: var(--on-surface);
+      text-shadow: 2px 2px 0px var(--true-black);
+    }
+
+    .intro-text {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gallery-layout {
+      display: grid;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (min-width: 920px) {
+      .gallery-layout {
+        grid-template-columns: 1.2fr 1fr;
+        align-items: start;
+      }
+    }
+
+    .stage {
+      padding: 1rem;
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      background-color: var(--surface);
+      box-shadow: var(--hard-shadow);
+    }
+
+    .stage-media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--rounded-sm);
+      border: var(--border-bold);
+      background-color: var(--quaternary);
+      overflow: hidden;
+    }
+
+    .stage-media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background-color: var(--surface);
+      cursor: zoom-in;
+    }
+
+    .stage-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-label);
+      font-weight: 800;
+      font-size: 1rem;
+      text-transform: uppercase;
+      gap: 0.5rem;
+      color: var(--on-surface);
+    }
+
+    .thumbs-group {
+      padding: 1.5rem;
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      background-color: var(--secondary-container);
+      box-shadow: var(--hard-shadow);
+    }
+
+    .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; list-style: none; margin-top: 1rem; }
+    .thumb { border: var(--border-bold); border-radius: var(--rounded-sm); overflow: hidden; background: var(--surface); transition: transform 0.2s; }
+    .thumb:hover { transform: translate(-2px, -2px); }
+    .thumb button { width: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; display: block; }
+    .thumb img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .thumb[aria-current="true"] { outline: 4px solid var(--primary); outline-offset: 2px; }
+
+    .styles-placeholder {
+      background-color: var(--surface);
+      border: var(--border-bold);
+      border-radius: var(--rounded-sm);
+      padding: 1.5rem;
+      text-align: center;
+      font-weight: 700;
+      color: var(--on-surface-variant);
+      font-family: var(--font-label);
+      text-transform: uppercase;
+    }
+
+    .info-section {
+      background-color: var(--surface);
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      box-shadow: var(--hard-shadow);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-section h2, .info-section h3 {
+      font-weight: 800;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .info-section ul {
+      margin-left: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    .info-section li {
+      margin-bottom: 0.5rem;
+    }
+
+    .price-callout {
+      background-color: var(--primary);
+      color: var(--on-primary);
+      padding: 1.5rem;
+      border-radius: var(--rounded-md);
+      border: var(--border-bold);
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: var(--hard-shadow-sm);
+    }
+
+    .warn-callout {
+      background-color: var(--secondary-container);
+      color: var(--on-surface);
+      padding: 1.5rem;
+      border-radius: var(--rounded-md);
+      border: var(--border-bold);
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    .steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 2rem;
+      height: 2rem;
+      background: var(--primary);
+      color: var(--on-primary);
+      border: var(--border-bold);
+      border-radius: var(--rounded-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 0.9rem;
+    }
+
+    .step-body {
+      font-weight: 600;
+      font-size: 1rem;
+      padding-top: 0.2rem;
+    }
+
+    .variant-grid {
+      display: grid;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+
+    .price-table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 1.5rem; }
+    .price-table th, .price-table td { border: var(--border-bold); padding: 0.65rem 1rem; text-align: center; font-weight: 700; }
+    .price-table th { background-color: var(--tertiary-container); font-family: var(--font-label); text-transform: uppercase; font-size: 0.85rem; }
+    .price-table tr:nth-child(even) td { background-color: var(--surface-container); }
+
+    .variant-card {
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      box-shadow: var(--hard-shadow-sm);
+      overflow: hidden;
+    }
+
+    .variant-card-header {
+      padding: 0.75rem 1.25rem;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1rem;
+      text-transform: uppercase;
+      border-bottom: var(--border-bold);
+    }
+
+    .variant-card-body {
+      padding: 1.25rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+  </style>
+  <script src="js/components.js"></script>
+</head>
+<body>
+
+  <jsbg-banner></jsbg-banner>
+
+  <jsbg-header></jsbg-header>
+
+  <main>
+    <div class="wrap">
+      <p class="breadcrumb"><a href="products.html">Shop Collection</a> / QR Code WiFi Stand</p>
+      <h1 class="page-title">QR Code WiFi Stand</h1>
+      <p class="intro-text">Never explain your WiFi password again. A custom-printed QR code stand that lets guests scan and connect instantly — tabletop or wall-mounted.</p>
+
+      <div class="hero-actions" style="margin-bottom: 3rem;">
+        <a href="mailto:printing@jsbg.ca?subject=QR%20Code%20WiFi%20Stand%20Order&body=WiFi%20network%20name%20%28SSID%29%3A%20%0ASecurity%20type%3A%20%5BWPA2%20%2F%20WPA3%20%2F%20None%5D%0AColor%20for%20QR%20code%3A%20%0AColor%20for%20background%3A%20%0ASymbol%20%28optional%29%3A%20%0AText%20to%20include%20%28optional%29%3A%20%0AMounting%3A%20%5BTabletop%20%2F%20Wall%20Mount%20%2F%20Mix%20%26%20Match%201%20-%20no%20strip%20%2F%20Mix%20%26%20Match%202%20-%20strip%20included%20%28%2B%242%29%5D%0ANFC%20tag%3A%20%5BYes%2C%20x__%20%28%2B%245%20each%29%20%2F%20No%5D%0AQuantity%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" class="btn btn-primary">Email to Order</a>
+        <a href="products.html" class="btn btn-secondary">Back to Collection</a>
+      </div>
+
+      <!-- Style gallery -->
+      <div class="gallery-layout">
+        <div class="stage">
+          <div class="stage-media">
+            <img id="stageImg" tabindex="0" role="button"
+              src="images/wifi-stand/Stand1_1.jpg"
+              alt="QR code WiFi tabletop stand" loading="lazy" />
+          </div>
+          <p id="stageCaption" style="font-weight: 900; margin-top: 1rem; font-size: 1.25rem;">Tabletop Stand — Tap to zoom.</p>
+          <p id="stageDesc" style="font-weight: 600;">The tabletop variant sitting on a surface.</p>
+        </div>
+
+        <div class="thumbs-group">
+          <h2 style="font-weight: 800; font-family: var(--font-display); text-transform: uppercase; border-bottom: var(--border-bold); padding-bottom: 0.5rem;">Photos</h2>
+          <p style="font-size: 0.9rem; font-weight: 700; margin-top: 0.5rem;">Tap a thumbnail to update the main image</p>
+          <ul class="thumbs" id="thumbs">
+            <li class="thumb" aria-current="true"
+              data-src="images/wifi-stand/Stand1_1.jpg"
+              data-title="Tabletop Stand"
+              data-alt="QR code WiFi tabletop stand"
+              data-desc="The tabletop variant sitting on a surface.">
+              <button type="button" aria-label="Show tabletop stand photo 1">
+                <img src="images/wifi-stand/Stand1_1.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/wifi-stand/Stand1_2.jpg"
+              data-title="Tabletop Stand — detail"
+              data-alt="QR code WiFi tabletop stand detail view"
+              data-desc="A closer look at the tabletop stand and QR code detail.">
+              <button type="button" aria-label="Show tabletop stand photo 2">
+                <img src="images/wifi-stand/Stand1_2.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/wifi-stand/Wall1.jpg"
+              data-title="Wall Mounted"
+              data-alt="QR code WiFi wall mounted variant"
+              data-desc="The wall-mounted variant installed on a wall.">
+              <button type="button" aria-label="Show wall mounted photo 1">
+                <img src="images/wifi-stand/Wall1.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/wifi-stand/Wall2.jpg"
+              data-title="Wall Mounted — detail"
+              data-alt="QR code WiFi wall mounted variant detail"
+              data-desc="A closer look at the wall-mounted variant.">
+              <button type="button" aria-label="Show wall mounted photo 2">
+                <img src="images/wifi-stand/Wall2.jpg" alt="" loading="lazy" />
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- About & Variants -->
+      <div class="info-section">
+        <h2>About This Product</h2>
+        <ul>
+          <li>A custom QR code display stand that encodes your WiFi credentials — guests scan it and connect instantly, no password typing required.</li>
+          <li>Before anything is printed, I generate the code and send it to you to scan and verify on your own device first.</li>
+          <li>Your WiFi password is never sent to me and never stored — I only need your network name (SSID) and security type.</li>
+          <li>Available in tabletop and wall-mounted variants, in your choice of two colors.</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <h2>Mounting Options</h2>
+        <div class="variant-grid">
+          <div class="variant-card">
+            <div class="variant-card-header" style="background-color: var(--tertiary-container);">Tabletop</div>
+            <div class="variant-card-body">QR plate + base. Clean flat back — sits on any surface. No wall mount slot.</div>
+          </div>
+          <div class="variant-card">
+            <div class="variant-card-header" style="background-color: var(--primary-container);">Wall Mount</div>
+            <div class="variant-card-body">QR plate + 3M velcro strip included. No base — mounts flush to the wall. Strip is included.</div>
+          </div>
+          <div class="variant-card">
+            <div class="variant-card-header" style="background-color: var(--secondary-container);">Mix & Match 1</div>
+            <div class="variant-card-body">QR plate + base + slot for 3M strip. Strip not included — bring your own. Can be used as tabletop or wall mounted.</div>
+          </div>
+          <div class="variant-card">
+            <div class="variant-card-header" style="background-color: var(--quaternary);">Mix & Match 2 <span style="font-size: 0.8rem;">+$2</span></div>
+            <div class="variant-card-body">QR plate + base + slot for 3M strip with strip included. Best of both worlds — tabletop or wall mount, ready to go.</div>
+          </div>
+        </div>
+        <p style="font-weight: 600;">All options are the same base price except Mix & Match 2, which adds $2 for the included strips.</p>
+      </div>
+
+      <!-- Price & Process -->
+      <div class="info-section">
+        <h2>Price & How It Works</h2>
+
+        <h3>Pricing</h3>
+        <table class="price-table">
+          <thead>
+            <tr><th>Quantity</th><th>Price</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>$20</td></tr>
+            <tr><td>2</td><td>$30</td></tr>
+            <tr><td>3+</td><td>+$5 each</td></tr>
+          </tbody>
+        </table>
+        <p style="font-weight: 600; margin-bottom: 1.5rem;">Most of the effort goes into the setup — generating and verifying the QR code — so additional stands after the first two are much cheaper.</p>
+
+        <h3>Add-Ons</h3>
+        <div class="warn-callout">
+          <strong>NFC Tag — +$5 each:</strong> I can embed an NFC tag into the stand so phones can tap to connect in addition to scanning the QR code. I'll pre-program it for you, but it won't be locked — you can rewrite it yourself any time if you want. Adding one requires manually inserting the tag during the print, so it requires a little babysitting.
+        </div>
+
+        <h3>Customization</h3>
+        <ul>
+          <li>Choose <strong>two colors</strong> — one for the QR code and symbols, one for the background.</li>
+          <li>Choose a <strong>symbol</strong> to appear on the stand (optional).</li>
+          <li>Add <strong>custom text</strong> — a label, your network name, or anything else that fits (optional).</li>
+        </ul>
+
+        <h3 style="margin-top: 1.5rem;">The Process</h3>
+        <ol class="steps">
+          <li class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">Email me your WiFi network name (SSID) and your password security type (WPA2, WPA3, etc.). <strong>Do not send your actual password</strong> — I only need the security type to generate a valid QR code structure.</div>
+          </li>
+          <li class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">I generate the QR code and send you an image file to test. Scan it with your phone and confirm it connects before anything is printed.</div>
+          </li>
+          <li class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">Once you confirm it works, I print your stand in your chosen colors, style, and mounting option.</div>
+          </li>
+        </ol>
+
+        <div class="warn-callout">
+          <strong>Note on privacy:</strong> I do not store your WiFi credentials. The QR code is generated, sent to you for verification, and that's it.
+        </div>
+
+        <p style="font-weight: 700; font-size: 1.25rem; text-align: center; margin-top: 1rem;">
+          To order, email <a href="mailto:printing@jsbg.ca?subject=QR%20Code%20WiFi%20Stand%20Order&body=WiFi%20network%20name%20%28SSID%29%3A%20%0ASecurity%20type%3A%20%5BWPA2%20%2F%20WPA3%20%2F%20None%5D%0AColor%20for%20QR%20code%3A%20%0AColor%20for%20background%3A%20%0ASymbol%20%28optional%29%3A%20%0AText%20to%20include%20%28optional%29%3A%20%0AMounting%3A%20%5BTabletop%20%2F%20Wall%20Mount%20%2F%20Mix%20%26%20Match%201%20-%20no%20strip%20%2F%20Mix%20%26%20Match%202%20-%20strip%20included%20%28%2B%242%29%5D%0ANFC%20tag%3A%20%5BYes%2C%20x__%20%28%2B%245%20each%29%20%2F%20No%5D%0AQuantity%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 3px;">printing@jsbg.ca</a>.
+        </p>
+      </div>
+
+      <jsbg-quality-notice></jsbg-quality-notice>
+    </div>
+  </main>
+
+  <jsbg-footer></jsbg-footer>
+
+  <script src="js/zoom.js"></script>
+  <script>
+    const stageImg = document.getElementById('stageImg');
+    const stageCaption = document.getElementById('stageCaption');
+    const stageDesc = document.getElementById('stageDesc');
+    const thumbs = Array.from(document.querySelectorAll('.thumb'));
+    const thumbData = thumbs.map(t => ({ src: t.dataset.src, alt: t.dataset.alt || '', title: t.dataset.title || 'Photo', desc: t.dataset.desc || '' }));
+    let currentStageIndex = 0;
+
+    thumbs.forEach((t, i) => {
+      t.querySelector('button').addEventListener('click', () => {
+        currentStageIndex = i;
+        const d = thumbData[i];
+        stageImg.src = d.src; stageImg.alt = d.alt;
+        stageCaption.textContent = d.title + ' — Tap to zoom.';
+        stageDesc.innerHTML = d.desc;
+        thumbs.forEach((th, j) => th.setAttribute('aria-current', j === i ? 'true' : 'false'));
+      });
+    });
+
+    const openZoom = initZoom(thumbData);
+
+    stageImg.addEventListener('click', () => openZoom(currentStageIndex));
+    stageImg.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openZoom(currentStageIndex); } });
+  </script>
+
+</body>
+</html>

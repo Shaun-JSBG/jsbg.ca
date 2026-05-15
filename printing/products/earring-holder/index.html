@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Earring & Pin Holder | JSBG 3D Printing</title>
+  <meta name="description" content="3D printed earring and pin holders — multiple styles, custom message in the centre, $20 each." />
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <style>
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+
+    .page-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 3rem 0 1rem;
+      color: var(--on-surface);
+      text-shadow: 2px 2px 0px var(--true-black);
+    }
+
+    .intro-text {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gallery-layout { display: grid; gap: 2rem; margin-bottom: 4rem; }
+    @media (min-width: 920px) { .gallery-layout { grid-template-columns: 1.2fr 1fr; align-items: start; } }
+
+    .stage { padding: 1rem; border: var(--border-bold); border-radius: var(--rounded-md); background-color: var(--surface); box-shadow: var(--hard-shadow); }
+    .stage-media { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: var(--rounded-sm); border: var(--border-bold); background-color: var(--primary-container); overflow: hidden; }
+    .stage-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background-color: var(--surface); cursor: zoom-in; }
+
+    .thumbs-group { padding: 1.5rem; border: var(--border-bold); border-radius: var(--rounded-md); background-color: var(--secondary-container); box-shadow: var(--hard-shadow); }
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+      list-style: none;
+      margin-top: 1rem;
+    }
+
+    .thumb { border: var(--border-bold); border-radius: var(--rounded-sm); overflow: hidden; background: var(--surface); transition: transform 0.2s; }
+    .thumb:hover { transform: translate(-2px, -2px); }
+    .thumb button { width: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; display: block; }
+    .thumb img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .thumb-label { display: block; text-align: center; font-family: var(--font-label); font-weight: 800; font-size: 0.68rem; text-transform: uppercase; padding: 0.3rem 0.25rem 0.4rem; border-top: 2px solid var(--true-black); background: var(--surface); }
+    .thumb[aria-current="true"] { outline: 4px solid var(--primary); outline-offset: 2px; }
+
+    .info-section { background-color: var(--surface); border: var(--border-bold); border-radius: var(--rounded-md); box-shadow: var(--hard-shadow); padding: 2rem; margin-bottom: 2rem; }
+    .info-section h2, .info-section h3 { font-weight: 800; font-family: var(--font-display); text-transform: uppercase; margin-bottom: 1rem; }
+    .info-section ul { margin-left: 1.5rem; margin-bottom: 1.5rem; font-weight: 500; }
+    .info-section li { margin-bottom: 0.5rem; }
+
+    .price-callout { background-color: var(--primary); color: var(--on-primary); padding: 1.5rem; border-radius: var(--rounded-md); border: var(--border-bold); font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 2rem; box-shadow: var(--hard-shadow-sm); }
+    .warn-callout { background-color: var(--secondary-container); color: var(--on-surface); padding: 1.5rem; border-radius: var(--rounded-md); border: var(--border-bold); font-weight: 600; margin-bottom: 2rem; }
+
+    /* Video section */
+    .video-section {
+      border: var(--border-bold);
+      border-radius: var(--rounded-md);
+      box-shadow: var(--hard-shadow);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .video-header {
+      padding: 1rem 1.25rem;
+      background-color: var(--primary-container);
+      border-bottom: var(--border-bold);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+    }
+
+    .video-body { background: var(--surface); padding: 1rem; }
+
+    .video-body video {
+      width: 100%;
+      border-radius: var(--rounded-sm);
+      border: var(--border-bold);
+      display: block;
+    }
+
+    .video-caption {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+      color: var(--on-surface-variant);
+    }
+
+  </style>
+  <script src="js/components.js"></script>
+</head>
+<body>
+
+  <jsbg-banner></jsbg-banner>
+
+  <jsbg-header></jsbg-header>
+
+  <main>
+    <div class="wrap">
+      <p class="breadcrumb"><a href="products.html">Shop Collection</a> / Earring & Pin Holder</p>
+      <h1 class="page-title">Earring & Pin Holder</h1>
+      <p class="intro-text">Display your earrings or pins in style. Pick from the designs below — each one has a custom message in the centre that you choose yourself.</p>
+
+      <div class="hero-actions" style="margin-bottom: 3rem;">
+        <a href="mailto:printing@jsbg.ca?subject=Earring%20%2F%20Pin%20Holder%20Order&body=Style%20I%20want%3A%20%0AHolder%20style%3A%20%5BSlim%20%2F%20Stand-Out%5D%3A%20%0ACustom%20message%20for%20centre%3A%20%0AAccent%20color%3A%20%0AMesh%20color%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" class="btn btn-primary">Email to Order</a>
+        <a href="products.html" class="btn btn-secondary">Back to Collection</a>
+      </div>
+
+      <div class="gallery-layout">
+        <div class="stage">
+          <div class="stage-media">
+            <img id="stageImg" tabindex="0" role="button"
+              src="images/earring-holder/Axolotl.jpg"
+              alt="Axolotl style earring and pin holder" loading="lazy" />
+          </div>
+          <p id="stageCaption" style="font-weight: 900; margin-top: 1rem; font-size: 1.25rem;">Axolotl — Tap to zoom.</p>
+          <p id="stageDesc" style="font-weight: 600;">The Axolotl design — you choose the message for the centre section.</p>
+        </div>
+
+        <div class="thumbs-group">
+          <h2 style="font-weight: 800; font-family: var(--font-display); text-transform: uppercase; border-bottom: var(--border-bold); padding-bottom: 0.5rem;">Available Styles</h2>
+          <p style="font-size: 0.9rem; font-weight: 700; margin-top: 0.5rem;">All styles are the same price — tap to preview</p>
+          <ul class="thumbs" id="thumbs">
+            <li class="thumb" aria-current="true"
+              data-src="images/earring-holder/Axolotl.jpg"
+              data-title="Axolotl"
+              data-alt="Axolotl style earring and pin holder"
+              data-desc="The Axolotl design — you choose the message for the centre section.">
+              <button type="button" aria-label="Show Axolotl style">
+                <img src="images/earring-holder/Axolotl.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Axolotl</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/earring-holder/Mushroom.jpg"
+              data-title="Mushroom"
+              data-alt="Mushroom style earring and pin holder"
+              data-desc="The Mushroom design — you choose the message for the centre section.">
+              <button type="button" aria-label="Show Mushroom style">
+                <img src="images/earring-holder/Mushroom.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Mushroom</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/earring-holder/Splat.jpg"
+              data-title="Splat"
+              data-alt="Splat style earring and pin holder"
+              data-desc="The Splat design — you choose the message for the centre section.">
+              <button type="button" aria-label="Show Splat style">
+                <img src="images/earring-holder/Splat.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Splat</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/earring-holder/Star.jpg"
+              data-title="Star"
+              data-alt="Star style earring and pin holder"
+              data-desc="The Star design — you choose the message for the centre section.">
+              <button type="button" aria-label="Show Star style">
+                <img src="images/earring-holder/Star.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Star</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/earring-holder/SugarSkull.jpg"
+              data-title="Sugar Skull"
+              data-alt="Sugar Skull style earring and pin holder"
+              data-desc="The Sugar Skull design — you choose the message for the centre section.">
+              <button type="button" aria-label="Show Sugar Skull style">
+                <img src="images/earring-holder/SugarSkull.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Sugar Skull</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/earring-holder/Unicorn.jpg"
+              data-title="Unicorn"
+              data-alt="Unicorn style earring and pin holder"
+              data-desc="The Unicorn design — you choose the message for the centre section.">
+              <button type="button" aria-label="Show Unicorn style">
+                <img src="images/earring-holder/Unicorn.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Unicorn</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/earring-holder/Holder_Dimensions.png"
+              data-title="Dimensions"
+              data-alt="Holder dimensions reference"
+              data-desc="Size reference for the holder — helpful for gauging how it'll fit your space and which holder style (Slim or Stand-Out) to choose.">
+              <button type="button" aria-label="Show dimensions reference">
+                <img src="images/earring-holder/Holder_Dimensions.png" alt="" loading="lazy" />
+                <span class="thumb-label">Dimensions</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mounting video -->
+      <div class="video-section">
+        <div class="video-header">How It Mounts</div>
+        <div class="video-body">
+          <video autoplay loop muted playsinline
+            aria-label="Video showing how the earring holder mounts to a surface">
+            <source src="images/earring-holder/Mounting.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <p class="video-caption">The holder mounts using 3M velcro tape — included with every order. No tools required.</p>
+        </div>
+      </div>
+
+      <!-- About & Price & Details -->
+      <div class="info-section">
+        <h2>About This Product</h2>
+        <ul>
+          <li>A wall-mounted display for earrings and pins — pick your shape, holder style, and a custom message for the centre section.</li>
+          <li>Two holder styles available: <strong>Slim</strong> (sits closer to the wall) or <strong>Stand-Out</strong> (projects further for easier access to your earrings). Same price for both.</li>
+          <li>Mounts using 3M velcro tape, which is included with every order. No tools required, and the velcro peels off cleanly — renter-friendly, no wall damage.</li>
+          <li>Six styles to choose from: Axolotl, Mushroom, Splat, Star, Sugar Skull, and Unicorn.</li>
+          <li>Custom shapes and colors are available on request.</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <h2>Price & Ordering</h2>
+        <div class="price-callout">$20 each</div>
+        <h3>What's Included</h3>
+        <ul>
+          <li>Your choice of style from the designs above.</li>
+          <li>Your choice of holder style: <strong>Slim</strong> (sits closer to the wall) or <strong>Stand-Out</strong> (projects further for easier access). Same price for both.</li>
+          <li>Your choice of two colors: one for the <strong>accent</strong> (outer detail) and one for the <strong>mesh</strong> (the perforated centre section).</li>
+          <li>A custom message printed in the centre section — you choose the text.</li>
+          <li>3M velcro tape for mounting — included with every order. Peels off cleanly, no wall damage.</li>
+        </ul>
+        <div class="warn-callout">
+          <strong>Custom shapes and colors</strong> are available on request. Reach out and I'll work out the details and pricing with you.
+        </div>
+        <p style="font-weight: 700; font-size: 1.25rem; text-align: center; margin-top: 1rem;">
+          To order, email <a href="mailto:printing@jsbg.ca?subject=Earring%20%2F%20Pin%20Holder%20Order&body=Style%20I%20want%3A%20%0AHolder%20style%3A%20%5BSlim%20%2F%20Stand-Out%5D%3A%20%0ACustom%20message%20for%20centre%3A%20%0AAccent%20color%3A%20%0AMesh%20color%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 3px;">printing@jsbg.ca</a>.
+        </p>
+      </div>
+
+      <jsbg-quality-notice></jsbg-quality-notice>
+    </div>
+  </main>
+
+  <jsbg-footer></jsbg-footer>
+
+  <script src="js/zoom.js"></script>
+  <script>
+    const stageImg = document.getElementById('stageImg');
+    const stageCaption = document.getElementById('stageCaption');
+    const stageDesc = document.getElementById('stageDesc');
+    const thumbs = Array.from(document.querySelectorAll('.thumb'));
+    const thumbData = thumbs.map(t => ({ src: t.dataset.src, alt: t.dataset.alt || '', title: t.dataset.title || 'Photo', desc: t.dataset.desc || '' }));
+    let currentStageIndex = 0;
+
+    thumbs.forEach((t, i) => {
+      t.querySelector('button').addEventListener('click', () => {
+        currentStageIndex = i;
+        const d = thumbData[i];
+        stageImg.src = d.src; stageImg.alt = d.alt;
+        stageCaption.textContent = d.title + ' — Tap to zoom.';
+        stageDesc.innerHTML = d.desc;
+        thumbs.forEach((th, j) => th.setAttribute('aria-current', j === i ? 'true' : 'false'));
+      });
+    });
+
+    const openZoom = initZoom(thumbData);
+
+    stageImg.addEventListener('click', () => openZoom(currentStageIndex));
+    stageImg.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openZoom(currentStageIndex); } });
+  </script>
+</body>
+</html>

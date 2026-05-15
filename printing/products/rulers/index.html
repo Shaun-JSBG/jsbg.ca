@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/printing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rulers | JSBG 3D Printing</title>
+  <meta name="description" content="3D printed rulers — multiple styles at $15 each, or go fully custom with your own design and name." />
+  <link rel="icon" href="images/site/icon-noBG.png" type="image/png" />
+  <link rel="stylesheet" href="css/printing.css" />
+  <style>
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+
+    .page-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 3rem 0 1rem;
+      color: var(--on-surface);
+      text-shadow: 2px 2px 0px var(--true-black);
+    }
+
+    .intro-text {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gallery-layout { display: grid; gap: 2rem; margin-bottom: 4rem; }
+    @media (min-width: 920px) { .gallery-layout { grid-template-columns: 1.2fr 1fr; align-items: start; } }
+
+    .stage { padding: 1rem; border: var(--border-bold); border-radius: var(--rounded-md); background-color: var(--surface); box-shadow: var(--hard-shadow); }
+    .stage-media { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: var(--rounded-sm); border: var(--border-bold); background-color: var(--tertiary-container); overflow: hidden; }
+    .stage-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background-color: var(--surface); cursor: zoom-in; }
+
+    .thumbs-group { padding: 1.5rem; border: var(--border-bold); border-radius: var(--rounded-md); background-color: var(--secondary-container); box-shadow: var(--hard-shadow); }
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+      list-style: none;
+      margin-top: 1rem;
+    }
+
+    .thumb { border: var(--border-bold); border-radius: var(--rounded-sm); overflow: hidden; background: var(--surface); transition: transform 0.2s; }
+    .thumb:hover { transform: translate(-2px, -2px); }
+    .thumb button { width: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; display: block; }
+    .thumb img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .thumb-label { display: block; text-align: center; font-family: var(--font-label); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; padding: 0.3rem 0.25rem 0.4rem; border-top: 2px solid var(--true-black); background: var(--surface); }
+    .thumb[aria-current="true"] { outline: 4px solid var(--primary); outline-offset: 2px; }
+
+    .info-section { background-color: var(--surface); border: var(--border-bold); border-radius: var(--rounded-md); box-shadow: var(--hard-shadow); padding: 2rem; margin-bottom: 2rem; }
+    .info-section h2, .info-section h3 { font-weight: 800; font-family: var(--font-display); text-transform: uppercase; margin-bottom: 1rem; }
+    .info-section ul { margin-left: 1.5rem; margin-bottom: 1.5rem; font-weight: 500; }
+    .info-section li { margin-bottom: 0.5rem; }
+
+    .price-callout { background-color: var(--primary); color: var(--on-primary); padding: 1.5rem; border-radius: var(--rounded-md); border: var(--border-bold); font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 2rem; box-shadow: var(--hard-shadow-sm); }
+    .warn-callout { background-color: var(--secondary-container); color: var(--on-surface); padding: 1.5rem; border-radius: var(--rounded-md); border: var(--border-bold); font-weight: 600; margin-bottom: 2rem; }
+
+    .option-grid { display: grid; gap: 1.5rem; margin-bottom: 1.5rem; }
+    @media (min-width: 640px) { .option-grid { grid-template-columns: 1fr 1fr; } }
+    .option-card { border: var(--border-bold); border-radius: var(--rounded-md); box-shadow: var(--hard-shadow-sm); overflow: hidden; }
+    .option-card-header { padding: 0.75rem 1.25rem; font-family: var(--font-display); font-weight: 800; font-size: 1rem; text-transform: uppercase; border-bottom: var(--border-bold); }
+    .option-card-body { padding: 1.25rem; font-weight: 600; font-size: 0.95rem; }
+
+  </style>
+  <script src="js/components.js"></script>
+</head>
+<body>
+
+  <jsbg-banner></jsbg-banner>
+
+  <jsbg-header></jsbg-header>
+
+  <main>
+    <div class="wrap">
+      <p class="breadcrumb"><a href="products.html">Shop Collection</a> / Rulers</p>
+      <h1 class="page-title">Rulers</h1>
+      <p class="intro-text">Functional and fun. Pick from my existing styles, or commission a fully custom ruler with your own design, colors, and name.</p>
+
+      <div class="hero-actions" style="margin-bottom: 3rem;">
+        <a href="mailto:printing@jsbg.ca?subject=Ruler%20Order&body=Style%20I%20want%3A%20%5BAnts%20%2F%20Aquatic%20%2F%20Artsy%20%2F%20Dragons%20%2F%20Spider-Man%20%2F%20Custom%5D%0AName%20to%20print%20on%20ruler%3A%20%0ATop%20color%3A%20%0ABottom%20color%3A%20%0ACustom%20description%20%28if%20going%20custom%29%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" class="btn btn-primary">Email to Order</a>
+        <a href="products.html" class="btn btn-secondary">Back to Collection</a>
+      </div>
+
+      <div class="gallery-layout">
+        <div class="stage">
+          <div class="stage-media">
+            <img id="stageImg" tabindex="0" role="button"
+              src="images/rulers/Ants.jpg"
+              alt="Ants design ruler" loading="lazy" />
+          </div>
+          <p id="stageCaption" style="font-weight: 900; margin-top: 1rem; font-size: 1.25rem;">Ants — Tap to zoom.</p>
+          <p id="stageDesc" style="font-weight: 600;">Ant-themed ruler design.</p>
+        </div>
+
+        <div class="thumbs-group">
+          <h2 style="font-weight: 800; font-family: var(--font-display); text-transform: uppercase; border-bottom: var(--border-bold); padding-bottom: 0.5rem;">Available Styles</h2>
+          <p style="font-size: 0.9rem; font-weight: 700; margin-top: 0.5rem;">All standard styles are $15 — tap to preview</p>
+          <ul class="thumbs" id="thumbs">
+            <li class="thumb" aria-current="true"
+              data-src="images/rulers/Ants.jpg"
+              data-title="Ants"
+              data-alt="Ants design ruler"
+              data-desc="Ant-themed ruler design.">
+              <button type="button" aria-label="Show Ants style">
+                <img src="images/rulers/Ants.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Ants</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/rulers/Aquatic.jpg"
+              data-title="Aquatic"
+              data-alt="Aquatic design ruler"
+              data-desc="Aquatic-themed ruler design.">
+              <button type="button" aria-label="Show Aquatic style">
+                <img src="images/rulers/Aquatic.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Aquatic</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/rulers/Artsy.jpg"
+              data-title="Artsy"
+              data-alt="Artsy design ruler"
+              data-desc="Artsy ruler design.">
+              <button type="button" aria-label="Show Artsy style">
+                <img src="images/rulers/Artsy.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Artsy</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/rulers/Dragons.jpg"
+              data-title="Dragons"
+              data-alt="Dragons design ruler"
+              data-desc="Dragon-themed ruler design.">
+              <button type="button" aria-label="Show Dragons style">
+                <img src="images/rulers/Dragons.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Dragons</span>
+              </button>
+            </li>
+            <li class="thumb"
+              data-src="images/rulers/Spiderman.jpg"
+              data-title="Spider-Man"
+              data-alt="Spider-Man design ruler"
+              data-desc="Spider-Man themed ruler design.">
+              <button type="button" aria-label="Show Spider-Man style">
+                <img src="images/rulers/Spiderman.jpg" alt="" loading="lazy" />
+                <span class="thumb-label">Spider-Man</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>About This Product</h2>
+        <ul>
+          <li>Standard 30 cm rulers with themed designs built directly into the print — not stickers or labels, part of the ruler itself.</li>
+          <li>Each ruler has your name printed on it as part of the design.</li>
+          <li>Fully functional as a measuring tool, not just a novelty.</li>
+          <li>Available in preset themes, or fully custom with your own design, colors, and name.</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <h2>Your Options</h2>
+        <div class="option-grid">
+          <div class="option-card">
+            <div class="option-card-header" style="background-color: var(--tertiary-container);">Pick a Style — $15</div>
+            <div class="option-card-body">Browse the designs above, pick the one you want, and include the style name, your name, and your top and bottom color choices when ordering.</div>
+          </div>
+          <div class="option-card">
+            <div class="option-card-header" style="background-color: var(--primary-container);">Go Custom — Price varies</div>
+            <div class="option-card-body">Want your own design, colors, or motif? Reach out and I'll work out the details and a custom quote with you.</div>
+          </div>
+        </div>
+
+        <div class="warn-callout">
+          <strong>Ordering a standard style?</strong> Include the style name, the name you'd like printed on the ruler, and your top and bottom color choices in your email.
+        </div>
+
+        <p style="font-weight: 700; font-size: 1.25rem; text-align: center; margin-top: 1rem;">
+          To order, email <a href="mailto:printing@jsbg.ca?subject=Ruler%20Order&body=Style%20I%20want%3A%20%5BAnts%20%2F%20Aquatic%20%2F%20Artsy%20%2F%20Dragons%20%2F%20Spider-Man%20%2F%20Custom%5D%0AName%20to%20print%20on%20ruler%3A%20%0ATop%20color%3A%20%0ABottom%20color%3A%20%0ACustom%20description%20%28if%20going%20custom%29%3A%20%0APickup%20or%20shipping%3A%20%0AAnything%20else%3A%20" style="color: var(--primary); text-decoration: underline; text-decoration-thickness: 3px;">printing@jsbg.ca</a>.
+        </p>
+      </div>
+
+      <jsbg-quality-notice></jsbg-quality-notice>
+    </div>
+  </main>
+
+  <jsbg-footer></jsbg-footer>
+
+  <script src="js/zoom.js"></script>
+  <script>
+    const stageImg = document.getElementById('stageImg');
+    const stageCaption = document.getElementById('stageCaption');
+    const stageDesc = document.getElementById('stageDesc');
+    const thumbs = Array.from(document.querySelectorAll('.thumb'));
+    const thumbData = thumbs.map(t => ({ src: t.dataset.src, alt: t.dataset.alt || '', title: t.dataset.title || 'Photo', desc: t.dataset.desc || '' }));
+    let currentStageIndex = 0;
+
+    thumbs.forEach((t, i) => {
+      t.querySelector('button').addEventListener('click', () => {
+        currentStageIndex = i;
+        const d = thumbData[i];
+        stageImg.src = d.src; stageImg.alt = d.alt;
+        stageCaption.textContent = d.title + ' — Tap to zoom.';
+        stageDesc.innerHTML = d.desc;
+        thumbs.forEach((th, j) => th.setAttribute('aria-current', j === i ? 'true' : 'false'));
+      });
+    });
+
+    const openZoom = initZoom(thumbData);
+
+    stageImg.addEventListener('click', () => openZoom(currentStageIndex));
+    stageImg.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openZoom(currentStageIndex); } });
+  </script>
+</body>
+</html>
