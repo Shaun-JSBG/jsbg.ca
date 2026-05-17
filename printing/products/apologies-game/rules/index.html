@@ -51,6 +51,7 @@
     figcaption { font-weight: 700; text-align: center; margin-top: 1rem; }
     img.zoomable { border: var(--border-bold); border-radius: var(--rounded-sm); cursor: zoom-in; }
     
+    section { scroll-margin-top: 120px; }
     @media print { .no-print, header, .toc, .banner, .site-footer { display: none !important; } .rules-content { box-shadow: none; border: none; } }
 
   </style>
@@ -359,11 +360,18 @@
 
   <script src="js/zoom.js"></script>
   <script>
-    // Smooth scroll for TOC anchors
+    // Smooth scroll for TOC anchors, offset for sticky header
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         const el = document.querySelector(a.getAttribute('href'));
-        if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        if (el) {
+          e.preventDefault();
+          const header = document.querySelector('.site-header');
+          const banner = document.querySelector('.banner');
+          const offset = (header ? header.offsetHeight : 0) + (banner ? banner.offsetHeight : 0) + 16;
+          const top = el.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
       });
     });
 
