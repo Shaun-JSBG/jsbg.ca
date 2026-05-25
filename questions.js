@@ -1,7 +1,8 @@
 // Edit this file to change the bubble questions and answers.
 // Rules: answers must be 35 words or fewer. Keep questions short (one line fits best).
+// Questions must be less than 90 characters including spaces and answers must be less than 155 characters including spaces.
 // Q: This is about the limit, and even this is pushing it. Definitely not longer than this. 
-// A: This can be a little longer but it gets bad on mobile if it's too long. Hard limit is quite a bit longer though so that's nice at least. Definitely no longer than this.
+// A: This can be a little longer but it gets bad on mobile if it's too long. Hard limit is quite a bit longer though so that's nice at least. This is the limit.
 
 var Q = [
   {
@@ -17,7 +18,7 @@ var Q = [
   },
   {
     q: "Why do we still do it this way?",
-    a: "Because nobody's had the time to change it. That's exactly the kind of thing I look at: where work is being done manually that doesn't need to be."
+    a: "Often, because that's the way it's always been done. That is almost never a good answer and I can help you find a better way."
   },
   {
     q: "Wouldn't it be great if this just ran automatically?",
@@ -44,10 +45,6 @@ var Q = [
     a: "In most cases, yes. Automated reports, triggered emails, scheduled summaries. If it follows a repeatable pattern, it can usually run without anyone pressing a button."
   },
   {
-    q: "Why does this take so long every time?",
-    a: "Because it wasn't designed to be fast. I look at where the time is actually going and redesign the parts that don't need to take that long."
-  },
-  {
     q: "Is all our data actually accurate?",
     a: "Probably not entirely. Most data collection has gaps and inconsistencies that build up over time. Finding and fixing them is usually the first thing worth doing."
   },
@@ -64,15 +61,19 @@ var Q = [
     a: "Without the right reporting, probably not clearly. I build the visibility that lets you see what's actually happening and whether it's producing what you intended."
   },
   {
-    q: "Why does this still require someone to do it manually?",
-    a: "Because it hasn't been automated yet. If a process follows consistent rules, it can usually run without someone doing it by hand every single time."
-  },
-  {
     q: "Could this run while everyone is on summer break?",
     a: "It could, once it's built right. Systems that depend on someone being there to trigger them are usually fixable. That's exactly the kind of problem I look at."
   },
   {
     q: "What would it take to fix this once and for all?",
     a: "Usually less than you'd think. A clear conversation about the actual problem, then a solution built for your situation. No ongoing dependency required."
+  },
+  {
+    q: "I really hope they don't get that new job. We’d be completely lost without them.",
+    a: "Relying on one person's memory is a massive risk. I build interactive digital guides that turn individual expertise into a company asset."
+  },
+  {
+    q: "It doesn't make sense that it takes weeks to get a clear picture of our data.",
+    a: "It doesn't. If the data is captured, the delay is just a broken pipeline. I build direct connections to keep your dashboards current."
   }
 ];
