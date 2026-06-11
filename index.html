@@ -527,6 +527,8 @@
     .footer { background: var(--foot-bg); border-top: 1px solid var(--w08); padding-block: 28px; }
     .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
     .footer-copy, .footer-loc { font-size: 0.8125rem; color: var(--w45); }
+    .footer-print { font-size: 0.75rem; color: var(--w15); text-decoration: none; transition: color 150ms; }
+    .footer-print:hover { color: var(--w45); }
 
     /* ── Reveals ── */
     .rv { opacity: 0; transform: translateY(16px); transition: opacity 520ms var(--expo), transform 520ms var(--expo); }
@@ -904,6 +906,7 @@
     <div class="wrap">
       <div class="footer-inner">
         <span class="footer-copy">&copy; 2026 JSBG Consulting</span>
+        <a href="/printing" class="footer-print">Looking for 3D printing?</a>
         <span class="footer-loc">Peace River, AB</span>
       </div>
     </div>
