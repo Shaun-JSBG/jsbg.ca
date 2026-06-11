@@ -61,10 +61,6 @@ var Q = [
     a: "Without the right reporting, probably not clearly. I build the visibility that lets you see what's actually happening and whether it's producing what you intended."
   },
   {
-    q: "Could this run while everyone is on summer break?",
-    a: "It could, once it's built right. Systems that depend on someone being there to trigger them are usually fixable. That's exactly the kind of problem I look at."
-  },
-  {
     q: "What would it take to fix this once and for all?",
     a: "Usually less than you'd think. A clear conversation about the actual problem, then a solution built for your situation. No ongoing dependency required."
   },
