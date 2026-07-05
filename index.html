@@ -252,10 +252,13 @@
       cursor: pointer;
       position: relative;
       display: inline-block;
-      transform: rotate(var(--rot, 0deg));
+      transform: rotate(var(--rot, 0deg)) scale(var(--bscale, 1));
       transition: transform 200ms var(--quart);
     }
-    .b-wrap:hover { transform: rotate(var(--rot, 0deg)) scale(1.05); }
+    .b-wrap:hover { transform: rotate(var(--rot, 0deg)) scale(calc(var(--bscale, 1) * 1.05)); }
+    /* Smaller bubbles on narrower desktops so they fit the side gutters */
+    @media (max-width: 1300px) { .b-wrap { --bscale: 0.85; } }
+    @media (max-width: 1100px) { .b-wrap { --bscale: 0.72; } }
 
     /* Cloud shape: drop-shadow wraps the whole irregular outline */
     .b-cloud {
@@ -551,7 +554,9 @@
       .b-outer { animation: none; opacity: 1; }
     }
 
-    /* ── Mobile adaptations (≤767px) ── */
+    /* ── Mobile / narrow adaptations (≤950px) ──
+       Below ~950px there is no room for bubbles beside the hero copy,
+       so the stacked hero + Q&A carousel takes over. */
 
     /* Touch target fixes — global */
     .theme-toggle { width: 44px; height: 44px; }
@@ -579,7 +584,7 @@
       .mq-dot  { font-size: 0.5rem; }
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: 950px) {
       /* Prevent horizontal overflow */
       body { overflow-x: hidden; }
 
@@ -633,6 +638,8 @@
       .mob-slide {
         flex-shrink: 0;
         width: 85%;
+        /* Cap card width on tablets — clones at both ends keep snap centering */
+        max-width: 540px;
         scroll-snap-align: center;
         scroll-snap-stop: always;
         position: relative;
@@ -734,8 +741,8 @@
       }
     }
 
-    /* Hide carousel on desktop — must be min-width so mobile @media block isn't overridden */
-    @media (min-width: 768px) {
+    /* Hide carousel on desktop — must be min-width so narrow @media block isn't overridden */
+    @media (min-width: 951px) {
       .mob-carousel { display: none; }
     }
   </style>
@@ -986,7 +993,7 @@
     // jitMin/jitMax: random horizontal offset applied at render time.
     // Edge zones (col left/right) jitter inward only, so they can't go off-screen.
     // Middle zones in bands jitter both directions for variety.
-    // ADJ map below prevents adjacent column zones from being active together.
+    // Zones are anchors only — final placement is collision-tested in createBubble().
     var ZONES = [
       //                             jitMin  jitMax
       // Top band — 18% keeps circles clear of the fixed navbar (~70px bottom)
@@ -1014,37 +1021,6 @@
       [80, 57, -6,   6],   // 16 inner
       [80, 76,  0,   0],   // 17 corner
     ];
-
-    // Adjacent zone pairs — zones too close to show simultaneously.
-    // Fully bidirectional: if A blocks B, B also blocks A.
-    // Top/bottom band zones chain (0-1-2-3, 14-15-16-17) prevent adjacent
-    // band positions from coexisting. Column zones form vertical chains.
-    var ADJ = {
-      // Top band
-      0:  [1,  4,  6],
-      1:  [0,  2],
-      2:  [1,  3,  5,  9],
-      3:  [2,  5,  9],
-      // Upper-middle flanks
-      4:  [0,  6],
-      5:  [2,  3,  9],
-      // Left column
-      6:  [0,  4,  7],
-      7:  [6,  8],
-      8:  [7,  12, 14],
-      // Right column
-      9:  [2,  3,  5,  10],
-      10: [9,  11],
-      11: [10, 13, 17],
-      // Lower-middle flanks
-      12: [8,  14],
-      13: [11, 16, 17],
-      // Bottom band
-      14: [8,  12, 15],
-      15: [14, 16],
-      16: [13, 15, 17],
-      17: [11, 13, 16],
-    };
 
     // ── State ─────────────────────────────────────────────────────────────
     var pool           = [];
@@ -1074,22 +1050,48 @@
       return pool.shift();
     }
 
-    function getFreeZone(excludeIdx) {
-      // Build the full blocked set: used zones + their adjacents + the excluded zone
-      var blocked = {};
-      usedZones.forEach(function(zi) {
-        blocked[zi] = true;
-        if (ADJ[zi]) ADJ[zi].forEach(function(a) { blocked[a] = true; });
-      });
-      if (excludeIdx !== undefined) blocked[excludeIdx] = true;
+    // ── Collision helpers ─────────────────────────────────────────────────
+    // Axis-aligned overlap test with a required clear gap between rects
+    function overlaps(a, b, gap) {
+      return a.left < b.right + gap && b.left < a.right + gap &&
+             a.top  < b.bottom + gap && b.top  < a.bottom + gap;
+    }
 
-      var all  = ZONES.map(function(_,i){ return i; });
-      var free = all.filter(function(i){ return !blocked[i]; });
-      // Fallback: drop adjacency constraint if nothing is free
-      if (!free.length) free = all.filter(function(i){ return usedZones.indexOf(i) < 0 && i !== excludeIdx; });
-      if (!free.length) free = all.filter(function(i){ return i !== excludeIdx; });
-      if (!free.length) free = all;
-      return free[Math.floor(Math.random() * free.length)];
+    function localRect(r, origin) {
+      return { left:  r.left  - origin.left, top:    r.top    - origin.top,
+               right: r.right - origin.left, bottom: r.bottom - origin.top };
+    }
+
+    function unionRects(u, r) {
+      if (!u) return { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+      if (r.left   < u.left)   u.left   = r.left;
+      if (r.top    < u.top)    u.top    = r.top;
+      if (r.right  > u.right)  u.right  = r.right;
+      if (r.bottom > u.bottom) u.bottom = r.bottom;
+      return u;
+    }
+
+    // Visual extent of a bubble: union of its cloud circles + body.
+    // (They overflow the layout box, so measure the parts directly.)
+    function visualRect(wrapEl) {
+      var u = null;
+      wrapEl.querySelectorAll('.b-cc, .b-body').forEach(function(p){
+        u = unionRects(u, p.getBoundingClientRect());
+      });
+      return u;
+    }
+
+    // Union of the hero copy's children (eyebrow, h1, sub, buttons) in
+    // hero-local coordinates — the no-go area for bubbles.
+    function centerContentRect(heroBox) {
+      var hc = heroEl.querySelector('.hero-center');
+      if (!hc) return null;
+      var u = null;
+      Array.prototype.forEach.call(hc.children, function(ch){
+        var r = ch.getBoundingClientRect();
+        if (r.width || r.height) u = unionRects(u, r);
+      });
+      return u ? localRect(u, heroBox) : null;
     }
 
     function getBubbleCount() {
@@ -1103,27 +1105,19 @@
     }
 
     // ── Create bubble ─────────────────────────────────────────────────────
-    function createBubble(zoneIdx, qIdx, delay, isNew) {
-      shownQs.push(qIdx);
-      usedZones.push(zoneIdx);
-
-      var zone  = ZONES[zoneIdx];
-      var jTop  = (Math.random() - 0.5) * 3;
-      var jLeft = zone[2] + Math.random() * (zone[3] - zone[2]);
-      var top   = zone[0] + jTop;
-      var left  = zone[1] + jLeft;
+    // Builds the bubble, measures its real rendered size, then searches the
+    // zone anchors for a spot clear of the hero copy, other bubbles, and any
+    // open answer card. Returns the element, or null when nothing fits.
+    function createBubble(qIdx, delay, isNew, excludeZoneIdx) {
       var rot   = (Math.random() - 0.5) * 7;
       var fDel  = Math.floor(Math.random() * 3000);
       var fDur  = 5000 + Math.floor(Math.random() * 4500);
 
       var outer = document.createElement('div');
       outer.className = 'b-outer' + (isNew ? ' is-new' : '');
-      outer.style.top               = top  + '%';
-      outer.style.left              = left + '%';
       outer.style.animationDelay    = fDel + 'ms';
       outer.style.animationDuration = fDur + 'ms';
-      outer.dataset.zoneIdx = zoneIdx;
-      outer.dataset.qIdx    = qIdx;
+      outer.dataset.qIdx = qIdx;
 
       var wrap = document.createElement('div');
       wrap.className = 'b-wrap';
@@ -1214,6 +1208,78 @@
       outer.appendChild(wrap);
       bubblesEl.appendChild(outer);
 
+      // ── Collision-tested placement ────────────────────────────────────
+      var heroBox   = bubblesEl.getBoundingClientRect();
+      var anchorBox = outer.getBoundingClientRect();
+      var vis       = visualRect(wrap);
+      // Offset from the element's anchor point to its visual top-left
+      var dx = vis.left - anchorBox.left;
+      var dy = vis.top  - anchorBox.top;
+      var bw = vis.right - vis.left;
+      var bh = vis.bottom - vis.top;
+
+      var GAP_CENTER = 18, GAP_BUBBLE = 16, GAP_CARD = 10, EDGE = 8;
+
+      var center    = centerContentRect(heroBox);
+      var obstacles = [];
+      bubblesEl.querySelectorAll('.b-outer').forEach(function(o){
+        if (o === outer) return;
+        var ow = o.querySelector('.b-wrap');
+        if (ow) obstacles.push({ rect: localRect(visualRect(ow), heroBox), gap: GAP_BUBBLE });
+      });
+      heroEl.querySelectorAll('.answer-card').forEach(function(c){
+        obstacles.push({ rect: localRect(c.getBoundingClientRect(), heroBox), gap: GAP_CARD });
+      });
+
+      function fitsAt(x, y) {
+        var r = { left: x + dx, top: y + dy, right: x + dx + bw, bottom: y + dy + bh };
+        if (r.left < EDGE || r.top < EDGE ||
+            r.right > heroBox.width - EDGE || r.bottom > heroBox.height - EDGE) return false;
+        if (center && overlaps(r, center, GAP_CENTER)) return false;
+        for (var i = 0; i < obstacles.length; i++) {
+          if (overlaps(r, obstacles[i].rect, obstacles[i].gap)) return false;
+        }
+        return true;
+      }
+
+      // Gutter positions: pinned just left/right of the hero copy
+      var slideL = center ? center.left  - GAP_CENTER - bw - dx : null;
+      var slideR = center ? center.right + GAP_CENTER - dx      : null;
+
+      var candidates = shuffle(ZONES.map(function(_, i){ return i; }).filter(function(i){
+        return usedZones.indexOf(i) < 0 && i !== excludeZoneIdx;
+      }));
+
+      var placed  = null;
+      var zoneIdx = null;
+      search:
+      for (var ci = 0; ci < candidates.length; ci++) {
+        var zi = candidates[ci];
+        var z  = ZONES[zi];
+        for (var s = 0; s < 4; s++) {
+          var x = (z[1] + z[2] + Math.random() * (z[3] - z[2])) / 100 * heroBox.width;
+          var y = (z[0] + (Math.random() - 0.5) * 3)            / 100 * heroBox.height;
+          if (fitsAt(x, y)) { placed = { x: x, y: y }; zoneIdx = zi; break search; }
+          // If the hero copy is in the way, try hugging the nearest gutter
+          var sx = (z[1] < 50) ? slideL : slideR;
+          if (sx !== null && fitsAt(sx, y)) { placed = { x: sx, y: y }; zoneIdx = zi; break search; }
+        }
+      }
+
+      // Nothing fits at this viewport size — skip rather than overlap.
+      // The question returns to the pool for the next opportunity.
+      if (!placed) {
+        outer.remove();
+        pool.push(qIdx);
+        return null;
+      }
+
+      outer.style.left = (placed.x / heroBox.width  * 100) + '%';
+      outer.style.top  = (placed.y / heroBox.height * 100) + '%';
+      outer.dataset.zoneIdx = zoneIdx;
+      shownQs.push(qIdx);
+      usedZones.push(zoneIdx);
+
       // Entrance fade
       setTimeout(function(){
         requestAnimationFrame(function(){
@@ -1263,7 +1329,7 @@
         prevCard.classList.add('closing');
         setTimeout(function(){
           prevCard.remove();
-          createBubble(getFreeZone(prevZone), nextQ(), 0, true);
+          createBubble(nextQ(), 0, true, prevZone);
         }, 250);
       }
 
@@ -1342,7 +1408,7 @@
         }
         setTimeout(function(){
           card.remove();
-          var nb    = createBubble(getFreeZone(fromZoneIdx), nextQ(), 60, true);
+          var nb     = createBubble(nextQ(), 60, true, fromZoneIdx);
           var nbWrap = nb && nb.querySelector('.b-wrap');
           if (nbWrap) nbWrap.focus();
         }, 260);
@@ -1362,22 +1428,12 @@
       var count = getBubbleCount();
       pool = shuffle(Q.map(function(_,i){ return i; }));
 
-      // Pick initial zones respecting adjacency constraints
-      var allZones = shuffle(ZONES.map(function(_,i){ return i; }));
-      var picked  = [];
-      var blocked = {};
-
-      for (var i = 0; i < allZones.length && picked.length < count; i++) {
-        var zi = allZones[i];
-        if (blocked[zi]) continue;
-        picked.push(zi);
-        blocked[zi] = true;
-        if (ADJ[zi]) ADJ[zi].forEach(function(a) { blocked[a] = true; });
+      // Place up to `count` bubbles; collision testing decides how many
+      // actually fit at this viewport size.
+      var made = 0;
+      for (var i = 0; i < count; i++) {
+        if (createBubble(nextQ(), 80 + made * 120, false)) made++;
       }
-
-      picked.forEach(function(zoneIdx, i){
-        createBubble(zoneIdx, nextQ(), 80 + i * 120, false);
-      });
 
       // Pulse the first visible bubble once after 2s to signal interactivity
       setTimeout(function() {
@@ -1402,13 +1458,20 @@
     }
 
     var _resizeCount = getBubbleCount();
+    var _resizeW     = window.innerWidth;
     var _resizeTimer = null;
     window.addEventListener('resize', function() {
       clearTimeout(_resizeTimer);
       _resizeTimer = setTimeout(function() {
         var newCount = getBubbleCount();
-        if (newCount !== _resizeCount) {
+        var w = window.innerWidth;
+        // Re-layout on count change, when crossing the bubbles ↔ carousel
+        // boundary, or when the width moved enough that percent-anchored
+        // bubbles may now collide with the fixed-width copy.
+        var crossed = (w > 950) !== (_resizeW > 950);
+        if (newCount !== _resizeCount || crossed || Math.abs(w - _resizeW) > 160) {
           _resizeCount = newCount;
+          _resizeW     = w;
           teardown();
           init();
         }
