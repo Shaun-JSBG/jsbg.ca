@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page Not Found | JSBG</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/favicon/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml">
+  <!-- Apply saved theme before first paint to avoid a light-mode flash -->
+  <script>
+    (function(){
+      try {
+        var t = localStorage.getItem('jsbg-theme');
+        if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { /* storage unavailable — keep default */ }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       oklch(98.5% 0.005 240);
+      --fg:       oklch(14%   0.020 240);
+      --fg-muted: oklch(44%   0.013 240);
+      --border:   oklch(14%   0.020 240 / 0.09);
+      --blue:     oklch(52%   0.19  248);
+      --bdk:      oklch(44%   0.17  248);
+      --w:        oklch(98%   0.005 240);
+    }
+    [data-theme="dark"] {
+      --bg:       oklch(12%   0.025 245);
+      --fg:       oklch(92%   0.007 240);
+      --fg-muted: oklch(62%   0.010 240);
+      --border:   oklch(98%   0.005 240 / 0.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      line-height: 1.65;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .nf { max-width: 480px; }
+    .nf-code {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-weight: 800;
+      font-size: 0.8125rem;
+      letter-spacing: 0.12em;
+      color: var(--fg-muted);
+      margin-bottom: 14px;
+    }
+    .nf h1 {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+      text-wrap: balance;
+    }
+    .nf p { color: var(--fg-muted); margin-bottom: 30px; max-width: 44ch; }
+    .nf-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn {
+      display: inline-flex; align-items: center;
+      font-weight: 600; font-size: 0.9375rem;
+      border-radius: 5px; text-decoration: none;
+      transition: background 120ms, border-color 120ms;
+    }
+    .btn-primary { background: var(--blue); color: var(--w); padding: 13px 26px; }
+    .btn-primary:hover { background: var(--bdk); }
+    .btn-outline {
+      color: var(--fg); padding: 12px 22px; font-weight: 500;
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--fg-muted); }
+    :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <main class="nf">
+    <p class="nf-code">404</p>
+    <h1 id="nf-title">This page doesn't exist.</h1>
+    <p id="nf-sub">It may have moved, or the link may be out of date. Here's where to go instead:</p>
+    <div class="nf-actions" id="nf-actions">
+      <a class="btn btn-primary" href="/">JSBG Consulting</a>
+      <a class="btn btn-outline" href="/printing/">JSBG 3D Printing</a>
+    </div>
+  </main>
+  <script>
+    // If the missing page was under /printing/, lead with printing destinations.
+    if (location.pathname.toLowerCase().indexOf('/printing') === 0) {
+      document.getElementById('nf-sub').textContent =
+        'That printing page doesn’t exist, or it moved. Here are some better places to be:';
+      document.getElementById('nf-actions').innerHTML =
+        '<a class="btn btn-primary" href="/printing/">3D Printing Home</a>' +
+        '<a class="btn btn-outline" href="/printing/products.html">Shop the Collection</a>' +
+        '<a class="btn btn-outline" href="/">JSBG Consulting</a>';
+    }
+  </script>
+</body>
+</html>

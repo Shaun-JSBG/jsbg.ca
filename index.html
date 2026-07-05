@@ -8,6 +8,15 @@
   <link rel="icon" href="./favicon/favicon.ico" sizes="any">
   <link rel="icon" href="./favicon/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./favicon/apple-touch-icon.png">
+  <!-- Apply saved theme before first paint to avoid a light-mode flash -->
+  <script>
+    (function(){
+      try {
+        var t = localStorage.getItem('jsbg-theme');
+        if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { /* storage unavailable — keep default */ }
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;0,700;0,800;1,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -772,7 +781,7 @@
 
   <!-- Hero -->
   <section class="hero" id="hero" aria-labelledby="hero-h1">
-    <div id="heroBubbles" aria-hidden="true"></div>
+    <div id="heroBubbles"></div>
 
     <div class="hero-center">
       <div class="hero-eyebrow">
@@ -926,13 +935,13 @@
         // Cal.com's embed.js drains Cal.q when it loads. A non-empty queue means it failed.
         var calFailed = !window.Cal || (window.Cal.q && window.Cal.q.length > 0);
         if (calFailed) {
-          var btn = document.querySelector('.cal-btn');
-          if (!btn) return;
-          btn.removeAttribute('data-cal-link');
-          btn.addEventListener('click', function() {
-            window.location.href = 'mailto:shaun@jsbg.ca?subject=Discovery+Meeting+Request';
+          document.querySelectorAll('[data-cal-link]').forEach(function(btn) {
+            btn.removeAttribute('data-cal-link');
+            btn.addEventListener('click', function() {
+              window.location.href = 'mailto:shaun@jsbg.ca?subject=Discovery+Meeting+Request';
+            });
+            btn.title = 'Booking is temporarily unavailable — clicking will open your email client.';
           });
-          btn.title = 'Booking is temporarily unavailable — clicking will open your email client.';
         }
       }, 7000);
     });
@@ -944,13 +953,13 @@
       var root = document.documentElement;
       var btn  = document.getElementById('themeToggle');
       var KEY  = 'jsbg-theme';
-      var saved = localStorage.getItem(KEY) || 'light';
-      root.setAttribute('data-theme', saved);
+      // Theme itself is applied by the inline script in <head>; only sync the button here.
+      var saved = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
       btn.setAttribute('aria-label', saved === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
       btn.addEventListener('click', function(){
         var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         root.setAttribute('data-theme', next);
-        localStorage.setItem(KEY, next);
+        try { localStorage.setItem(KEY, next); } catch (e) { /* storage unavailable */ }
         btn.setAttribute('aria-label', next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
       });
     })();
@@ -1041,8 +1050,9 @@
     var pool           = [];
     var shownQs        = [];
     var usedZones      = [];
-    var activeCard     = null;   // currently visible answer card element
-    var activeCardZone = null;   // zone index that card's bubble came from
+    var activeCard      = null;  // currently visible answer card element
+    var activeCardZone  = null;  // zone index that card's bubble came from
+    var closeActiveCard = null;  // closer for the active card (Escape key)
 
     var heroEl    = document.getElementById('hero');
     var bubblesEl = document.getElementById('heroBubbles');
@@ -1222,6 +1232,8 @@
       wrap.addEventListener('keydown', function(e){
         if (e.key === 'Enter' || e.key === ' ') onClick();
       });
+
+      return outer;
     }
 
     // ── Handle click ──────────────────────────────────────────────────────
@@ -1245,8 +1257,9 @@
       if (activeCard) {
         var prevCard = activeCard;
         var prevZone = activeCardZone;
-        activeCard     = null;
-        activeCardZone = null;
+        activeCard      = null;
+        activeCardZone  = null;
+        closeActiveCard = null;
         prevCard.classList.add('closing');
         setTimeout(function(){
           prevCard.remove();
@@ -1292,12 +1305,18 @@
 
       var closeBtn = document.createElement('button');
       closeBtn.className = 'answer-close';
-      closeBtn.setAttribute('aria-label', 'Close');
+      closeBtn.setAttribute('aria-label', 'Close answer');
       closeBtn.innerHTML = '<svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="7" y2="7"/><line x1="7" y1="1" x2="1" y2="7"/></svg>';
 
       var textEl = document.createElement('p');
       textEl.className   = 'answer-text';
+      textEl.id          = 'answer-text-' + qIdx;
       textEl.textContent = Q[qIdx].a;
+
+      // Announce question + answer when focus lands on the close button
+      card.setAttribute('role', 'dialog');
+      card.setAttribute('aria-label', Q[qIdx].q);
+      card.setAttribute('aria-describedby', textEl.id);
 
       card.appendChild(closeBtn);
       card.appendChild(textEl);
@@ -1309,18 +1328,34 @@
         });
       });
 
-      closeBtn.addEventListener('click', function(){
+      // Keyboard users arrive from the popped bubble, which no longer exists —
+      // put focus on the close button so they aren't dropped to <body>.
+      closeBtn.focus();
+
+      function closeCard() {
+        if (card.classList.contains('closing')) return;
         card.classList.add('closing');
         if (activeCard === card) {
-          activeCard     = null;
-          activeCardZone = null;
+          activeCard      = null;
+          activeCardZone  = null;
+          closeActiveCard = null;
         }
         setTimeout(function(){
           card.remove();
-          createBubble(getFreeZone(fromZoneIdx), nextQ(), 60, true);
+          var nb    = createBubble(getFreeZone(fromZoneIdx), nextQ(), 60, true);
+          var nbWrap = nb && nb.querySelector('.b-wrap');
+          if (nbWrap) nbWrap.focus();
         }, 260);
-      });
+      }
+
+      closeActiveCard = closeCard;
+      closeBtn.addEventListener('click', closeCard);
     }
+
+    // Escape closes the open answer card
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && closeActiveCard) closeActiveCard();
+    });
 
     // ── Init ──────────────────────────────────────────────────────────────
     function init() {
@@ -1359,7 +1394,8 @@
       var hero = document.getElementById('hero');
       hero.querySelectorAll('.b-outer').forEach(function(el){ el.remove(); });
       if (activeCard) { activeCard.remove(); activeCard = null; }
-      activeCardZone = null;
+      activeCardZone  = null;
+      closeActiveCard = null;
       usedZones = [];
       shownQs   = [];
       pool      = [];
