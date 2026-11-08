@@ -4,10 +4,10 @@
   var API = window.PRSS.api;
   var $ = function (id) { return document.getElementById(id); };
   var PARTS = [
-    { t: 'Body', s: 'body, head, tail' },
-    { t: 'Trim', s: 'horns, hooves, muzzle' },
-    { t: 'Eyes', s: 'the eyes' },
-    { t: 'Eye shine', s: 'little dots in the eyes' }
+    { t: 'Body', p: 'Body', s: 'body, head, tail' },
+    { t: 'Trim', p: 'Trim', s: 'horns, hooves, muzzle' },
+    { t: 'Eyes', p: 'Eyes', s: 'the eyes' },
+    { t: 'Eye shine', p: 'Shine', s: 'little dots in the eyes' }
   ];
   var DEFAULT_SEL = [62, 55, 70, 61];
   var S = { user: '', token: '', phase: 'closed', max: 3, maxDrafts: 20, notice: '', deadline: '', drafts: [], tab: 'design', active: 0, sel: DEFAULT_SEL.slice(),
@@ -46,7 +46,8 @@
   }
   function handleError(e) {
     if (e.code === 'auth') { logout(); banner('Please log in again.'); return; }
-    banner(e.message || 'Something went wrong.');
+    banner(e.message || 'Something went wrong. Please try again.');
+    if (e.code === 'closed') refresh(true);
   }
 
   /* ---------- cow drawing: recolor pre-rendered layers in the browser, with a look per filament type ---------- */
@@ -84,8 +85,19 @@
       var a0 = g[iv][iu] * (1 - fu) + g[iv][iu + 1] * fu, a1 = g[iv + 1][iu] * (1 - fu) + g[iv + 1][iu + 1] * fu;
       mot[y * w + x] = (a0 * (1 - fv) + a1 * fv) * 255;
     }
-    return { small: small, mid: mid, big: big, mot: mot };
+    // sparkle glints: sparse flecks, each with a random facing (g2o / g3o) so only some catch the light at a given spot
+    var r2 = mulberry(77), g2m = new Uint8Array(N), g2o = new Uint8Array(N), g3m = new Uint8Array(N), g3o = new Uint8Array(N);
+    function fleck(m, o, count, plus) {
+      for (var k = 0; k < count; k++) {
+        var x = (r2() * w) | 0, y = (r2() * h) | 0, a = (r2() * 256) | 0, pts = plus ? [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1], [2, 0], [-2, 0], [0, 2], [0, -2]] : [[0, 0], [1, 0], [0, 1], [1, 1]];
+        for (var q = 0; q < pts.length; q++) { var xx = x + pts[q][0], yy = y + pts[q][1]; if (xx >= 0 && yy >= 0 && xx < w && yy < h) { m[yy * w + xx] = 1; o[yy * w + xx] = a; } }
+      }
+    }
+    fleck(g2m, g2o, N * 0.014, false); fleck(g3m, g3o, N * 0.0013, true);
+    return { small: small, mid: mid, big: big, mot: mot, g2m: g2m, g2o: g2o, g3m: g3m, g3o: g3o };
   }
+  // a fleck is lit when its facing lines up with the light at that spot (the light is fixed, so the pattern is fixed)
+  function lit(fo, sh, wd) { var d = fo + 77 - sh * 190; d -= Math.floor(d / 256) * 256; if (d > 128) d = 256 - d; return d < wd ? 1 - d / wd : 0; }
   function prep(sel) {
     return sel.map(function (v) {
       var s = S.byN[v] || { kind: 'basic', hex: '#888888' };
@@ -103,12 +115,17 @@
     if (k === 'dual') { var c2 = sl.c2; r = c2[0] + (r - c2[0]) * t; g = c2[1] + (g - c2[1]) * t; b = c2[2] + (b - c2[2]) * t; k = 'silk'; }
     switch (k) {
       case 'matte': o[0] = r * sh; o[1] = g * sh; o[2] = b * sh; break;
-      case 'silk': m = 0.8 * sh + 0.1; o[0] = r * m + spS * 1.7 + rim * 34; o[1] = g * m + spS * 1.7 + rim * 34; o[2] = b * m + spS * 1.7 + rim * 34; break;
-      case 'metal': m = 0.42 * sh + 0.1; f = spM * 2.1 / 255;
+      case 'silk':
+        if (sl.k === 'silk') {                    // deep gloss: darker shadows, a color-tinted highlight and a white core
+          var hv = spS / 255, mm = Math.pow(sh, 1.35) * 0.88 + 0.04, wh = 255 * hv * hv * hv * 0.65, rm = rim * 30;
+          o[0] = r * mm + (r * 0.5 + 125) * hv * 1.3 + wh + rm * (0.4 + r / 400); o[1] = g * mm + (g * 0.5 + 125) * hv * 1.3 + wh + rm * (0.4 + g / 400); o[2] = b * mm + (b * 0.5 + 125) * hv * 1.3 + wh + rm * (0.4 + b / 400);
+        } else { m = 0.8 * sh + 0.1; o[0] = r * m + spS * 1.7 + rim * 34; o[1] = g * m + spS * 1.7 + rim * 34; o[2] = b * m + spS * 1.7 + rim * 34; }   // two-color silk keeps the smooth look
+        break;
+      case 'metal': m = 0.42 * sh + 0.1; f = spM * 1.8 / 255;
         o[0] = r * m + (r * 0.55 + 140) * f + spB * 0.5 + rim * 22 * r / 255; o[1] = g * m + (g * 0.55 + 140) * f + spB * 0.5 + rim * 22 * g / 255; o[2] = b * m + (b * 0.55 + 140) * f + spB * 0.5 + rim * 22 * b / 255; break;
       case 'translucent': m = 0.66 + 0.34 * sh;
         o[0] = (r + (255 - r) * 0.3) * m + spB * 3 + rim * 70; o[1] = (g + (255 - g) * 0.3) * m + spB * 3 + rim * 70; o[2] = (b + (255 - b) * 0.3) * m + spB * 3 + rim * 70; break;
-      case 'neon': m = 0.84 + 0.16 * sh; o[0] = r * m * 1.08 + rim * 36 + spB; o[1] = g * m * 1.08 + rim * 36 + spB; o[2] = b * m * 1.08 + rim * 36 + spB; break;
+      case 'neon': m = 0.66 + 0.34 * sh; o[0] = r * m; o[1] = g * m; o[2] = b * m; break;                  // matte pop: the plain color, never blown out
       case 'glow': m = 0.6 + 0.4 * sh; o[0] = (r + (255 - r) * 0.25) * m + spB * 1.6; o[1] = (g + (255 - g) * 0.25) * m + spB * 1.6; o[2] = (b + (255 - b) * 0.25) * m + spB * 1.6; break;
       case 'sparkle': case 'galaxy': case 'glitter': case 'marble': {
         var hl = k === 'marble' ? 0 : spB;
@@ -116,11 +133,16 @@
         var mot = T.mot[i] / 255;
         if (k === 'galaxy') {                     // dark nebula with tiny stars
           var n = 0.78 + 0.5 * mot; o[0] *= n; o[1] *= n; o[2] *= n;
-          if ((f = T.small[i])) { a = 0.55 + f / 255 * 0.45; fc = sl.fl.length ? sl.fl[f % sl.fl.length] : [255, 255, 255]; o[0] += (fc[0] - o[0]) * a; o[1] += (fc[1] - o[1]) * a; o[2] += (fc[2] - o[2]) * a; }
-          if ((f = T.mid[i])) { o[0] += 150 + f * 0.4; o[1] += 150 + f * 0.4; o[2] += 150 + f * 0.4; }
-        } else if (k === 'sparkle') {             // fine metallic flecks
-          if ((f = T.small[i] || T.mid[i])) { a = 0.9; fc = sl.fl.length ? sl.fl[f % sl.fl.length] : [255, 255, 255]; var q = 0.7 + 0.5 * sh; o[0] += (fc[0] * q - o[0]) * a; o[1] += (fc[1] * q - o[1]) * a; o[2] += (fc[2] * q - o[2]) * a; }
-          if (T.big[i]) { o[0] = 255; o[1] = 255; o[2] = 255; }
+          if ((f = T.small[i]) && i % 20 !== 7) { a = 0.55 + f / 255 * 0.45; fc = sl.fl.length ? sl.fl[f % sl.fl.length] : [255, 255, 255]; o[0] += (fc[0] - o[0]) * a; o[1] += (fc[1] - o[1]) * a; o[2] += (fc[2] - o[2]) * a; }
+          if ((f = T.mid[i]) && i % 20 !== 7) { o[0] += 150 + f * 0.4; o[1] += 150 + f * 0.4; o[2] += 150 + f * 0.4; }
+        } else if (k === 'sparkle') {             // glints: sparse flecks that flash only where they face the light
+          var hs = spB * 0.7; o[0] = r * sh * 0.92 + hs; o[1] = g * sh * 0.92 + hs; o[2] = b * sh * 0.92 + hs;
+          if (T.g2m[i]) {
+            var fo = T.g2o[i], l = lit(fo, sh, 52); fc = sl.fl.length ? sl.fl[fo % sl.fl.length] : [255, 255, 255];
+            if (l > 0) { a = 0.4 + 0.6 * l; o[0] += (fc[0] * 0.5 + 128 - o[0]) * a + l * 70; o[1] += (fc[1] * 0.5 + 128 - o[1]) * a + l * 70; o[2] += (fc[2] * 0.5 + 128 - o[2]) * a + l * 70; }
+            else { o[0] += (fc[0] * 0.5 * sh - o[0]) * 0.45; o[1] += (fc[1] * 0.5 * sh - o[1]) * 0.45; o[2] += (fc[2] * 0.5 * sh - o[2]) * 0.45; }
+          }
+          if (T.g3m[i]) { if (lit(T.g3o[i], sh, 70) > 0) { o[0] = 255; o[1] = 255; o[2] = 255; } else { o[0] += (255 - o[0]) * 0.25; o[1] += (255 - o[1]) * 0.25; o[2] += (255 - o[2]) * 0.25; } }
         } else if (k === 'glitter') {             // bigger, brighter flakes
           if ((f = T.mid[i] || T.big[i])) {
             var vv = f % 3;                       // mix of white, pale and deep flakes so they show on any base color
@@ -163,7 +185,57 @@
     ctx.putImageData(outData, 0, 0);
   }
   var mainCtx = $('cv').getContext('2d'), off = document.createElement('canvas'), offCtx;
-  function drawMain() { paint(mainCtx, S.sel, S.lights); $('cvLoading').hidden = !!L; $('stage').classList.toggle('dark', S.lights); }
+  function drawMain() { paint(mainCtx, S.sel, S.lights); $('cvLoading').hidden = !!L; $('stage').classList.toggle('dark', S.lights); if (L && !BOX) measureBox(); layoutCanvas(); }
+  /* ---------- zoom and pan on the cow window only (pinch, double-tap, drag, ctrl+wheel; double-tap again to fit) ---------- */
+  var Z = { s: 1, x: 0, y: 0 }, ptrs = {}, pinch = null, lastTap = null, view = $('view'), pan = $('pan'), cvEl = $('cv'), BOX = null;
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  /* The cow only fills the middle band of its square picture, so the window is cropped to the cow's own box and fills the available width. */
+  function measureBox() {
+    try {
+      var W = cvEl.width, H = cvEl.height, d = mainCtx.getImageData(0, 0, W, H).data, x0 = W, y0 = H, x1 = 0, y1 = 0;
+      for (var y = 0; y < H; y += 2) for (var x = 0; x < W; x += 2) if (d[(y * W + x) * 4 + 3] > 24) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      if (x1 <= x0 || y1 <= y0) return;
+      var pad = Math.round(W * 0.03); x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(W, x1 + pad); y1 = Math.min(H, y1 + pad);
+      BOX = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+      $('stage').style.setProperty('--ar', (BOX.w / BOX.h).toFixed(3));
+    } catch (e) {}
+  }
+  function layoutCanvas() {
+    var vw = view.clientWidth; if (!vw) return;
+    var b = BOX || { x: 60, y: 150, w: 580, h: 400 }, W = cvEl.width, D = vw / b.w * W;
+    cvEl.style.width = cvEl.style.height = D + 'px'; cvEl.style.left = -(b.x / W * D) + 'px'; cvEl.style.top = -(b.y / W * D) + 'px';
+  }
+  function zApply() {
+    var w = view.clientWidth, h = view.clientHeight;
+    Z.s = clamp(Z.s, 1, 3.5); Z.x = clamp(Z.x, w - w * Z.s, 0); Z.y = clamp(Z.y, h - h * Z.s, 0);
+    pan.style.transform = Z.s === 1 ? '' : 'translate(' + Z.x + 'px,' + Z.y + 'px) scale(' + Z.s + ')';
+    view.classList.toggle('zoomed', Z.s > 1);
+  }
+  function zoomAt(px, py, ns) { ns = clamp(ns, 1, 3.5); var k = ns / Z.s; Z.x = px - (px - Z.x) * k; Z.y = py - (py - Z.y) * k; Z.s = ns; zApply(); }
+  function localPt(e) { var r = view.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  function two() { var k = Object.keys(ptrs); return k.length === 2 ? [ptrs[k[0]], ptrs[k[1]]] : null; }
+  view.addEventListener('pointerdown', function (e) {
+    ptrs[e.pointerId] = localPt(e); try { view.setPointerCapture(e.pointerId); } catch (x) {}
+    var t = two(); if (t) { pinch = { d: Math.hypot(t[0][0] - t[1][0], t[0][1] - t[1][1]), s: Z.s }; lastTap = null; return; }
+    var p = ptrs[e.pointerId], now = Date.now();
+    if (lastTap && now - lastTap.t < 320 && Math.hypot(p[0] - lastTap.x, p[1] - lastTap.y) < 30) { zoomAt(p[0], p[1], Z.s > 1 ? 1 : 2.5); lastTap = null; }
+    else lastTap = { t: now, x: p[0], y: p[1] };
+  });
+  view.addEventListener('pointermove', function (e) {
+    if (!ptrs[e.pointerId]) return;
+    var prev = ptrs[e.pointerId], p = localPt(e); ptrs[e.pointerId] = p;
+    var t = two();
+    if (t && pinch) { var d = Math.hypot(t[0][0] - t[1][0], t[0][1] - t[1][1]); zoomAt((t[0][0] + t[1][0]) / 2, (t[0][1] + t[1][1]) / 2, pinch.s * d / (pinch.d || 1)); }
+    else if (Z.s > 1) { Z.x += p[0] - prev[0]; Z.y += p[1] - prev[1]; zApply(); lastTap = null; }
+  });
+  function ptrUp(e) { delete ptrs[e.pointerId]; if (Object.keys(ptrs).length < 2) pinch = null; }
+  view.addEventListener('pointerup', ptrUp); view.addEventListener('pointercancel', ptrUp);
+  view.addEventListener('wheel', function (e) { if (!e.ctrlKey && !e.metaKey && Z.s === 1) return; e.preventDefault(); var p = localPt(e); zoomAt(p[0], p[1], Z.s * (e.deltaY < 0 ? 1.15 : 1 / 1.15)); }, { passive: false });
+  window.addEventListener('resize', function () { layoutCanvas(); zApply(); }); zApply();
+
+  var thumbQ = [], thumbBusy = false;
+  function queueThumb(cv, spec) { thumbQ.push([cv, spec]); if (!thumbBusy) { thumbBusy = true; requestAnimationFrame(pumpThumbs); } }
+  function pumpThumbs() { var n = 0; while (thumbQ.length && n < 3) { var t = thumbQ.shift(); if (L && t[0].isConnected) drawThumb(t[0], t[1]); n++; } if (thumbQ.length) requestAnimationFrame(pumpThumbs); else thumbBusy = false; }
   function drawThumb(canvas, sel) {
     if (!L) return;
     if (!offCtx) { off.width = L.w; off.height = L.h; offCtx = off.getContext('2d'); }
@@ -226,6 +298,8 @@
   }
   function saveSel() { store('prss_sel', JSON.stringify(S.sel)); }
   function lbl(v) { var s = S.byN[v]; return s ? s.label : 'Unknown'; }
+  function nm(v) { var s = S.byN[v]; return s ? s.name : ''; }
+  function describe(spec) { return nm(spec[0]) + ' body, ' + nm(spec[1]) + ' trim, ' + nm(spec[2]) + ' eyes'; }
   function refreshDesign() {
     var parts = $('parts'); parts.innerHTML = '';
     PARTS.forEach(function (p, i) {
@@ -235,17 +309,25 @@
       b.appendChild(d); b.appendChild(t); b.addEventListener('click', function () { S.active = i; refreshDesign(); });
       parts.appendChild(b);
     });
+    var pin = $('pinParts'); pin.innerHTML = '';
+    PARTS.forEach(function (p, i) {
+      var b = el('button', 'pinbtn'); b.type = 'button'; b.setAttribute('aria-pressed', i === S.active); b.setAttribute('aria-label', p.t + ': ' + lbl(S.sel[i]));
+      var d = el('span', 'dot'); var sw = S.byN[S.sel[i]]; if (sw) d.style.background = swatchBg(sw);
+      b.appendChild(d); b.appendChild(el('span', 'pl', p.p)); b.addEventListener('click', function () { S.active = i; refreshDesign(); });
+      pin.appendChild(b);
+    });
     var cur = S.sel[S.active];
     Array.prototype.forEach.call($('grid').children, function (b) { b.setAttribute('aria-pressed', String(b.dataset.n) === String(cur)); });
     $('summary').textContent = S.sel.map(function (v, i) { return PARTS[i].t + ': ' + lbl(v); }).join('  ·  ');
+    $('cv').setAttribute('aria-label', 'Your coo: ' + describe(S.sel));
     var editing = !!S.editId && S.drafts.some(function (d) { return d.id === S.editId; });
     if (!editing) S.editId = null;
-    $('editTitle').textContent = editing ? 'Editing your design' : 'Design your cow';
+    $('editTitle').textContent = editing ? 'Editing your design' : COPY.designTitle;
     $('saveBtn').textContent = editing ? 'Save changes' : 'Save design';
     $('saveNewBtn').hidden = !editing; $('newBtn').hidden = !editing;
     var subs = S.drafts.filter(function (d) { return d.submitted; }).length;
     $('saveBtn').disabled = !editing && S.drafts.length >= S.maxDrafts;
-    $('saveNote').textContent = 'You have saved ' + S.drafts.length + ' of ' + S.maxDrafts + ' designs and submitted ' + subs + ' of ' + S.max + '. Submit your favorites in My designs.' + (editing && S.drafts.some(function (d) { return d.id === S.editId && d.submitted; }) ? ' This one is submitted, so saving changes updates your submission.' : '');
+    $('saveNote').textContent = 'Saved ' + S.drafts.length + ' of ' + S.maxDrafts + ' · Submitted ' + subs + ' of ' + S.max + '. Open ' + COPY.herd + ' to submit your favorites.' + (editing && S.drafts.some(function (d) { return d.id === S.editId && d.submitted; }) ? ' This one is submitted, so saving changes updates your submission.' : '');
     drawMain();
   }
   function saveDraft(asNew) {
@@ -253,7 +335,7 @@
     var payload = { parts: S.sel, name: $('cowName').value };
     if (S.editId && !asNew) payload.id = S.editId;
     api('save', payload, false).then(function (j) {
-      S.editId = j.savedId; applyState(j); banner('Saved to My designs.', true);
+      S.editId = j.savedId; applyState(j); banner('Saved to ' + COPY.herd + '.', true);
     }).catch(handleError).then(function () { btn.textContent = old; refreshDesign(); });
   }
   $('saveBtn').addEventListener('click', function () { saveDraft(false); });
@@ -262,14 +344,15 @@
   $('lightsOff').addEventListener('change', function (e) { S.lights = e.target.checked; drawMain(); });
 
   /* ---------- my designs (gallery) ---------- */
-  var STATUS = { pending: 'Submitted', approved: 'Picked for voting', rejected: 'Not picked this time' };
+  var COPY = Object.assign({ unnamed: 'Unnamed coo', pending: 'Entered in the show', approved: 'Picked for the vote', rejected: 'Not picked this time', cows: 'coos', seenAll: "You've seen every coo!", designTitle: 'Design your coo', herd: 'My herd' }, window.PRSS.copy || {});
+  var STATUS = { pending: COPY.pending, approved: COPY.approved, rejected: COPY.rejected };
   function editDraft(d) {
     S.editId = d.id; S.sel = d.spec.slice(); $('cowName').value = d.name; saveSel(); showTab('design');
   }
   function card(d, compact, canEdit) {
     var c = el('div', 'mini' + (d.submitted ? ' picked' : '')), cv = el('canvas'); cv.width = compact ? 260 : 320; cv.height = cv.width; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', 'Design ' + (d.name || ''));
     c.appendChild(cv);
-    c.appendChild(el('h2', null, d.name || 'Unnamed design'));
+    c.appendChild(el('h2', null, d.name || COPY.unnamed));
     if (d.submitted) c.appendChild(el('span', 'st ' + d.status, STATUS[d.status] || d.status));
     if (!compact) { var ul = el('ul'); d.spec.forEach(function (v, i) { ul.appendChild(el('li', null, PARTS[i].t + ': ' + lbl(v))); }); c.appendChild(ul); }
     if (canEdit) {
@@ -283,7 +366,7 @@
         sb = el('button', 'small go', 'Submit'); sb.type = 'button';
         var full = S.drafts.filter(function (x) { return x.submitted; }).length >= S.max;
         sb.disabled = full; if (full) sb.title = 'Remove one of your picks first';
-        sb.addEventListener('click', function () { act(sb, 'submit', d, 'Submitted!'); });
+        sb.addEventListener('click', function () { act(sb, 'submit', d, 'Entered in the show!'); });
       }
       row.appendChild(sb);
       if (!compact) {
@@ -296,7 +379,7 @@
       }
       c.appendChild(row);
     }
-    if (L) drawThumb(cv, d.spec); else c._cv = cv;
+    queueThumb(cv, d.spec);
     return c;
   }
   function act(btn, action, d, msg) {
@@ -308,12 +391,12 @@
     var open = S.phase === 'submissions', subs = S.drafts.filter(function (d) { return d.submitted; });
     $('galCount').textContent = '(' + S.drafts.length + ')';
     $('picksCount').textContent = '(' + subs.length + ' of ' + S.max + ')';
-    $('picksNote').textContent = open ? 'These are the designs you have submitted. You can still change them or swap them until sending closes.' : 'These are the designs you submitted.';
+    $('picksNote').textContent = open ? 'These coos are entered in the show. You can still change or swap them until the design phase ends.' : 'These coos were entered in the show.';
     var pk = $('picks'); pk.innerHTML = '';
     subs.forEach(function (d) { pk.appendChild(card(d, true, open)); });
     for (var i = subs.length; i < S.max; i++) { var e = el('div', 'mini empty'); e.appendChild(el('p', null, open ? 'Empty. Pick a design below and tap Submit.' : 'Empty')); pk.appendChild(e); }
     var box = $('cards'); box.innerHTML = '';
-    $('galIntro').textContent = S.drafts.length ? '' : (open ? 'You have not saved a design yet. Go to Design, make one and tap Save design.' : 'You did not save any designs.');
+    $('galIntro').textContent = S.drafts.length ? '' : (open ? 'No designs yet. Go to Design, make one and tap Save design.' : 'You did not save any designs.');
     S.drafts.forEach(function (d) { box.appendChild(card(d, false, open)); });
   }
 
@@ -321,9 +404,7 @@
   function showTab(t) { S.tab = t; renderAll(); window.scrollTo(0, 0); }
   function renderAll() {
     $('whoName').textContent = S.user;
-    var open = S.phase === 'submissions', voting = S.phase === 'voting', pill = $('phasePill');
-    pill.textContent = open ? 'Sending designs is open' : voting ? 'Voting is open' : 'Closed';
-    pill.className = 'pill' + (open || voting ? ' open' : '');
+    var open = S.phase === 'submissions', voting = S.phase === 'voting';
     var n = $('notice'); n.textContent = S.notice; n.hidden = !S.notice;
     var dl = $('deadline'); dl.textContent = S.deadline; dl.hidden = !S.deadline || !(open || voting);
     if (open && S.tab === 'vote') S.tab = 'design';
@@ -412,15 +493,16 @@
   }
   function updateVoteUi() {
     var V = S.vote, n = Math.min(Object.keys(V.seenSet).length, V.total);
-    $('voteCount').textContent = V.complete ? "You've seen all the cows!" : "You've seen " + n + " of " + V.total + " cows";
+    $('voteCount').textContent = V.complete ? COPY.seenAll : "You've seen " + n + " of " + V.total + " " + COPY.cows;
     $('rankLink').hidden = !V.complete;
   }
   function nextPair() {
     var V = S.vote; updateVoteUi();
     if (V.buf.length < 5) fetchMore();
-    if (!V.buf.length) { V.current = null; $('voteLoading').hidden = false; $('optA').disabled = $('optB').disabled = true;
+    if (!V.buf.length) { V.current = null; $('voteLoading').hidden = false; $('voteLoading').textContent = (V.total < 2 && !V.fetching) ? "There aren't enough coos to vote on yet. Check back soon." : 'Getting the next coos...'; $('optA').disabled = $('optB').disabled = true;
       if (V.empty) { finishVoting("You have seen every pair there is. Thank you!"); } return; }
-    var p = V.buf.shift(); V.current = p; $('voteLoading').hidden = true; $('optA').disabled = $('optB').disabled = false;
+    var p = V.buf.shift(); V.current = p;
+    $('optA').setAttribute('aria-label', 'Pick the coo on the left: ' + describe(p.a.spec)); $('optB').setAttribute('aria-label', 'Pick the coo on the right: ' + describe(p.b.spec)); $('voteLoading').hidden = true; $('optA').disabled = $('optB').disabled = false;
     $('optA').classList.remove('won'); $('optB').classList.remove('won');
     if (L) { paint($('cvA').getContext('2d'), p.a.spec, false); paint($('cvB').getContext('2d'), p.b.spec, false); }
   }
@@ -430,7 +512,7 @@
       V.fetching = false; if (typeof j.votes === 'number') S.votes = Math.max(j.votes, S.votes); syncSeen(j);
       if (!j.pairs.length) { V.empty = true; } else addPairs(j.pairs);
       if (!V.current) nextPair();
-    }).catch(function (e) { V.fetching = false; if (e.code === 'closed') { refresh(); return; } handleError(e); if (!V.current) setTimeout(function () { if (!V.current && S.phase === 'voting') nextPair(); }, 4000); });
+    }).catch(function (e) { V.fetching = false; if (e.code === 'closed') { refresh(); return; } if (e.code === 'no_pool') { $('voteLoading').hidden = false; $('voteLoading').textContent = e.message; return; } handleError(e); if (!V.current) setTimeout(function () { if (!V.current && S.phase === 'voting') nextPair(); }, 4000); });
   }
   function choose(side) {
     var V = S.vote, p = V.current; if (!p) return;
@@ -457,7 +539,7 @@
   }
   function finishVoting(msg) {
     var V = S.vote; flush(); V.done = true;
-    $('doneText').textContent = msg || ('You voted ' + S.votes + (S.votes === 1 ? ' time' : ' times') + ' and saw ' + Math.min(Object.keys(S.vote.seenSet).length, S.vote.total) + ' of ' + S.vote.total + ' cows. Your votes are saved. Come back whenever you like.');
+    $('doneText').textContent = msg || ('You voted ' + S.votes + (S.votes === 1 ? ' time' : ' times') + ' and saw ' + Math.min(Object.keys(S.vote.seenSet).length, S.vote.total) + ' of ' + S.vote.total + ' ' + COPY.cows + '. Your votes are saved. Come back whenever you like.');
     renderAll();
   }
   $('optA').addEventListener('click', function () { choose('a'); });
@@ -498,7 +580,7 @@
         $('rankLoading').hidden = true; V.rankFor = S.votes;
         var ol = $('rankList'); ol.innerHTML = ''; var todo = [];
         j.list.forEach(function (x) {
-          var li = el('li', x.rank <= 3 ? 'top' : ''), cv = el('canvas'); cv.width = 260; cv.height = 260; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', 'Cow ranked number ' + x.rank);
+          var li = el('li', x.rank <= 3 ? 'top' : ''), cv = el('canvas'); cv.width = 260; cv.height = 260; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', 'Coo ranked number ' + x.rank + ': ' + describe(x.spec));
           li.appendChild(el('span', 'no', String(x.rank))); li.appendChild(cv);
           var n = x.w + x.l; li.appendChild(el('span', 'rec', n === 1 ? (x.w ? 'You picked it' : 'You picked the other one') : 'Picked ' + x.w + ' of ' + n + ' times'));
           ol.appendChild(li); todo.push([cv, x.spec]);

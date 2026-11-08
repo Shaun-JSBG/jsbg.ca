@@ -1,3 +1,15 @@
+/* Highland Cow designer: Foil Heather look (base layout + foil cards + heather changes in one file, no @import chain). */
+/* Self-hosted fonts (Latin subset), so no request goes to Google. Files in fonts/. */
+@font-face{font-family:'Big Shoulders Display';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/big-shoulders-display-normal-832b15.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Big Shoulders Display';font-style:normal;font-weight:900;font-display:swap;src:url(fonts/big-shoulders-display-normal-832b15.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/bricolage-grotesque-normal-a97232.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/bricolage-grotesque-normal-a97232.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Figtree';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/figtree-normal-dab710.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Figtree';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/figtree-normal-dab710.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Figtree';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/figtree-normal-dab710.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Libre Baskerville';font-style:italic;font-weight:400;font-display:swap;src:url(fonts/libre-baskerville-italic-17b716.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Libre Baskerville';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/libre-baskerville-normal-eeb780.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Libre Baskerville';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/libre-baskerville-normal-eeb780.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 :root{
   --bg:#faf5ec;--card:#fffdf8;--ink:#2b2420;--mute:#6f645b;--line:#e2d8c8;
   --acc:#b3452a;--acc-ink:#fff;--ok:#2f7d4f;--warn:#9a6a00;--bad:#a12a2a;--focus:#1f5fd6;
@@ -7,7 +19,7 @@
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+body{margin:0;background:var(--bg);color:var(--ink);font:1.0625rem/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
 h1{font-size:1.4rem;line-height:1.2;margin:0 0 6px}
 .lead{font-size:1.05rem;color:var(--mute);margin:0 0 16px}
 .note{color:var(--mute);font-size:.9rem;margin:6px 0 12px}
@@ -33,12 +45,12 @@ button.small{padding:8px 12px;border:2px solid var(--line);background:none;color
 #banner.info{background:var(--ok)}
 
 .top{display:flex;gap:10px;align-items:center;padding:10px 16px;max-width:1000px;margin:0 auto}
-.top .who{flex:1}
-.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-size:.85rem;font-weight:700;background:var(--line);color:var(--ink);white-space:nowrap}
+.top .who{flex:1;white-space:nowrap}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-size:.8rem;font-weight:700;background:var(--line);color:var(--ink);white-space:nowrap}
 .pill.open{background:var(--ok);color:#fff}
-.notice{max-width:1000px;margin:0 auto 8px;padding:10px 16px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--acc);border-radius:10px}
+.notice{max-width:1000px;margin:0 auto 8px;padding:10px 16px;background:var(--card);border:1px solid var(--acc);border-radius:10px}
 .tabs{display:flex;gap:8px;max-width:1000px;margin:0 auto;padding:4px 16px}
-.tabs button{flex:1;padding:12px;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font-weight:700}
+.tabs button{flex:1;padding:12px 6px;font-size:.92rem;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font-weight:700}
 .tabs button[aria-pressed=true]{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
 .count{font-weight:400;color:var(--mute)}
 
@@ -57,7 +69,7 @@ canvas{width:100%;max-width:560px;height:auto;aspect-ratio:1/1}
 .sw[aria-pressed=true]{border-color:#fff;outline:3px solid var(--ink)}
 .summary{margin:10px 0 0;font-size:.92rem;color:var(--mute)}
 
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
 .mini{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:6px}
 .mini canvas{border-radius:12px;background:var(--bg)}
 .mini h2{font-size:1.05rem;margin:2px 0 0}
@@ -81,7 +93,7 @@ button.secondary{display:block;width:100%;margin-top:10px;padding:12px;border:2p
 /* gallery */
 .wrap{max-width:1000px;margin:0 auto;padding:12px 16px 40px;display:grid;gap:26px}
 .wrap h1 .count{font-size:1rem}
-.picks{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.picks{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .mini.picked{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc) inset}
 .mini.empty{border-style:dashed;justify-content:center;align-items:center;text-align:center;min-height:150px;color:var(--mute)}
 .mini canvas{width:100%;height:auto}
@@ -105,7 +117,7 @@ dialog h2{margin:0 0 8px;font-size:1.3rem}
 .votebar{display:flex;justify-content:space-between;align-items:center;min-height:36px;color:var(--mute);font-weight:600}
 .duel{display:grid;grid-template-columns:1fr;gap:8px;justify-items:center}
 @media(min-width:700px){.duel{grid-template-columns:1fr 1fr;gap:16px}}
-.cowbtn{border:3px solid var(--line);border-radius:20px;background:var(--card);padding:6px;width:100%;max-width:max(150px,calc((100vh - 300px)/2));color:inherit;transition:transform .12s,border-color .12s}
+.cowbtn{border:3px solid var(--line);border-radius:20px;background:var(--card);padding:6px;width:100%;max-width:max(150px,calc((100vh - 300px)/2));color:inherit}
 @media(min-width:700px){.cowbtn{max-width:min(460px,46vw,max(200px,calc(100vh - 300px)))}}
 .cowbtn:hover{border-color:var(--acc)}
 .cowbtn:active,.cowbtn.won{transform:scale(.97);border-color:var(--ok);box-shadow:0 0 0 4px var(--ok)}
@@ -115,10 +127,181 @@ dialog h2{margin:0 0 8px;font-size:1.3rem}
 .deadline{margin:0;padding:12px 16px;text-align:center;font-weight:700;background:var(--acc);color:var(--acc-ink);line-height:1.35}
 
 /* rankings */
-.ranks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.ranks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .ranks li{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;position:relative;display:flex;flex-direction:column;gap:4px}
 .ranks canvas{width:100%;height:auto;aspect-ratio:1/1;border-radius:12px;background:var(--bg)}
 .ranks .no{position:absolute;left:8px;top:8px;min-width:30px;height:30px;padding:0 8px;border-radius:15px;background:var(--acc);color:var(--acc-ink);font-weight:800;display:flex;align-items:center;justify-content:center}
 .ranks .rec{font-size:.88rem;color:var(--mute)}
 .ranks li.top{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
 .votebar .link{font-weight:700}
+
+/* ===== foil cards ===== */
+/* B. Foil cards: every cow is a collectible card. The plastic is the thing members will trade, so the interface
+   is a card sleeve in a dark room: deep violet ground, foil frames, big condensed numerals.
+   Signature move: a foil sweep that crosses a card when you touch it. Always dark: it is a card-table look. */
+:root,:root:not([data-theme]){
+  --bg:#0F0B1F;--card:#1A1433;--ink:#F4F0FF;--mute:#BDB4E0;--line:#3A2F6E;
+  --acc:#FFC933;--acc-ink:#1A1100;--ok:#46E0A0;--bad:#FF7A90;--focus:#7DE3FF;
+  --foil:conic-gradient(from 200deg,#ff7ac8,#ffd36b,#7dffb6,#6bd6ff,#b08cff,#ff7ac8);
+  color-scheme:dark;
+}
+body{font-family:Figtree,system-ui,sans-serif;background:radial-gradient(ellipse at 50% -10%,#2A1F5C 0,#0F0B1F 60%) fixed;color:var(--ink)}
+h1,h2,dialog h2{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;letter-spacing:-.02em}
+h1{font-size:1.65rem}
+.lead,.note,.summary,.loading{color:var(--mute)}
+
+.card,dialog{background:linear-gradient(var(--card),var(--card)) padding-box,var(--foil) border-box;border:2px solid transparent;border-radius:20px}
+.mini,.ranks li,.cowbtn{background:linear-gradient(var(--card),var(--card)) padding-box,var(--foil) border-box;border:3px solid transparent;border-radius:18px;position:relative;overflow:hidden}
+.mini::after,.ranks li::after,.cowbtn::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.3) 50%,transparent 62%);background-size:260% 100%;background-position:160% 0}
+@media (prefers-reduced-motion:no-preference){
+  .mini::after,.ranks li::after,.cowbtn::after{transition:background-position .8s cubic-bezier(.16,1,.3,1)}
+  .mini:hover::after,.ranks li:hover::after,.cowbtn:hover::after,.cowbtn:active::after,.cowbtn.won::after{background-position:-60% 0}
+}
+.mini canvas,.ranks canvas,.cowbtn canvas,.pair img,.pair canvas{background:radial-gradient(circle at 50% 40%,#3B2C7A,#1B1438 75%);border-radius:12px}
+input[type=text]{background:#120D26;color:var(--ink);border:2px solid var(--line);border-radius:12px}
+input[type=text]:focus{border-color:var(--acc)}
+
+button.primary{background:var(--acc);color:var(--acc-ink);border-radius:14px;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;letter-spacing:.01em;text-transform:uppercase;font-size:1rem}
+button.secondary{border-radius:14px;border:2px solid var(--acc);color:var(--acc);font-weight:700}
+button.small{border-radius:12px;border:2px solid var(--line);color:var(--ink)}
+button.small.go{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+button.small.danger{color:var(--bad);border-color:var(--bad)}
+button.link{color:var(--focus)}
+
+.top .who{font-weight:700}
+.pill{background:#2B2255;color:var(--ink);border:1px solid var(--line)}
+.pill.open{background:var(--ok);color:#06241A;border-color:var(--ok)}
+.deadline{background:var(--acc);color:var(--acc-ink)}
+#banner{background:var(--bad);color:#25000A}
+.notice{background:var(--card);border:1px solid var(--acc);border-radius:12px}
+
+.tabs{gap:6px;background:#17112E;border:1px solid var(--line);border-radius:16px;padding:5px;margin-top:4px;max-width:calc(1000px - 32px)}
+.tabs button{border:0;border-radius:12px;background:transparent;color:var(--mute);font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800}
+.tabs button[aria-pressed=true]{background:var(--acc);color:var(--acc-ink);box-shadow:none}
+.count{color:inherit;opacity:.7}
+
+.stage{background:radial-gradient(circle at 50% 38%,#3B2C7A,#1A1433 72%) padding-box,var(--foil) border-box}
+.part{background:#120D26;border:2px solid var(--line);border-radius:14px;color:var(--ink)}
+.part[aria-pressed=true]{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,201,51,.28)}
+.part b{font-family:'Bricolage Grotesque',system-ui,sans-serif}
+.sw{border-radius:50%;outline:2px solid rgba(255,255,255,.18);border:0}
+.sw[aria-pressed=true]{outline:3px solid var(--acc);box-shadow:0 0 0 3px #0F0B1F}
+.sw.special{outline-color:rgba(255,255,255,.7)}
+.badge{background:#0F0B1F;border:1px solid rgba(255,255,255,.35)}
+.chip{color:var(--mute)}
+.toggle{color:var(--ink)}
+
+.st{background:var(--foil);color:#1A1100;border-radius:8px;font-family:'Big Shoulders Display',sans-serif;font-weight:900;letter-spacing:.06em;text-transform:uppercase;font-size:.95rem}
+.st.approved{background:var(--ok);color:#06241A}.st.rejected{background:var(--bad);color:#25000A}
+.mini.picked{background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,#ffe58a,#ffb300 45%,#fff2b8 60%,#ffb300) border-box}
+.mini.empty{background:transparent;border:2px dashed var(--line);overflow:visible}
+.mini.empty::after{display:none}
+.mini ul{color:var(--mute)}
+.wrap h1{font-size:1.5rem}
+
+.votebar{font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:1.25rem;letter-spacing:.06em;text-transform:uppercase;color:var(--acc)}
+.duel{position:relative}
+.duel::after{content:"VS";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;background:var(--acc);color:var(--acc-ink);font:900 1.3rem/54px 'Big Shoulders Display',sans-serif;letter-spacing:.04em;text-align:center;z-index:3;box-shadow:0 0 0 5px #0F0B1F;pointer-events:none}
+.cowbtn:hover{filter:brightness(1.08)}
+.cowbtn:active,.cowbtn.won{box-shadow:0 0 0 4px var(--ok);transform:scale(.97)}
+
+.ranks .no{border-radius:12px;min-width:40px;height:40px;background:var(--acc);color:var(--acc-ink);font:900 1.5rem/1 'Big Shoulders Display',sans-serif;z-index:2}
+.ranks li.top{background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,#ffe58a,#ffb300 45%,#fff2b8 60%,#ffb300) border-box}
+.ranks .rec{color:var(--mute)}
+
+dialog::backdrop{background:rgba(8,5,20,.82)}
+.pair figcaption{color:var(--mute)}
+
+/* ===== heather changes ===== */
+/* F. Foil Heather: the foil-card look with small changes. Midnight-blue ground with a heather glow, metallic
+   gold-silver-copper foil instead of rainbow, Libre Baskerville headings (the club's own serif), squarer cards,
+   a tartan corner sash on each card, and "or" between the two cows. Scots wording. */
+:root,:root:not([data-theme]){
+  --bg:#0A0F26;--card:#141B3E;--ink:#F3F1FA;--mute:#B4BAE0;--line:#2F3A78;
+  --acc:#F2C14E;--acc-ink:#1C1300;
+  --foil:conic-gradient(from 210deg,#f3d27a,#b9c0cf,#e8a46c,#f7eab6,#9aa3b8,#f3d27a);
+  --navy:#222A78;
+  --tartan:
+    repeating-linear-gradient(90deg,transparent 0 16px,rgba(214,58,70,.9) 16px 19px,transparent 19px 33px,rgba(106,88,201,.8) 33px 47px,transparent 47px 61px,rgba(240,240,250,.6) 61px 62px,transparent 62px 72px),
+    repeating-linear-gradient(0deg,transparent 0 16px,rgba(214,58,70,.9) 16px 19px,transparent 19px 33px,rgba(106,88,201,.8) 33px 47px,transparent 47px 61px,rgba(240,240,250,.6) 61px 62px,transparent 62px 72px),
+    repeating-linear-gradient(45deg,rgba(0,0,0,.2) 0 1px,transparent 1px 3px),
+    linear-gradient(var(--navy),var(--navy));
+}
+body{background-color:var(--bg);background-image:radial-gradient(ellipse at 50% -8%,rgba(92,78,200,.5) 0,transparent 62%),linear-gradient(rgba(10,15,38,.94),rgba(10,15,38,.94)),var(--tartan)}
+h1,h2,dialog h2,.part b,.tabs button,.mini h2{font-family:'Libre Baskerville',Georgia,serif;letter-spacing:-.01em}
+h1{font-size:1.5rem;font-weight:700}
+.tabs button{font-weight:700}
+
+/* squarer cards, thin inner rule */
+.card,dialog{border-radius:12px}
+.mini,.ranks li,.cowbtn{border-radius:12px}
+.mini canvas,.ranks canvas,.cowbtn canvas,.pair img,.pair canvas{border-radius:6px;background:radial-gradient(circle at 50% 40%,#2C3475,#0F1536 78%)}
+.tabs{border-radius:12px}.tabs button{border-radius:8px}
+button.primary,button.secondary{border-radius:10px}
+button.small{border-radius:8px}
+
+/* tartan corner sash */
+.mini::before,.ranks li::before,.cowbtn::before{content:"";position:absolute;right:0;top:0;width:50px;height:50px;background:var(--tartan);clip-path:polygon(0 0,100% 0,100% 100%);z-index:1}
+.mini.empty::before{display:none}
+
+.duel::after{content:"or";font:italic 700 1.35rem/54px 'Libre Baskerville',Georgia,serif;letter-spacing:0;text-transform:none;box-shadow:0 0 0 5px #0A0F26}
+.ranks .no{border-radius:50%;min-width:40px;height:40px;font:700 1.05rem/1 'Libre Baskerville',Georgia,serif;box-shadow:0 0 0 3px var(--card),0 0 0 5px var(--acc)}
+.st{background:var(--foil);color:#1C1300;border-radius:6px}
+.st.approved{background:var(--ok);color:#06241A}.st.rejected{background:var(--bad);color:#25000A}
+.votebar{font-family:'Libre Baskerville',Georgia,serif;font-weight:700;text-transform:none;letter-spacing:0;font-size:1rem}
+.thistle{width:34px;height:34px;vertical-align:-8px;margin-right:8px}
+.top .thistle{width:22px;height:22px;vertical-align:-5px;margin-right:6px}
+
+/* ---- hardening, accessibility and wording pass ---- */
+@media (prefers-reduced-motion:no-preference){.cowbtn{transition:transform .12s,border-color .12s}}
+.mini h2,.ranks .rec,.who,.summary,.part b{overflow-wrap:anywhere}
+.who{min-width:0}
+.top .link{min-height:44px;padding-inline:10px}
+.toggle{min-height:44px}
+.toggle input{width:24px;height:24px}
+.wrap h1,.vote h1,h1{text-wrap:balance}
+.thistle{width:34px;height:34px;vertical-align:-8px;margin-right:8px;flex:none}
+.top .thistle{width:22px;height:22px;vertical-align:-5px;margin-right:6px}
+#voteLoading{color:var(--mute);margin:12px 0}
+
+/* ---- critique + polish pass (2026-11-07) ---- */
+/* Phones: keep the cow in view while picking colors. The stage sticks to the top, compact, and the picker scrolls beneath it. */
+@media (max-width:859px) and (min-height:561px){
+  .two{display:flex;flex-direction:column}
+  .stage{position:sticky;top:0;z-index:5;padding:8px 12px 2px;box-shadow:0 10px 18px -6px rgba(5,7,22,.85)}
+  .stage .loading{position:absolute;top:40%}
+  .grid{max-height:none;overflow:visible}
+}
+/* Lights off: a foil-style tick box instead of the browser default */
+.toggle input{appearance:none;-webkit-appearance:none;flex:none;border:2px solid var(--mute);border-radius:7px;background:#120D26;display:grid;place-content:center;margin:0;cursor:pointer}
+.toggle input::after{content:"";width:12px;height:7px;border:solid var(--acc-ink,#1A1100);border-width:0 0 3px 3px;transform:rotate(-45deg) translate(1px,-1px);opacity:0}
+.toggle input:checked{background:var(--acc);border-color:var(--acc)}
+.toggle input:checked::after{opacity:1}
+.toggle input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+/* Login: club name above the title, and the form sits a little lower on a tall phone */
+.eyebrow{margin:0 0 6px;font:700 .8rem/1.2 Figtree,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--acc)}
+#loginView{padding-top:max(28px,10vh)}
+
+/* ---- cow window: zoom, plus a pinned part picker on phones (floating buttons over the cow's right side) ---- */
+.stagebox{display:flex;justify-content:center;align-items:center;gap:8px;width:100%}
+.stage{--ar:1.4}
+.view{position:relative;overflow:hidden;border-radius:12px;flex:1 1 0;min-width:0;max-width:560px;aspect-ratio:var(--ar);touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.view.zoomed{touch-action:none;cursor:grab}
+.pan{position:absolute;inset:0;transform-origin:0 0}
+.pan canvas{position:absolute;display:block;max-width:none;aspect-ratio:auto;width:auto;height:auto}
+.pin{display:none}
+.pinbtn{display:flex;align-items:center;gap:6px;border:2px solid var(--line);border-radius:12px;background:#120D26;color:var(--ink);padding:4px 8px;min-height:44px;font:700 .72rem/1.1 Figtree,system-ui,sans-serif}
+.pinbtn[aria-pressed=true]{border-color:var(--acc);box-shadow:0 0 0 2px rgba(255,201,51,.3)}
+.pinbtn .dot{width:22px;height:22px;border-radius:50%;flex:none;outline:1px solid rgba(255,255,255,.3)}
+@media (max-width:859px) and (min-height:561px){
+  .pin{display:flex}
+  /* the window is as wide as the card allows, but never taller than about a third of the screen */
+  .view{max-width:calc(min(34vh,280px) * var(--ar))}
+  /* floating part buttons on the right side of the cow */
+  .pin-over .stagebox{position:relative}
+  .pin-over .view{flex:none;width:100%}
+  .pin-over .pin{position:absolute;right:calc(50% - min(100%, min(34vh,280px) * var(--ar)) / 2 + 6px);top:6px;bottom:6px;flex-direction:column;justify-content:space-between;z-index:2;gap:4px}
+  .pin-over .pinbtn{background:rgba(10,15,38,.74);padding:3px;border-radius:24px;flex-direction:column;gap:0;width:48px;min-height:48px;justify-content:center}
+  .pin-over .pinbtn .pl{font-size:.58rem}
+  .pin-over .pinbtn .dot{width:20px;height:20px}
+}
