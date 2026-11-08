@@ -35,28 +35,29 @@
 
   <nav class="tabs" id="tabs" hidden>
     <button type="button" data-tab="design" aria-pressed="true">Design</button>
-    <button type="button" data-tab="mine" aria-pressed="false">My cows <span class="count" id="mineCount"></span></button>
+    <button type="button" data-tab="gallery" aria-pressed="false">My designs <span class="count" id="galCount"></span></button>
   </nav>
 
   <!-- Design -->
   <main id="designView" class="two">
-    <section class="card stage"><canvas id="cv" width="700" height="700" role="img" aria-label="Your cow, drawn in the colors you pick"></canvas>
-      <p class="loading" id="cvLoading">Loading your cow...</p></section>
+    <section class="card stage" id="stage">
+      <canvas id="cv" width="700" height="700" role="img" aria-label="Your cow, drawn in the colors you pick"></canvas>
+      <p class="loading" id="cvLoading">Loading your cow...</p>
+      <label class="toggle"><input type="checkbox" id="lightsOff"> Lights off <span class="note">(see glow-in-the-dark)</span></label>
+    </section>
     <section class="card">
-      <h1>Design your cow</h1>
-      <p class="note">Tap a part, then tap a color. Colors marked <b>≈</b> are special filaments (sparkle, galaxy, glow and more). They will look different on the real cow, so the picture is only a guide.</p>
+      <h1 id="editTitle">Design your cow</h1>
+      <p class="note" id="editNote">Tap a part, then tap a color. Colors with a symbol are special filaments. The picture is only a guide, because they look different on a real cow.</p>
       <div class="parts" id="parts"></div>
       <div class="grid" id="grid" role="group" aria-label="Colors"></div>
-      <div class="row">
-        <label for="wish">Want a color we don't have?</label>
-        <input type="color" id="wish" value="#ff8800" aria-label="Pick a wish color for the selected part">
-      </div>
-      <p class="note">A wish color shows on the cow but can't be promised. It is sent as a request.</p>
+      <div class="legend" id="legend" aria-label="What the symbols mean"></div>
       <p class="summary" id="summary"></p>
-      <label for="cowName">Name your cow (optional)</label>
+      <label for="cowName">Name your design (optional)</label>
       <input id="cowName" type="text" maxlength="30" placeholder="Like “Strawberry Milk”" autocomplete="off">
-      <button class="primary" id="sendBtn" type="button">Send my cow</button>
-      <p class="note" id="sendNote"></p>
+      <button class="primary" id="saveBtn" type="button">Save design</button>
+      <button class="secondary" id="saveNewBtn" type="button" hidden>Save as a new design</button>
+      <button class="link" id="newBtn" type="button" hidden>Start a fresh design</button>
+      <p class="note" id="saveNote"></p>
     </section>
   </main>
 
@@ -66,14 +67,30 @@
     <p class="lead" id="waitText"></p>
   </main>
 
-  <!-- My cows -->
-  <main id="mineView" class="narrow wide" hidden>
-    <h1>My cows</h1>
-    <p class="note" id="mineIntro"></p>
-    <div class="cards" id="cards"></div>
+  <!-- My designs -->
+  <main id="galleryView" class="wrap" hidden>
+    <section>
+      <h1>My picks <span class="count" id="picksCount"></span></h1>
+      <p class="note" id="picksNote"></p>
+      <div class="picks" id="picks"></div>
+    </section>
+    <section>
+      <h1>All my designs</h1>
+      <p class="note" id="galIntro"></p>
+      <div class="cards" id="cards"></div>
+    </section>
   </main>
-
 </div>
+
+<dialog id="mockup" aria-labelledby="mockTitle">
+  <h2 id="mockTitle">This is a mock-up</h2>
+  <p>The pictures on this site are a computer guide. Real prints look a bit different, and special filaments (sparkle, galaxy, glow, silk and more) can only be shown roughly. Here is a real cow next to this site's picture of the same cow.</p>
+  <div class="pair">
+    <figure><img src="mockup-real.jpg" alt="A real 3D printed white cow with purple and blue shiny horns, hooves and nose" width="640" height="640"><figcaption><b>The real print</b><br>White body, shiny purple trim</figcaption></figure>
+    <figure><canvas id="mockCv" width="700" height="700" role="img" aria-label="The same cow as drawn on this site"></canvas><figcaption><b>On this site</b><br>Same colors, drawn by the computer</figcaption></figure>
+  </div>
+  <button class="primary" id="gotIt" type="button">Got it</button>
+</dialog>
 
 <script src="config.js"></script>
 <script src="app.js"></script>
