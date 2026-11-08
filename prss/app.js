@@ -11,7 +11,7 @@
   ];
   var DEFAULT_SEL = [62, 55, 70, 61];
   var S = { user: '', token: '', phase: 'closed', max: 3, maxDrafts: 20, notice: '', deadline: '', drafts: [], tab: 'design', active: 0, sel: DEFAULT_SEL.slice(),
-            editId: null, lights: false, votes: 0, swatches: [], byN: {}, lastSync: 0 };
+            editId: null, tartan: '', lights: false, votes: 0, swatches: [], byN: {}, lastSync: 0 };
 
   /* ---------- small helpers ---------- */
   function store(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
@@ -343,6 +343,77 @@
   $('newBtn').addEventListener('click', function () { S.editId = null; $('cowName').value = ''; refreshDesign(); });
   $('lightsOff').addEventListener('change', function (e) { S.lights = e.target.checked; drawMain(); });
 
+  /* ---------- tartan: every member designs their own; it hangs as a ribbon on their coos and on the show badge ---------- */
+  var THREADS = [['Navy', '#27307F'], ['Midnight', '#12163D'], ['Royal blue', '#2F5FD0'], ['Sky blue', '#7FB8F0'], ['Teal', '#12A0B8'], ['Forest green', '#14452E'], ['Green', '#2F9E5B'], ['Lime', '#A5D63F'], ['Gold', '#E8C65A'], ['Orange', '#F08A2E'],
+                 ['Red', '#C8323F'], ['Crimson', '#8E1B2B'], ['Pink', '#E2557E'], ['Blush', '#F0A8C0'], ['Purple', '#7B66D9'], ['Plum', '#4A1F55'], ['Brown', '#6B4423'], ['Silver', '#B9BFD0'], ['White', '#F4F2FF'], ['Black', '#14141C']];   // keep in step with TARTAN_HEX in Code.gs
+  var ROLES = [['Ground', 'the main color'], ['Wide stripe', 'the big stripes'], ['Second stripe', 'the other stripes'], ['Thin line', 'the thin lines']];
+  var PATTERNS = ['Classic', 'Bold', 'Fine'];
+  var SETTS = [                                   // [thread, width] pairs; thread 0 to 3 = ground, wide stripe, second stripe, thin line
+    [[0, 12], [1, 3], [0, 3], [2, 9], [0, 3], [3, 1.5], [0, 3], [2, 9], [0, 3], [1, 3], [0, 12], [3, 1.5]],
+    [[0, 16], [1, 6], [0, 4], [2, 12], [0, 4], [3, 2], [0, 4], [2, 12], [0, 4], [1, 6], [0, 16], [3, 2]],
+    [[0, 6], [1, 2], [0, 2], [2, 4], [0, 2], [3, 1], [0, 2], [2, 4], [0, 2], [1, 2], [0, 6], [3, 1], [0, 3], [1, 1], [0, 3], [2, 1]]
+  ];
+  var DEFAULT_TARTAN = '0:#27307F,#C8323F,#7B66D9,#F4F2FF';
+  var TWILL = 'repeating-linear-gradient(45deg,rgba(255,255,255,.1) 0 1px,rgba(0,0,0,.17) 1px 2px)';
+  function parseTartan(s) {
+    var m = /^([0-2]):(#[0-9a-f]{6}),(#[0-9a-f]{6}),(#[0-9a-f]{6}),(#[0-9a-f]{6})$/i.exec(String(s || '')) || /^(.):(.*),(.*),(.*),(.*)$/.exec(DEFAULT_TARTAN);
+    return { p: +m[1], c: [m[2], m[3], m[4], m[5]].map(function (x) { return x.toUpperCase(); }) };
+  }
+  function tartanStr(t) { return t.p + ':' + t.c.join(','); }
+  var clothMemo = {};
+  function cloth(s) {                             // CSS background for a tartan: twill grain over a woven tile (warp full strength, weft half, so crossings blend like real cloth)
+    var t = parseTartan(s), key = tartanStr(t); if (clothMemo[key]) return clothMemo[key];
+    var set = SETTS[t.p], T = 0; set.forEach(function (x) { T += x[1]; });
+    function bars(vert) { var pos = 0, out = ''; set.forEach(function (x) { out += '<rect ' + (vert ? 'x' : 'y') + '="' + pos + '" ' + (vert ? 'width' : 'height') + '="' + x[1] + '" ' + (vert ? 'height' : 'width') + '="' + T + '" fill="' + t.c[x[0]] + '"/>'; pos += x[1]; }); return out; }
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + T + '" height="' + T + '" viewBox="0 0 ' + T + ' ' + T + '"><rect width="' + T + '" height="' + T + '" fill="' + t.c[0] + '"/>' + bars(false) + '<g opacity=".5">' + bars(true) + '</g></svg>';
+    return (clothMemo[key] = TWILL + ',url("data:image/svg+xml,' + encodeURIComponent(svg) + '")');
+  }
+  function ownTartan() { return S.tartan || DEFAULT_TARTAN; }
+  function ribbon() { var r = el('span', 'rib'); r.appendChild(el('i', 'tab')); r.appendChild(el('i', 'rivet')); return r; }
+  function setRib(r, t) { if (t === undefined || t === null) { r.hidden = true; return; } r.hidden = false; r.style.setProperty('--cloth', cloth(t)); }
+  var ROS_TXT = { pending: 'In the<br>show', approved: 'Picked', rejected: 'Not<br>picked' };
+  function rosette(t, state, inline, label) {      // the show badge: pleated tartan ring and tails around a navy centre
+    var r = el('span', 'ros s-' + state + (inline ? ' inline' : '')); r.setAttribute('role', 'img'); r.setAttribute('aria-label', label || state);
+    r.appendChild(el('i', 'tl a')); r.appendChild(el('i', 'tl b')); r.appendChild(el('i', 'pl'));
+    var d = el('span', 'dc'); d.innerHTML = ROS_TXT[state] || ROS_TXT.pending; r.appendChild(d);
+    r.style.setProperty('--cloth', cloth(t)); return r;
+  }
+  var TD = { cur: null, role: 0 };
+  function renderTartanDlg() {
+    var c = TD.cur, th = $('tThreads'), pal = $('tPalette'), pat = $('tPat');
+    th.innerHTML = ''; ROLES.forEach(function (r, i) {
+      var b = el('button', 'thread'); b.type = 'button'; b.setAttribute('aria-pressed', i === TD.role);
+      var d = el('span', 'dot'); d.style.background = c.c[i]; var tx = el('span'); tx.appendChild(document.createTextNode(r[0])); tx.appendChild(el('small', null, nameOf(c.c[i])));
+      b.appendChild(d); b.appendChild(tx); b.addEventListener('click', function () { TD.role = i; renderTartanDlg(); }); th.appendChild(b);
+    });
+    pal.innerHTML = ''; THREADS.forEach(function (x) {
+      var b = el('button'); b.type = 'button'; b.style.background = x[1]; b.setAttribute('aria-label', x[0]); b.title = x[0]; b.setAttribute('aria-pressed', c.c[TD.role] === x[1]);
+      b.addEventListener('click', function () { c.c[TD.role] = x[1]; renderTartanDlg(); }); pal.appendChild(b);
+    });
+    pat.innerHTML = ''; pat.appendChild(el('b', null, 'Pattern'));
+    PATTERNS.forEach(function (n, i) { var b = el('button', null, n); b.type = 'button'; b.setAttribute('aria-pressed', c.p === i); b.addEventListener('click', function () { c.p = i; renderTartanDlg(); }); pat.appendChild(b); });
+    var s = tartanStr(c); $('tBig').style.setProperty('--cloth', cloth(s));
+    var mini = $('tMini'); mini.innerHTML = ''; var rb = ribbon(); setRib(rb, s); mini.appendChild(rb); mini.appendChild(rosette(s, 'pending', true, 'Show badge preview'));
+  }
+  function nameOf(hex) { for (var i = 0; i < THREADS.length; i++) if (THREADS[i][1] === hex) return THREADS[i][0]; return hex; }
+  function openTartan() {
+    var t = parseTartan(ownTartan()); TD.cur = { p: t.p, c: t.c.slice() }; TD.role = 0; renderTartanDlg();
+    var d = $('tartanDlg'); if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+  }
+  function closeTartan() { var d = $('tartanDlg'); if (d.close) d.close(); else d.removeAttribute('open'); }
+  $('tartanBtn').addEventListener('click', openTartan);
+  $('tCancel').addEventListener('click', closeTartan);
+  $('tRand').addEventListener('click', function () {
+    var dark = [0, 1, 5, 11, 15, 16, 19, 2], pick = function (n) { return Math.floor(Math.random() * n); }, ids = [dark[pick(dark.length)]];
+    while (ids.length < 4) { var k = pick(THREADS.length); if (ids.indexOf(k) < 0) ids.push(k); }
+    TD.cur = { p: pick(3), c: ids.map(function (k) { return THREADS[k][1]; }) }; renderTartanDlg();
+  });
+  $('tSave').addEventListener('click', function () {
+    var btn = $('tSave'), old = btn.textContent; btn.disabled = true; btn.textContent = 'Saving...';
+    api('tartan', { tartan: tartanStr(TD.cur) }, false).then(function (j) { applyState(j); closeTartan(); banner('Tartan saved.', true); })
+      .catch(handleError).then(function () { btn.disabled = false; btn.textContent = old; });
+  });
+
   /* ---------- my designs (gallery) ---------- */
   var COPY = Object.assign({ unnamed: 'Unnamed coo', pending: 'Entered in the show', approved: 'Picked for the vote', rejected: 'Not picked this time', cows: 'coos', seenAll: "You've seen every coo!", designTitle: 'Design your coo', herd: 'My herd' }, window.PRSS.copy || {});
   var STATUS = { pending: COPY.pending, approved: COPY.approved, rejected: COPY.rejected };
@@ -351,9 +422,12 @@
   }
   function card(d, compact, canEdit) {
     var c = el('div', 'mini' + (d.submitted ? ' picked' : '')), cv = el('canvas'); cv.width = compact ? 260 : 320; cv.height = cv.width; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', 'Design ' + (d.name || ''));
-    c.appendChild(cv);
+    var win = el('div', 'cwin'); win.appendChild(cv); c.appendChild(win);
+    if (d.submitted) {                                // picked for the show: the member's tartan ribbon on the card, and the show badge on the picture
+      var rb = ribbon(); setRib(rb, ownTartan()); c.insertBefore(rb, win);
+      win.appendChild(rosette(ownTartan(), d.status, false, STATUS[d.status] || d.status));
+    }
     c.appendChild(el('h2', null, d.name || COPY.unnamed));
-    if (d.submitted) c.appendChild(el('span', 'st ' + d.status, STATUS[d.status] || d.status));
     if (!compact) { var ul = el('ul'); d.spec.forEach(function (v, i) { ul.appendChild(el('li', null, PARTS[i].t + ': ' + lbl(v))); }); c.appendChild(ul); }
     if (canEdit) {
       var row = el('div', 'btns');
@@ -403,7 +477,7 @@
   /* ---------- views and state ---------- */
   function showTab(t) { S.tab = t; renderAll(); window.scrollTo(0, 0); }
   function renderAll() {
-    $('whoName').textContent = S.user;
+    $('whoName').textContent = S.user; $('tartanSw').style.setProperty('--cloth', cloth(ownTartan()));
     var open = S.phase === 'submissions', voting = S.phase === 'voting';
     var n = $('notice'); n.textContent = S.notice; n.hidden = !S.notice;
     var dl = $('deadline'); dl.textContent = S.deadline; dl.hidden = !S.deadline || !(open || voting);
@@ -428,14 +502,14 @@
   }
   function applyState(j) {
     if (j.phase === 'voting') takeVoting(j);
-    S.phase = j.phase; S.max = j.max; S.maxDrafts = j.maxDrafts || 20; S.notice = j.notice || ''; S.deadline = j.deadline || ''; S.drafts = j.drafts || []; S.lastSync = Date.now();
-    store('prss_state', JSON.stringify({ u: S.user, phase: S.phase, max: S.max, maxDrafts: S.maxDrafts, notice: S.notice, deadline: S.deadline, drafts: S.drafts }));
+    S.phase = j.phase; S.max = j.max; S.maxDrafts = j.maxDrafts || 20; S.notice = j.notice || ''; S.deadline = j.deadline || ''; S.drafts = j.drafts || []; if (typeof j.tartan === 'string') S.tartan = j.tartan; S.lastSync = Date.now();
+    store('prss_state', JSON.stringify({ u: S.user, phase: S.phase, max: S.max, maxDrafts: S.maxDrafts, notice: S.notice, deadline: S.deadline, drafts: S.drafts, tartan: S.tartan }));
     renderAll();
   }
   function showLogin() { $('appView').hidden = true; $('loginView').hidden = false; $('loginWait').hidden = true; $('loginBtn').disabled = false; }
   function showApp() { $('loginView').hidden = true; $('appView').hidden = false; renderAll(); }
   function logout() {
-    S.token = ''; S.user = ''; S.drafts = []; S.editId = null; S.votes = 0; S.vote.buf = []; S.vote.queue = []; S.vote.current = null; S.vote.started = false; S.vote.done = false; S.vote.empty = false; S.vote.seen = []; S.vote.seenSet = {}; S.vote.total = 0; S.vote.complete = false; S.vote.rankFor = -1; $('rankList').innerHTML = ''; store('prss_token', null); store('prss_user', null); store('prss_state', null);
+    S.token = ''; S.user = ''; S.tartan = ''; S.drafts = []; S.editId = null; S.votes = 0; S.vote.buf = []; S.vote.queue = []; S.vote.current = null; S.vote.started = false; S.vote.done = false; S.vote.empty = false; S.vote.seen = []; S.vote.seenSet = {}; S.vote.total = 0; S.vote.complete = false; S.vote.rankFor = -1; $('rankList').innerHTML = ''; store('prss_token', null); store('prss_user', null); store('prss_state', null);
     $('c').value = ''; $('cowName').value = ''; showLogin();
   }
   $('logoutBtn').addEventListener('click', logout);
@@ -502,7 +576,7 @@
     if (!V.buf.length) { V.current = null; $('voteLoading').hidden = false; $('voteLoading').textContent = (V.total < 2 && !V.fetching) ? "There aren't enough coos to vote on yet. Check back soon." : 'Getting the next coos...'; $('optA').disabled = $('optB').disabled = true;
       if (V.empty) { finishVoting("You have seen every pair there is. Thank you!"); } return; }
     var p = V.buf.shift(); V.current = p;
-    $('optA').setAttribute('aria-label', 'Pick the coo on the left: ' + describe(p.a.spec)); $('optB').setAttribute('aria-label', 'Pick the coo on the right: ' + describe(p.b.spec)); $('voteLoading').hidden = true; $('optA').disabled = $('optB').disabled = false;
+    $('optA').setAttribute('aria-label', 'Pick the coo on the left: ' + describe(p.a.spec)); $('optB').setAttribute('aria-label', 'Pick the coo on the right: ' + describe(p.b.spec)); $('voteLoading').hidden = true; $('optA').disabled = $('optB').disabled = false; setRib($('ribA'), p.a.t); setRib($('ribB'), p.b.t);
     $('optA').classList.remove('won'); $('optB').classList.remove('won');
     if (L) { paint($('cvA').getContext('2d'), p.a.spec, false); paint($('cvB').getContext('2d'), p.b.spec, false); }
   }
@@ -581,6 +655,7 @@
         var ol = $('rankList'); ol.innerHTML = ''; var todo = [];
         j.list.forEach(function (x) {
           var li = el('li', x.rank <= 3 ? 'top' : ''), cv = el('canvas'); cv.width = 260; cv.height = 260; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', 'Coo ranked number ' + x.rank + ': ' + describe(x.spec));
+          if (x.t !== undefined) { var rb = ribbon(); setRib(rb, x.t); li.appendChild(rb); }
           li.appendChild(el('span', 'no', String(x.rank))); li.appendChild(cv);
           var n = x.w + x.l; li.appendChild(el('span', 'rec', n === 1 ? (x.w ? 'You picked it' : 'You picked the other one') : 'Picked ' + x.w + ' of ' + n + ' times'));
           ol.appendChild(li); todo.push([cv, x.spec]);
@@ -604,7 +679,7 @@
     layersReady = loadLayers('layers').then(function (l) { L = l; renderAll(); }).catch(function () { banner('The cow picture could not load. Reload the page.'); });
     sw.then(function () {
       if (S.token) {
-        try { var c = JSON.parse(load('prss_state') || 'null'); if (c && c.u === S.user) { S.phase = c.phase; S.max = c.max; S.maxDrafts = c.maxDrafts || 20; S.notice = c.notice; S.deadline = c.deadline || ''; S.drafts = c.drafts || []; } } catch (e) {}
+        try { var c = JSON.parse(load('prss_state') || 'null'); if (c && c.u === S.user) { S.phase = c.phase; S.max = c.max; S.maxDrafts = c.maxDrafts || 20; S.notice = c.notice; S.deadline = c.deadline || ''; S.drafts = c.drafts || []; S.tartan = c.tartan || ''; } } catch (e) {}
         showApp(); refresh(true);
       } else { showLogin(); }
     }).catch(function () { banner('The page could not load. Reload it.'); showLogin(); });

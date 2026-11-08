@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/figtree-normal-dab710.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/bricolage-grotesque-normal-a97232.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <div id="banner" role="alert" hidden></div>
@@ -43,6 +43,7 @@
   <p class="deadline" id="deadline" role="status" hidden></p>
   <header class="top">
     <div class="who"><svg class="thistle" aria-hidden="true"><use href="#thistle"/></svg>Hi, <b id="whoName"></b></div>
+    <button class="link tbtn" id="tartanBtn" type="button"><span class="tsw" id="tartanSw"></span>My tartan</button>
     <button class="link" id="logoutBtn" type="button">Log out</button>
   </header>
   <p class="notice" id="notice" hidden></p>
@@ -93,8 +94,8 @@
     <div class="votebar"><span id="voteCount" aria-live="polite"></span><button class="link" id="rankLink" type="button" hidden>See my champions</button></div>
     <h1>Which coo do you like more?</h1>
     <div class="duel">
-      <button class="cowbtn" id="optA" type="button" aria-label="Pick the coo on the left"><canvas id="cvA" width="700" height="700"></canvas></button>
-      <button class="cowbtn" id="optB" type="button" aria-label="Pick the coo on the right"><canvas id="cvB" width="700" height="700"></canvas></button>
+      <button class="cowbtn" id="optA" type="button" aria-label="Pick the coo on the left"><span class="rib" id="ribA" hidden><i class="tab"></i><i class="rivet"></i></span><canvas id="cvA" width="700" height="700"></canvas></button>
+      <button class="cowbtn" id="optB" type="button" aria-label="Pick the coo on the right"><span class="rib" id="ribB" hidden><i class="tab"></i><i class="rivet"></i></span><canvas id="cvB" width="700" height="700"></canvas></button>
     </div>
     <p class="loading" id="voteLoading" role="status" hidden>Getting the next coos...</p>
     <div class="voteactions"><button class="small" id="skipBtn" type="button">Skip this pair</button><button class="small" id="doneBtn" type="button">I'm done for now</button></div>
@@ -131,6 +132,17 @@
   </main>
 </div>
 
+<dialog id="tartanDlg" aria-labelledby="tTitle">
+  <h2 id="tTitle">Design your tartan</h2>
+  <p class="note">A tartan is woven from a few colors of thread. Pick yours. It hangs as a ribbon on your coos, and on the badge once they are in the show.</p>
+  <div class="tprev"><div class="tbig" id="tBig" role="img" aria-label="Your tartan"></div><div class="tmini" id="tMini"></div></div>
+  <div class="threads" id="tThreads" role="group" aria-label="Which thread to color"></div>
+  <div class="tgrid" id="tPalette" role="group" aria-label="Thread colors"></div>
+  <div class="tpat" id="tPat" role="group" aria-label="Pattern"></div>
+  <button class="rand" id="tRand" type="button">Surprise me</button>
+  <div class="row2"><button class="primary" id="tSave" type="button">Save my tartan</button><button class="link" id="tCancel" type="button">Cancel</button></div>
+</dialog>
+
 <dialog id="allSeen" aria-labelledby="seenTitle">
   <h2 id="seenTitle">You've seen every coo!</h2>
   <p>Thank you so much for your help. Your votes decide which coos we make. You're welcome to keep voting if you want, and your champions are ready to look at.</p>
@@ -148,7 +160,7 @@
   <button class="primary" id="gotIt" type="button">Got it</button>
 </dialog>
 
-<script src="config.js?v=5"></script>
-<script src="app.js?v=5"></script>
+<script src="config.js?v=6"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>

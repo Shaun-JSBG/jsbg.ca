@@ -241,7 +241,7 @@ button.primary,button.secondary{border-radius:10px}
 button.small{border-radius:8px}
 
 /* tartan corner sash */
-.mini::before,.ranks li::before,.cowbtn::before{content:"";position:absolute;right:0;top:0;width:50px;height:50px;background:var(--tartan);clip-path:polygon(0 0,100% 0,100% 100%);z-index:1}
+/* (the old corner sash is gone: each card now carries its designer's tartan ribbon, see "tartan" block at the end) */
 .mini.empty::before{display:none}
 
 .duel::after{content:"or";font:italic 700 1.35rem/54px 'Libre Baskerville',Georgia,serif;letter-spacing:0;text-transform:none;box-shadow:0 0 0 5px #0A0F26}
@@ -305,3 +305,57 @@ button.small{border-radius:8px}
   .pin-over .pinbtn .pl{font-size:.58rem}
   .pin-over .pinbtn .dot{width:20px;height:20px}
 }
+
+
+/* ---- tartan: woven cloth (set per element through --cloth), bookmark ribbon, show badge, and the designer dialog ---- */
+.rib{position:absolute;z-index:4;top:-3px;right:16px;filter:drop-shadow(0 3px 3px rgba(0,0,0,.6));pointer-events:none}
+.rib[hidden]{display:none}
+.rib .tab{position:relative;display:block;width:27px;height:62px;background:var(--cloth);background-size:auto,38px 38px;clip-path:polygon(0 0,100% 0,100% 100%,50% 84%,0 100%)}
+.rib .tab::before{content:"";position:absolute;inset:0;z-index:1;box-shadow:inset 0 0 0 1.5px rgba(217,174,62,.9)}
+.rib .tab::after{content:"";position:absolute;top:0;bottom:0;left:3px;right:3px;border-left:1px dashed rgba(255,255,255,.5);border-right:1px dashed rgba(255,255,255,.5)}
+.rib .rivet{position:absolute;z-index:5;top:12px;left:9px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3b8,#d9ae3e 55%,#8a6414);box-shadow:0 1px 2px rgba(0,0,0,.6)}
+.cowbtn .rib{right:14px}
+.ranks .rib{right:14px}
+
+.cwin{position:relative}
+.cwin canvas{display:block}
+.mini.picked h2{min-height:58px;padding-right:62px}
+.ros{position:absolute;z-index:5;right:4px;bottom:-54px;width:64px;height:92px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+.ros.inline{position:relative;right:auto;bottom:auto;flex:none}
+.ros .tl{position:absolute;top:40px;width:17px;height:46px;background:var(--cloth);background-size:auto,20px 20px;transform-origin:50% 0;clip-path:polygon(0 0,100% 0,100% 100%,50% 84%,0 100%)}
+.ros .tl::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(217,174,62,.85)}
+.ros .tl.a{left:11px;transform:rotate(14deg)}.ros .tl.b{left:36px;transform:rotate(-14deg)}
+.ros .pl{position:absolute;top:0;left:0;width:64px;height:64px;clip-path:polygon(100.0% 50.0%,94.5% 56.4%,98.0% 64.1%,90.9% 68.7%,92.1% 77.0%,84.0% 79.5%,82.7% 87.8%,74.3% 87.9%,70.8% 95.5%,62.7% 93.2%,57.1% 99.5%,50.0% 95.0%,42.9% 99.5%,37.3% 93.2%,29.2% 95.5%,25.7% 87.9%,17.3% 87.8%,16.0% 79.5%,7.9% 77.0%,9.1% 68.7%,2.0% 64.1%,5.5% 56.4%,0.0% 50.0%,5.5% 43.6%,2.0% 35.9%,9.1% 31.3%,7.9% 23.0%,16.0% 20.5%,17.3% 12.2%,25.7% 12.1%,29.2% 4.5%,37.3% 6.8%,42.9% 0.5%,50.0% 5.0%,57.1% 0.5%,62.7% 6.8%,70.8% 4.5%,74.3% 12.1%,82.7% 12.2%,84.0% 20.5%,92.1% 23.0%,90.9% 31.3%,98.0% 35.9%,94.5% 43.6%);background:var(--cloth);background-size:auto,26px 26px}
+.ros .pl::after{content:"";position:absolute;inset:0;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.16) 0 8.18deg,rgba(0,0,0,.38) 8.18deg 16.36deg)}
+.ros .pl::before{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(circle,transparent 52%,rgba(0,0,0,.35) 100%)}
+.ros .dc{position:absolute;top:8px;left:8px;width:48px;height:48px;border-radius:50%;display:grid;place-content:center;text-align:center;
+  font:700 8.5px/1.1 'Libre Baskerville',Georgia,serif;letter-spacing:.04em;text-transform:uppercase;color:#F2C14E;
+  background:radial-gradient(circle at 35% 28%,#2a3485,#0b1030);box-shadow:inset 0 0 0 2px #D9AE3E,0 0 0 1.5px rgba(255,255,255,.2)}
+.ros.s-approved .dc{box-shadow:inset 0 0 0 2px #6fd6a0,0 0 0 1.5px rgba(255,255,255,.2);color:#9be8bf}
+.ros.s-rejected{filter:drop-shadow(0 2px 3px rgba(0,0,0,.6)) grayscale(.9) brightness(.85)}
+.ros.s-rejected .dc{color:#c7cbe0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.top .tbtn{display:inline-flex;align-items:center;gap:7px;text-decoration:none;font-weight:700}
+.top .tbtn .tsw{width:20px;height:20px;border-radius:5px;flex:none;background:var(--cloth);background-size:auto,20px 20px;box-shadow:0 0 0 1.5px rgba(217,174,62,.9)}
+#tartanDlg{max-width:560px}
+#tartanDlg .tprev{display:flex;align-items:center;gap:16px;margin:10px 0 12px}
+#tartanDlg .tbig{width:96px;height:96px;border-radius:8px;flex:none;background:var(--cloth);background-size:auto,48px 48px;box-shadow:0 0 0 2px rgba(217,174,62,.9),0 3px 10px rgba(0,0,0,.5)}
+#tartanDlg .tmini{display:flex;align-items:flex-start;gap:14px;padding:8px 14px 0;position:relative;height:96px}
+#tartanDlg .tmini .rib{position:relative;top:0;right:auto}
+#tartanDlg .tmini .ros{position:relative;right:auto;bottom:auto}
+.threads{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+.thread{display:flex;align-items:center;gap:8px;text-align:left;min-height:48px;padding:6px 10px;border:2px solid var(--line);border-radius:12px;background:#120D26;color:var(--ink);font:700 .85rem/1.15 Figtree,system-ui,sans-serif}
+.thread[aria-pressed=true]{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,201,51,.28)}
+.thread .dot{width:24px;height:24px;border-radius:50%;flex:none;outline:1px solid rgba(255,255,255,.35)}
+.thread small{display:block;font-weight:400;color:var(--mute);font-size:.72rem}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:8px;margin:0 0 12px}
+.tgrid button{aspect-ratio:1;min-height:40px;border-radius:50%;border:0;outline:2px solid rgba(255,255,255,.18);cursor:pointer}
+.tgrid button[aria-pressed=true]{outline:3px solid var(--acc);box-shadow:0 0 0 3px #0F0B1F}
+.tpat{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;align-items:center}
+.tpat b{font-size:.85rem;color:var(--mute);margin-right:4px}
+.tpat button,#tartanDlg .rand{min-height:44px;padding:6px 14px;border:2px solid var(--line);border-radius:10px;background:none;color:var(--ink);font:700 .85rem Figtree,system-ui,sans-serif}
+.tpat button[aria-pressed=true]{border-color:var(--acc);box-shadow:0 0 0 2px rgba(255,201,51,.3)}
+#tartanDlg .row2{display:flex;gap:10px;align-items:center;margin-top:6px}
+#tartanDlg .row2 .primary{margin-top:0;flex:1}
+.picks{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
