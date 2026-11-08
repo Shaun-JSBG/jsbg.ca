@@ -36,6 +36,7 @@
 
   <nav class="tabs" id="tabs" hidden>
     <button type="button" data-tab="vote" aria-pressed="false" hidden>Vote</button>
+    <button type="button" data-tab="rankings" aria-pressed="false" hidden>My rankings</button>
     <button type="button" data-tab="design" aria-pressed="true">Design</button>
     <button type="button" data-tab="gallery" aria-pressed="false">My designs <span class="count" id="galCount"></span></button>
   </nav>
@@ -71,7 +72,7 @@
 
   <!-- Voting -->
   <main id="voteView" class="vote" hidden>
-    <div class="votebar"><span id="voteCount" aria-live="polite"></span></div>
+    <div class="votebar"><span id="voteCount" aria-live="polite"></span><button class="link" id="rankLink" type="button" hidden>See my rankings</button></div>
     <h1>Which one do you like more?</h1>
     <div class="duel">
       <button class="cowbtn" id="optA" type="button" aria-label="Pick the cow on the left"><canvas id="cvA" width="700" height="700"></canvas></button>
@@ -85,6 +86,16 @@
     <h1 id="doneTitle">Thanks for voting!</h1>
     <p class="lead" id="doneText"></p>
     <button class="primary" id="moreBtn" type="button">Keep voting</button>
+  </main>
+
+  <!-- My rankings -->
+  <main id="rankView" class="wrap" hidden>
+    <section>
+      <h1>My rankings</h1>
+      <p class="note">These are the cows you voted on, ranked by how often you picked them. If two cows are tied, the one that beat cows other kids like ranks higher. Your ranking changes as you keep voting.</p>
+      <p class="loading" id="rankLoading" hidden>Working out your rankings...</p>
+      <ol class="ranks" id="rankList"></ol>
+    </section>
   </main>
 
   <!-- My designs -->
@@ -101,6 +112,13 @@
     </section>
   </main>
 </div>
+
+<dialog id="allSeen" aria-labelledby="seenTitle">
+  <h2 id="seenTitle">You've seen all the cows!</h2>
+  <p>Thank you so much for your help. Your votes tell us which cows to make. You're welcome to keep voting if you want, and your rankings are ready to look at.</p>
+  <button class="primary" id="seenRank" type="button">See my rankings</button>
+  <button class="secondary" id="seenMore" type="button">Keep voting</button>
+</dialog>
 
 <dialog id="mockup" aria-labelledby="mockTitle">
   <h2 id="mockTitle">This is a mock-up</h2>
