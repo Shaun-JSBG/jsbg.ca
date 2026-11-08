@@ -384,7 +384,7 @@
 
 
   /* ---------- voting (this or that) ---------- */
-  S.vote = { buf: [], queue: [], seen: [], current: null, prev: null, fetching: false, flushing: false, timer: null, undoTimer: null, started: false, done: false, empty: false };
+  S.vote = { buf: [], queue: [], seen: [], current: null, fetching: false, flushing: false, timer: null, started: false, done: false, empty: false };
   function takeVoting(j) {
     var V = S.vote;
     if (typeof j.votes === 'number') S.votes = Math.max(j.votes, S.votes);
@@ -422,10 +422,9 @@
     var V = S.vote, p = V.current; if (!p) return;
     V.current = null;
     var win = side === 'a' ? p.a : p.b, lose = side === 'a' ? p.b : p.a, v = { w: win.id, l: lose.id, k: p.k };
-    V.queue.push(v); V.prev = { pair: p, vote: v }; S.votes++;
+    V.queue.push(v); S.votes++;
     $(side === 'a' ? 'optA' : 'optB').classList.add('won'); $('optA').disabled = $('optB').disabled = true;
-    $('undoBtn').hidden = false; clearTimeout(V.undoTimer); V.undoTimer = setTimeout(function () { $('undoBtn').hidden = true; V.prev = null; }, 6000);
-    updateVoteUi(); scheduleFlush(V.queue.length >= 6 ? 0 : 6500);
+    updateVoteUi(); scheduleFlush(V.queue.length >= 5 ? 0 : 3000);
     setTimeout(nextPair, 230);
   }
   function scheduleFlush(ms) { clearTimeout(S.vote.timer); S.vote.timer = setTimeout(flush, ms); }
@@ -450,14 +449,6 @@
   $('skipBtn').addEventListener('click', function () { var V = S.vote; if (V.current) { V.current = null; nextPair(); } });
   $('doneBtn').addEventListener('click', function () { finishVoting(); });
   $('moreBtn').addEventListener('click', function () { var V = S.vote; V.done = false; V.empty = false; V.current = null; V.started = false; renderAll(); });
-  $('undoBtn').addEventListener('click', function () {
-    var V = S.vote, pr = V.prev; if (!pr) return;
-    var at = V.queue.indexOf(pr.vote); if (at < 0) { $('undoBtn').hidden = true; return; }
-    V.queue.splice(at, 1); S.votes--; V.prev = null; $('undoBtn').hidden = true;
-    if (V.current) V.buf.unshift(V.current);
-    V.current = pr.pair; $('optA').disabled = $('optB').disabled = false; $('optA').classList.remove('won'); $('optB').classList.remove('won');
-    paint($('cvA').getContext('2d'), pr.pair.a.spec, false); paint($('cvB').getContext('2d'), pr.pair.b.spec, false); updateVoteUi();
-  });
   document.addEventListener('keydown', function (e) {
     if ($('voteView').hidden || e.target.tagName === 'INPUT') return;
     if (e.key === 'ArrowLeft') choose('a'); else if (e.key === 'ArrowRight') choose('b');
