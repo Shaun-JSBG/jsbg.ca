@@ -98,3 +98,18 @@ dialog h2{margin:0 0 8px;font-size:1.3rem}
 .pair figure{margin:0;text-align:center}
 .pair img,.pair canvas{width:100%;height:auto;aspect-ratio:1/1;border-radius:12px;object-fit:cover;background:var(--bg)}
 .pair figcaption{font-size:.82rem;color:var(--mute);margin-top:4px}
+
+/* voting */
+.vote{max-width:1000px;margin:0 auto;padding:6px 16px 28px;text-align:center}
+.vote h1{font-size:1.3rem;margin:4px 0 10px}
+.votebar{display:flex;justify-content:space-between;align-items:center;min-height:36px;color:var(--mute);font-weight:600}
+.duel{display:grid;grid-template-columns:1fr;gap:8px;justify-items:center}
+@media(min-width:700px){.duel{grid-template-columns:1fr 1fr;gap:16px}}
+.cowbtn{border:3px solid var(--line);border-radius:20px;background:var(--card);padding:6px;width:100%;max-width:max(150px,calc((100vh - 300px)/2));color:inherit;transition:transform .12s,border-color .12s}
+@media(min-width:700px){.cowbtn{max-width:min(460px,46vw,max(200px,calc(100vh - 300px)))}}
+.cowbtn:hover{border-color:var(--acc)}
+.cowbtn:active,.cowbtn.won{transform:scale(.97);border-color:var(--ok);box-shadow:0 0 0 4px var(--ok)}
+.cowbtn canvas{width:100%;height:auto;aspect-ratio:1/1;display:block}
+.voteactions{display:flex;justify-content:center;gap:12px;margin:14px 0 6px;flex-wrap:wrap}
+
+.deadline{margin:0;padding:12px 16px;text-align:center;font-weight:700;background:var(--acc);color:var(--acc-ink);line-height:1.35}

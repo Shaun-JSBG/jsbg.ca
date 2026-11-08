@@ -10,8 +10,8 @@
     { t: 'Eye shine', s: 'little dots in the eyes' }
   ];
   var DEFAULT_SEL = [62, 55, 70, 61];
-  var S = { user: '', token: '', phase: 'closed', max: 3, maxDrafts: 20, notice: '', drafts: [], tab: 'design', active: 0, sel: DEFAULT_SEL.slice(),
-            editId: null, lights: false, swatches: [], byN: {}, lastSync: 0 };
+  var S = { user: '', token: '', phase: 'closed', max: 3, maxDrafts: 20, notice: '', deadline: '', drafts: [], tab: 'design', active: 0, sel: DEFAULT_SEL.slice(),
+            editId: null, lights: false, votes: 0, swatches: [], byN: {}, lastSync: 0 };
 
   /* ---------- small helpers ---------- */
   function store(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
@@ -321,28 +321,37 @@
   function showTab(t) { S.tab = t; renderAll(); window.scrollTo(0, 0); }
   function renderAll() {
     $('whoName').textContent = S.user;
-    var open = S.phase === 'submissions', pill = $('phasePill');
-    pill.textContent = open ? 'Sending designs is open' : S.phase === 'voting' ? 'Voting' : 'Closed';
-    pill.className = 'pill' + (open ? ' open' : '');
+    var open = S.phase === 'submissions', voting = S.phase === 'voting', pill = $('phasePill');
+    pill.textContent = open ? 'Sending designs is open' : voting ? 'Voting is open' : 'Closed';
+    pill.className = 'pill' + (open || voting ? ' open' : '');
     var n = $('notice'); n.textContent = S.notice; n.hidden = !S.notice;
-    $('tabs').hidden = !open;
-    Array.prototype.forEach.call($('tabs').querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', b.dataset.tab === S.tab); });
+    var dl = $('deadline'); dl.textContent = S.deadline; dl.hidden = !S.deadline || !(open || voting);
+    if (open && S.tab === 'vote') S.tab = 'design';
+    if (voting && S.tab === 'design') S.tab = 'vote';
+    $('tabs').hidden = !(open || voting);
+    Array.prototype.forEach.call($('tabs').querySelectorAll('button'), function (b) {
+      b.hidden = (b.dataset.tab === 'design' && !open) || (b.dataset.tab === 'vote' && !voting);
+      b.setAttribute('aria-pressed', b.dataset.tab === S.tab);
+    });
     $('designView').hidden = !(open && S.tab === 'design');
-    $('galleryView').hidden = open ? S.tab !== 'gallery' : S.drafts.length === 0;
-    var wait = $('waitView'); wait.hidden = open;
-    if (S.phase === 'voting') { $('waitTitle').textContent = 'Voting is coming'; $('waitText').textContent = 'Sending designs is finished. When voting opens you will pick your favorites here.'; }
-    else if (!open) { $('waitTitle').textContent = 'Closed for now'; $('waitText').textContent = 'Nothing is open right now. Check back later.'; }
+    var showVote = voting && S.tab === 'vote' && !S.vote.done;
+    $('voteView').hidden = !showVote; $('doneView').hidden = !(voting && S.tab === 'vote' && S.vote.done);
+    $('galleryView').hidden = (open || voting) ? S.tab !== 'gallery' : S.drafts.length === 0;
+    var wait = $('waitView'); wait.hidden = open || voting;
+    if (!open && !voting) { $('waitTitle').textContent = 'Closed for now'; $('waitText').textContent = 'Nothing is open right now. Check back later.'; }
     renderGallery(); refreshDesign();
+    if (showVote) startVoting();
   }
   function applyState(j) {
-    S.phase = j.phase; S.max = j.max; S.maxDrafts = j.maxDrafts || 20; S.notice = j.notice || ''; S.drafts = j.drafts || []; S.lastSync = Date.now();
-    store('prss_state', JSON.stringify({ u: S.user, phase: S.phase, max: S.max, maxDrafts: S.maxDrafts, notice: S.notice, drafts: S.drafts }));
+    if (j.phase === 'voting') takeVoting(j);
+    S.phase = j.phase; S.max = j.max; S.maxDrafts = j.maxDrafts || 20; S.notice = j.notice || ''; S.deadline = j.deadline || ''; S.drafts = j.drafts || []; S.lastSync = Date.now();
+    store('prss_state', JSON.stringify({ u: S.user, phase: S.phase, max: S.max, maxDrafts: S.maxDrafts, notice: S.notice, deadline: S.deadline, drafts: S.drafts }));
     renderAll();
   }
   function showLogin() { $('appView').hidden = true; $('loginView').hidden = false; $('loginWait').hidden = true; $('loginBtn').disabled = false; }
   function showApp() { $('loginView').hidden = true; $('appView').hidden = false; renderAll(); }
   function logout() {
-    S.token = ''; S.user = ''; S.drafts = []; S.editId = null; store('prss_token', null); store('prss_user', null); store('prss_state', null);
+    S.token = ''; S.user = ''; S.drafts = []; S.editId = null; S.votes = 0; S.vote.buf = []; S.vote.queue = []; S.vote.current = null; S.vote.started = false; S.vote.done = false; S.vote.empty = false; S.vote.seen = []; store('prss_token', null); store('prss_user', null); store('prss_state', null);
     $('c').value = ''; $('cowName').value = ''; showLogin();
   }
   $('logoutBtn').addEventListener('click', logout);
@@ -373,6 +382,89 @@
   }
   document.addEventListener('visibilitychange', function () { if (!document.hidden && S.token && Date.now() - S.lastSync > 60000) refresh(true); });
 
+
+  /* ---------- voting (this or that) ---------- */
+  S.vote = { buf: [], queue: [], seen: [], current: null, prev: null, fetching: false, flushing: false, timer: null, undoTimer: null, started: false, done: false, empty: false };
+  function takeVoting(j) {
+    var V = S.vote;
+    if (typeof j.votes === 'number') S.votes = Math.max(j.votes, S.votes);
+    if (j.pairs && j.pairs.length && !V.buf.length && !V.current) addPairs(j.pairs);
+  }
+  function addPairs(list) {
+    var V = S.vote, have = {}; V.buf.forEach(function (p) { have[p.k] = 1; }); if (V.current) have[V.current.k] = 1;
+    list.forEach(function (p) { if (!have[p.k]) { V.buf.push(p); V.seen.push(p.k); have[p.k] = 1; } });
+    if (V.seen.length > 200) V.seen = V.seen.slice(-200);
+  }
+  function startVoting() {
+    var V = S.vote;
+    if (V.started) { updateVoteUi(); if (V.current && L) { paint($('cvA').getContext('2d'), V.current.a.spec, false); paint($('cvB').getContext('2d'), V.current.b.spec, false); } return; }
+    V.started = true; nextPair();
+  }
+  function updateVoteUi() { $('voteCount').textContent = S.votes === 1 ? '1 vote so far' : S.votes + ' votes so far'; }
+  function nextPair() {
+    var V = S.vote; updateVoteUi();
+    if (V.buf.length < 5) fetchMore();
+    if (!V.buf.length) { V.current = null; $('voteLoading').hidden = false; $('optA').disabled = $('optB').disabled = true;
+      if (V.empty) { finishVoting("You have seen every pair there is. Thank you!"); } return; }
+    var p = V.buf.shift(); V.current = p; $('voteLoading').hidden = true; $('optA').disabled = $('optB').disabled = false;
+    $('optA').classList.remove('won'); $('optB').classList.remove('won');
+    if (L) { paint($('cvA').getContext('2d'), p.a.spec, false); paint($('cvB').getContext('2d'), p.b.spec, false); }
+  }
+  function fetchMore() {
+    var V = S.vote; if (V.fetching || V.empty) return; V.fetching = true;
+    api('pairs', { seen: V.seen }).then(function (j) {
+      V.fetching = false; if (typeof j.votes === 'number') S.votes = Math.max(j.votes, S.votes);
+      if (!j.pairs.length) { V.empty = true; } else addPairs(j.pairs);
+      if (!V.current) nextPair();
+    }).catch(function (e) { V.fetching = false; if (e.code === 'closed') { refresh(); return; } handleError(e); if (!V.current) setTimeout(function () { if (!V.current && S.phase === 'voting') nextPair(); }, 4000); });
+  }
+  function choose(side) {
+    var V = S.vote, p = V.current; if (!p) return;
+    V.current = null;
+    var win = side === 'a' ? p.a : p.b, lose = side === 'a' ? p.b : p.a, v = { w: win.id, l: lose.id, k: p.k };
+    V.queue.push(v); V.prev = { pair: p, vote: v }; S.votes++;
+    $(side === 'a' ? 'optA' : 'optB').classList.add('won'); $('optA').disabled = $('optB').disabled = true;
+    $('undoBtn').hidden = false; clearTimeout(V.undoTimer); V.undoTimer = setTimeout(function () { $('undoBtn').hidden = true; V.prev = null; }, 6000);
+    updateVoteUi(); scheduleFlush(V.queue.length >= 6 ? 0 : 6500);
+    setTimeout(nextPair, 230);
+  }
+  function scheduleFlush(ms) { clearTimeout(S.vote.timer); S.vote.timer = setTimeout(flush, ms); }
+  function flush() {
+    var V = S.vote; if (V.flushing || !V.queue.length || !S.token) return;
+    V.flushing = true; var batch = V.queue.splice(0, 30);
+    api('vote', { votes: batch.map(function (v) { return { w: v.w, l: v.l }; }) }).then(function () { V.flushing = false; if (V.queue.length) scheduleFlush(1500); })
+      .catch(function (e) { V.flushing = false; V.queue = batch.concat(V.queue); if (e.code === 'auth' || e.code === 'closed') { handleError(e); if (e.code === 'closed') refresh(); return; } scheduleFlush(8000); });
+  }
+  function flushOnLeave() {
+    var V = S.vote; if (!V.queue.length || !S.token) return;
+    var batch = V.queue.splice(0, 30);
+    try { fetch(API, { method: 'POST', keepalive: true, body: JSON.stringify({ action: 'vote', t: S.token, votes: batch.map(function (v) { return { w: v.w, l: v.l }; }) }) }); } catch (e) { V.queue = batch.concat(V.queue); }
+  }
+  function finishVoting(msg) {
+    var V = S.vote; flush(); V.done = true;
+    $('doneText').textContent = msg || ('You voted ' + S.votes + (S.votes === 1 ? ' time.' : ' times.') + ' Your votes are saved. Come back whenever you like.');
+    renderAll();
+  }
+  $('optA').addEventListener('click', function () { choose('a'); });
+  $('optB').addEventListener('click', function () { choose('b'); });
+  $('skipBtn').addEventListener('click', function () { var V = S.vote; if (V.current) { V.current = null; nextPair(); } });
+  $('doneBtn').addEventListener('click', function () { finishVoting(); });
+  $('moreBtn').addEventListener('click', function () { var V = S.vote; V.done = false; V.empty = false; V.current = null; V.started = false; renderAll(); });
+  $('undoBtn').addEventListener('click', function () {
+    var V = S.vote, pr = V.prev; if (!pr) return;
+    var at = V.queue.indexOf(pr.vote); if (at < 0) { $('undoBtn').hidden = true; return; }
+    V.queue.splice(at, 1); S.votes--; V.prev = null; $('undoBtn').hidden = true;
+    if (V.current) V.buf.unshift(V.current);
+    V.current = pr.pair; $('optA').disabled = $('optB').disabled = false; $('optA').classList.remove('won'); $('optB').classList.remove('won');
+    paint($('cvA').getContext('2d'), pr.pair.a.spec, false); paint($('cvB').getContext('2d'), pr.pair.b.spec, false); updateVoteUi();
+  });
+  document.addEventListener('keydown', function (e) {
+    if ($('voteView').hidden || e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowLeft') choose('a'); else if (e.key === 'ArrowRight') choose('b');
+  });
+  window.addEventListener('pagehide', flushOnLeave);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) flushOnLeave(); });
+
   /* ---------- start ---------- */
   var layersReady;
   function init() {
@@ -387,7 +479,7 @@
     layersReady = loadLayers('layers').then(function (l) { L = l; renderAll(); }).catch(function () { banner('The cow picture could not load. Reload the page.'); });
     sw.then(function () {
       if (S.token) {
-        try { var c = JSON.parse(load('prss_state') || 'null'); if (c && c.u === S.user) { S.phase = c.phase; S.max = c.max; S.maxDrafts = c.maxDrafts || 20; S.notice = c.notice; S.drafts = c.drafts || []; } } catch (e) {}
+        try { var c = JSON.parse(load('prss_state') || 'null'); if (c && c.u === S.user) { S.phase = c.phase; S.max = c.max; S.maxDrafts = c.maxDrafts || 20; S.notice = c.notice; S.deadline = c.deadline || ''; S.drafts = c.drafts || []; } } catch (e) {}
         showApp(); refresh(true);
       } else { showLogin(); }
     }).catch(function () { banner('The page could not load. Reload it.'); showLogin(); });
