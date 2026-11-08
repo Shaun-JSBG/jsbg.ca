@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Design a Highland Cow</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="banner" role="alert" hidden></div>
+
+<!-- Login -->
+<main id="loginView" class="narrow" hidden>
+  <h1>Design a Highland Cow</h1>
+  <p class="lead">Log in with the username and access code you were given.</p>
+  <form id="loginForm" class="card" autocomplete="off">
+    <label for="u">Username</label>
+    <input id="u" name="u" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+    <label for="c">Access code</label>
+    <input id="c" name="c" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+    <button class="primary" id="loginBtn" type="submit">Log in</button>
+    <p class="note" id="loginWait" hidden>Logging in. The first one of the day can take a few seconds.</p>
+  </form>
+</main>
+
+<!-- App -->
+<div id="appView" hidden>
+  <header class="top">
+    <div class="who">Hi, <b id="whoName"></b></div>
+    <span class="pill" id="phasePill"></span>
+    <button class="link" id="logoutBtn" type="button">Log out</button>
+  </header>
+  <p class="notice" id="notice" hidden></p>
+
+  <nav class="tabs" id="tabs" hidden>
+    <button type="button" data-tab="design" aria-pressed="true">Design</button>
+    <button type="button" data-tab="mine" aria-pressed="false">My cows <span class="count" id="mineCount"></span></button>
+  </nav>
+
+  <!-- Design -->
+  <main id="designView" class="two">
+    <section class="card stage"><canvas id="cv" width="700" height="700" role="img" aria-label="Your cow, drawn in the colors you pick"></canvas>
+      <p class="loading" id="cvLoading">Loading your cow...</p></section>
+    <section class="card">
+      <h1>Design your cow</h1>
+      <p class="note">Tap a part, then tap a color. Colors marked <b>≈</b> are special filaments (sparkle, galaxy, glow and more). They will look different on the real cow, so the picture is only a guide.</p>
+      <div class="parts" id="parts"></div>
+      <div class="grid" id="grid" role="group" aria-label="Colors"></div>
+      <div class="row">
+        <label for="wish">Want a color we don't have?</label>
+        <input type="color" id="wish" value="#ff8800" aria-label="Pick a wish color for the selected part">
+      </div>
+      <p class="note">A wish color shows on the cow but can't be promised. It is sent as a request.</p>
+      <p class="summary" id="summary"></p>
+      <label for="cowName">Name your cow (optional)</label>
+      <input id="cowName" type="text" maxlength="30" placeholder="Like “Strawberry Milk”" autocomplete="off">
+      <button class="primary" id="sendBtn" type="button">Send my cow</button>
+      <p class="note" id="sendNote"></p>
+    </section>
+  </main>
+
+  <!-- Voting / closed -->
+  <main id="waitView" class="narrow" hidden>
+    <h1 id="waitTitle"></h1>
+    <p class="lead" id="waitText"></p>
+  </main>
+
+  <!-- My cows -->
+  <main id="mineView" class="narrow wide" hidden>
+    <h1>My cows</h1>
+    <p class="note" id="mineIntro"></p>
+    <div class="cards" id="cards"></div>
+  </main>
+
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
