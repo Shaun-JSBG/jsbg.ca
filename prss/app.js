@@ -10,7 +10,7 @@
     { t: 'Eye shine', p: 'Shine', s: 'little dots in the eyes' }
   ];
   var DEFAULT_SEL = [62, 55, 70, 61];
-  var S = { user: '', token: '', phase: 'closed', max: 3, maxDrafts: 20, notice: '', deadline: '', drafts: [], tab: 'design', active: 0, sel: DEFAULT_SEL.slice(),
+  var S = { user: '', display: '', token: '', phase: 'closed', max: 3, maxDrafts: 20, notice: '', deadline: '', drafts: [], tab: 'design', active: 0, sel: DEFAULT_SEL.slice(),
             editId: null, tartan: '', lights: false, votes: 0, swatches: [], byN: {}, lastSync: 0 };
 
   /* ---------- small helpers ---------- */
@@ -123,8 +123,6 @@
         break;
       case 'metal': m = 0.42 * sh + 0.1; f = spM * 1.8 / 255;
         o[0] = r * m + (r * 0.55 + 140) * f + spB * 0.5 + rim * 22 * r / 255; o[1] = g * m + (g * 0.55 + 140) * f + spB * 0.5 + rim * 22 * g / 255; o[2] = b * m + (b * 0.55 + 140) * f + spB * 0.5 + rim * 22 * b / 255; break;
-      case 'translucent': m = 0.66 + 0.34 * sh;
-        o[0] = (r + (255 - r) * 0.3) * m + spB * 3 + rim * 70; o[1] = (g + (255 - g) * 0.3) * m + spB * 3 + rim * 70; o[2] = (b + (255 - b) * 0.3) * m + spB * 3 + rim * 70; break;
       case 'neon': m = 0.66 + 0.34 * sh; o[0] = r * m; o[1] = g * m; o[2] = b * m; break;                  // matte pop: the plain color, never blown out
       case 'glow': m = 0.6 + 0.4 * sh; o[0] = (r + (255 - r) * 0.25) * m + spB * 1.6; o[1] = (g + (255 - g) * 0.25) * m + spB * 1.6; o[2] = (b + (255 - b) * 0.25) * m + spB * 1.6; break;
       case 'sparkle': case 'galaxy': case 'glitter': case 'marble': {
@@ -253,7 +251,6 @@
     silk:        { name: 'Silk', hint: 'smooth and shiny', icon: '<path d="M3 15c4-7 8 6 12-2s5-3 6-1"/><path d="M3 9c3-3 6 2 9 0"/>' },
     dual:        { name: 'Two-color silk', hint: 'shifts between two colors', icon: '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="#fff"/>' },
     metal:       { name: 'Metallic', hint: 'shiny like metal', icon: '<path d="M12 3l8 6-8 12L4 9z M4 9h16 M9 9l3 12 3-12"/>' },
-    translucent: { name: 'See-through', hint: 'clear like glass', icon: '<path d="M12 3s-7 8-7 12a7 7 0 0 0 14 0c0-4-7-12-7-12z"/>' },
     neon:        { name: 'Neon bright', hint: 'super bright', icon: '<path d="M13 2L4 14h7l-1 8 10-13h-7z"/>' }
   };
   function iconSvg(kind, size) {
@@ -272,7 +269,6 @@
       case 'silk': return 'linear-gradient(120deg,rgba(255,255,255,0) 22%,rgba(255,255,255,.7) 46%,rgba(255,255,255,0) 64%),' + h;
       case 'dual': return 'linear-gradient(120deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.45) 48%,rgba(255,255,255,0) 62%),linear-gradient(135deg,' + h + ' 10%,' + (s.hex2 || h) + ' 90%)';
       case 'metal': return 'linear-gradient(135deg,' + h + ' 0%,rgba(255,255,255,.75) 32%,' + h + ' 52%,rgba(0,0,0,.35) 100%),' + h;
-      case 'translucent': return 'linear-gradient(' + rgba(h, .72) + ',' + rgba(h, .72) + '),conic-gradient(#bbb 25%,#fff 0 50%,#bbb 0 75%,#fff 0) 0 0/10px 10px';
       case 'neon': return 'radial-gradient(circle at 50% 50%,rgba(255,255,255,.35),transparent 70%),' + h;
       default: return h;
     }
@@ -477,7 +473,7 @@
   /* ---------- views and state ---------- */
   function showTab(t) { S.tab = t; renderAll(); window.scrollTo(0, 0); }
   function renderAll() {
-    $('whoName').textContent = S.user; $('tartanSw').style.setProperty('--cloth', cloth(ownTartan()));
+    $('whoName').textContent = S.display || S.user; $('tartanSw').style.setProperty('--cloth', cloth(ownTartan()));
     var open = S.phase === 'submissions', voting = S.phase === 'voting';
     var n = $('notice'); n.textContent = S.notice; n.hidden = !S.notice;
     var dl = $('deadline'); dl.textContent = S.deadline; dl.hidden = !S.deadline || !(open || voting);
@@ -502,14 +498,14 @@
   }
   function applyState(j) {
     if (j.phase === 'voting') takeVoting(j);
-    S.phase = j.phase; S.max = j.max; S.maxDrafts = j.maxDrafts || 20; S.notice = j.notice || ''; S.deadline = j.deadline || ''; S.drafts = j.drafts || []; if (typeof j.tartan === 'string') S.tartan = j.tartan; S.lastSync = Date.now();
-    store('prss_state', JSON.stringify({ u: S.user, phase: S.phase, max: S.max, maxDrafts: S.maxDrafts, notice: S.notice, deadline: S.deadline, drafts: S.drafts, tartan: S.tartan }));
+    S.phase = j.phase; S.max = j.max; S.maxDrafts = j.maxDrafts || 20; S.notice = j.notice || ''; S.deadline = j.deadline || ''; S.drafts = j.drafts || []; if (typeof j.tartan === 'string') S.tartan = j.tartan; if (j.display) S.display = j.display; S.lastSync = Date.now();
+    store('prss_state', JSON.stringify({ u: S.user, display: S.display, phase: S.phase, max: S.max, maxDrafts: S.maxDrafts, notice: S.notice, deadline: S.deadline, drafts: S.drafts, tartan: S.tartan }));
     renderAll();
   }
   function showLogin() { $('appView').hidden = true; $('loginView').hidden = false; $('loginWait').hidden = true; $('loginBtn').disabled = false; }
   function showApp() { $('loginView').hidden = true; $('appView').hidden = false; renderAll(); }
   function logout() {
-    S.token = ''; S.user = ''; S.tartan = ''; S.drafts = []; S.editId = null; S.votes = 0; S.vote.buf = []; S.vote.queue = []; S.vote.current = null; S.vote.started = false; S.vote.done = false; S.vote.empty = false; S.vote.seen = []; S.vote.seenSet = {}; S.vote.total = 0; S.vote.complete = false; S.vote.rankFor = -1; $('rankList').innerHTML = ''; store('prss_token', null); store('prss_user', null); store('prss_state', null);
+    S.token = ''; S.user = ''; S.display = ''; S.tartan = ''; S.drafts = []; S.editId = null; S.votes = 0; S.vote.buf = []; S.vote.queue = []; S.vote.current = null; S.vote.started = false; S.vote.done = false; S.vote.empty = false; S.vote.seen = []; S.vote.seenSet = {}; S.vote.total = 0; S.vote.complete = false; S.vote.rankFor = -1; $('rankList').innerHTML = ''; store('prss_token', null); store('prss_user', null); store('prss_state', null);
     $('c').value = ''; $('cowName').value = ''; showLogin();
   }
   $('logoutBtn').addEventListener('click', logout);
@@ -671,7 +667,7 @@
     try { var sv = JSON.parse(load('prss_sel') || 'null'); if (Array.isArray(sv) && sv.length === 4) S.sel = sv; } catch (e) {}
     S.token = load('prss_token') || ''; S.user = load('prss_user') || '';
     if (!S.token) { fetch(API, { mode: 'no-cors' }).catch(function () {}); }     // wake the server while they type
-    var sw = fetch('swatches.json').then(function (r) { return r.json(); }).then(function (list) {
+    var sw = fetch('swatches.json?v=2').then(function (r) { return r.json(); }).then(function (list) {
       S.swatches = list; list.forEach(function (s) { S.byN[s.n] = s; });
       S.sel = S.sel.map(function (v, i) { return (typeof v === 'number' && S.byN[v]) ? v : DEFAULT_SEL[i]; });
       buildGrid();
@@ -679,7 +675,7 @@
     layersReady = loadLayers('layers').then(function (l) { L = l; renderAll(); }).catch(function () { banner('The cow picture could not load. Reload the page.'); });
     sw.then(function () {
       if (S.token) {
-        try { var c = JSON.parse(load('prss_state') || 'null'); if (c && c.u === S.user) { S.phase = c.phase; S.max = c.max; S.maxDrafts = c.maxDrafts || 20; S.notice = c.notice; S.deadline = c.deadline || ''; S.drafts = c.drafts || []; S.tartan = c.tartan || ''; } } catch (e) {}
+        try { var c = JSON.parse(load('prss_state') || 'null'); if (c && c.u === S.user) { S.phase = c.phase; S.max = c.max; S.maxDrafts = c.maxDrafts || 20; S.notice = c.notice; S.deadline = c.deadline || ''; S.drafts = c.drafts || []; S.tartan = c.tartan || ''; S.display = c.display || ''; } } catch (e) {}
         showApp(); refresh(true);
       } else { showLogin(); }
     }).catch(function () { banner('The page could not load. Reload it.'); showLogin(); });
